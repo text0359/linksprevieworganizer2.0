@@ -3137,12 +3137,39 @@
       // Cria um objeto Blob (Binary Large Object) com os dados JSON formatados para legibilidade
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob); // Cria uma URL temporária para o Blob
-      const a = document.createElement('a'); // Cria um elemento <a> (link) no DOM
-      a.href = url; // Define o href do link para a URL do Blob
-      a.download = 'liquid-glass-data.json'; // Define o nome do arquivo que será baixado
-      a.click(); // Simula um clique no link para iniciar o download
-      URL.revokeObjectURL(url); // Libera o objeto URL para economizar memória
-      manageDataModal.classList.add('hidden'); // Oculta o modal de gerenciamento após a exportação
+
+      // Oculta o modal de gerenciamento imediatamente
+      manageDataModal.classList.add('hidden');
+
+      // Verifica se estamos em um ambiente Electron (Nativefier)
+      if (typeof require !== 'undefined' && typeof process !== 'undefined' && process.versions && process.versions.electron) {
+        showLoadingMessage("Preparando download... Por favor, aguarde 5 segundos.", 5000); // Mostra mensagem por 5 segundos
+
+        setTimeout(() => {
+          require('electron').shell.openExternal(url)
+            .then(() => {
+              console.log('JSON export opened in external browser after delay.');
+            })
+            .catch(err => {
+              console.error('Failed to open JSON export in external browser:', err);
+              showCustomModal("Falha ao exportar o arquivo. Por favor, tente novamente.", window.translations[currentLanguage]['okBtn']);
+            })
+            .finally(() => {
+              URL.revokeObjectURL(url); // Revoga a URL após a tentativa de abertura
+              hideLoadingMessage(); // Esconde a mensagem de carregamento
+            });
+        }, 5000); // Atraso de 5 segundos antes de chamar openExternal
+
+      } else {
+        // Fallback para ambientes que não são Electron (navegador web padrão)
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'liquid-glass-data.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
     });
 
     // Event listener para o input de arquivo de importação (acionado quando um arquivo é selecionado)
