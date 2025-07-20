@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid Glass Productivity App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.8s ease-in-out;
+      overflow-x: hidden;
+      padding-top: 1rem;
+    }
+    body.light {
+      background: linear-gradient(135deg, #e0f2f7, #c1e7f0, #9fd8e6);
+    }
+    body.dark {
+      background: linear-gradient(135deg, #1a2a3a, #0a1a2a, #050f1a);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      transition: all 0.4s ease-in-out;
+      box-sizing: border-box;
+    }
+    body.dark .glass-effect {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .glass-effect:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+    }
+    body.dark .glass-effect:hover {
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+    }
+    .menu-button {
+      transition: all 0.3s ease-in-out;
+    }
+    .menu-button:hover {
+      transform: scale(1.08);
+      filter: brightness(1.1);
+    }
+    input, select {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+      height: 3rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      color: #333;
+      font-size: 0.875rem;
+      box-sizing: border-box;
+    }
+    body.dark input, body.dark select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e0e7ff;
+    }
+    select option {
+        background-color: #ffffff;
+        color: #333;
+    }
+    body.dark select option {
+        background-color: #2a2a2a;
+        color: #e0e7ff;
+    }
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: #007bff;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+      outline: none;
+    }
+    body.dark input:focus, body.dark select:focus {
+      background: rgba(255, 107, 107, 0.1);
+      border-color: #ff6b6b;
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+    .add-item-preview-img {
+      max-width: 80px;
+      max-height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .item-thumbnail-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    #items-list .glass-effect {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      border: 2px solid transparent;
+    }
+    #items-list .glass-effect > a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      flex-grow: 1;
+      text-decoration: none;
+      color: inherit;
+    }
+    #items-list .glass-effect .item-title {
+      font-size: 1.15rem;
+      line-height: 1.3;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+    body.light #items-list .glass-effect .item-title {
+      color: #000000;
+    }
+    body.dark #items-list .glass-effect .item-title {
+      color: rgb(21, 132, 63);
+    }
+    #items-list .glass-effect .item-description {
+      display: none;
+    }
+    #items-list .glass-effect .item-url-short {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-top: 0.25rem;
+    }
+    body.light #items-list .glass-effect .item-url-short {
+      color: rgb(50, 50, 50);
+    }
+    body.dark #items-list .glass-effect .item-url-short {
+      color: #b9b9b9;
+    }
+    #items-list .glass-effect .item-added-date {
+      font-size: 0.7rem;
+      color: #718096;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+    }
+    body.dark #items-list .glass-effect .item-added-date {
+      color: #718096;
+    }
+    .truncate-lines-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .truncate-lines-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #settings-panel {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #333;
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+      animation: scaleIn 0.3s ease-out;
+    }
+    body.dark .modal-content {
+      background: #2a2a2a;
+      color: #e0e7ff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888;
+      transition: color 0.2s ease-in-out;
+    }
+    .modal-close-btn:hover {
+      color: #333;
+    }
+    body.dark .modal-close-btn {
+      color: #bbb;
+    }
+    body.dark .modal-close-btn:hover {
+      color: #fff;
+    }
+    .modal-input-group {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+    .modal-input-group label {
+      color: #333;
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    body.dark .modal-input-group label {
+      color: #e0e7ff;
+    }
+    .modal-input-group input, .modal-input-group select {
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      color: #333;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+    body.dark .modal-input-group input, body.dark select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e0e7ff;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .modal-btn.confirm {
+      background-color: #007bff;
+      color: white;
+    }
+    .modal-btn.confirm:hover {
+      background-color: #0056b3;
+      transform: translateY(-1px);
+    }
+    .modal-btn.cancel {
+      background-color: #cccccc;
+      color: #333;
+    }
+    .modal-btn.cancel:hover {
+      background-color: #b0b0b0;
+      transform: translateY(-1px);
+    }
+    .modal-btn.delete-folder {
+      background-color: #dc3545;
+      color: white;
+    }
+    .modal-btn.delete-folder:hover {
+      background-color: #c82333;
+    }
+    .folder-action-btn {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 5px;
+      transition: all 0.2s ease-in-out;
+    }
+    .folder-action-btn.edit {
+      background-color: #007bff;
+      color: white;
+    }
+    .folder-action-btn.edit:hover {
+      background-color: #0056b3;
+    }
+    .edit-item-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-left: 5px;
+        transition: all 0.2s ease-in-out;
+    }
+    .edit-item-btn:hover {
+        background-color: #218838;
+    }
+    .tag-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+    body.dark .tag-item {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+    }
+    .tag-item-buttons button {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-left: 8px;
+        transition: all 0.2s ease-in-out;
+    }
+    .tag-item-buttons .edit {
+        background-color: #007bff;
+        color: white;
+    }
+    .tag-item-buttons .edit:hover {
+        background-color: #0056b3;
+    }
+    .tag-item-buttons .delete {
+        background-color: #dc3545;
+        color: white;
+    }
+    .tag-item-buttons .delete:hover {
+        background-color: #c82333;
+    }
+    .clear-input-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 5px;
+        line-height: 1;
+        transition: color 0.2s ease-in-out;
+    }
+    .clear-input-btn:hover {
+        color: #333;
+    }
+    body.dark .clear-input-btn {
+        color: #bbb;
+    }
+    body.dark .clear-input-btn:hover {
+        color: #fff;
+    }
+    .input-with-clear {
+        position: relative;
+    }
+    .hidden {
+      display: none;
+    }
+    .loading-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        z-index: 1001;
+        font-size: 1.2rem;
+        display: none;
+    }
+    /* Estilo para ícones SVG em selects e buttons */
+    .icon-svg {
+        height: 1em;
+        width: 1em;
+        vertical-align: middle;
+        margin-right: 0.25em;
+        filter: invert(0);
+    }
+    body.dark .icon-svg {
+        filter: invert(1);
+    }
+    /* Estilos para o sistema de estrelas */
+    .star-rating {
+        display: inline-flex;
+        direction: rtl;
+        unicode-bidi: isolate;
+        gap: 2px;
+    }
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    .star-rating label {
+        color: #ccc;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input[type="radio"]:checked ~ label {
+        color: #ffb700;
+    }
+    /* Estilo para exibição das estrelas (não clicável) */
+    .display-rating .star {
+        font-size: 1.2rem;
+        color: #ffb700;
+        margin: 0 1px;
+    }
+    .display-rating .star-empty {
+        font-size: 1.2rem;
+        color: #ccc;
+        margin: 0 1px;
+    }
+    .item-actions-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* checkbox para importação */
+    .modal-checkbox-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 15px;
+        gap: 10px;
+    }
+    .modal-checkbox-group label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #333;
+    }
+    body.dark .modal-checkbox-group label {
+        color: #e0e7ff;
+    }
+    .modal-checkbox-group input[type="checkbox"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+    }
+
+    /* Tab System Styles */
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-button {
+      padding: 0.75rem 1.5rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      color: #333;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    body.dark .tab-button {
+      background-color: rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    .tab-button:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    body.dark .tab-button:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border-color: #007bff;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    }
+
+    body.dark .tab-button.active {
+      background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+      border-color: #4ecdc4;
+      box-shadow: 0 4px 10px rgba(78, 205, 196, 0.3);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Dashboard specific styles */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .dashboard-card {
+        background: rgba(255, 255, 255, 0.6);
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        color: #333;
+    }
+    body.dark .dashboard-card {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #e0e7ff;
+    }
+    .dashboard-card h3 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #007bff;
+    }
+    body.dark .dashboard-card h3 {
+        color: #4ecdc4;
+    }
+    .dashboard-card p {
+        font-size: 0.9rem;
+    }
+    .dashboard-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .dashboard-list li {
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; /* Allow content to wrap */
+        gap: 0.5rem;
+    }
+    .dashboard-list li span:first-child {
+        font-weight: 500;
+    }
+    .dashboard-list.ratings li span:first-child {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+    .dashboard-list .item-info-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-grow: 1;
+        min-width: 0; /* Allow content to shrink */
+    }
+    .dashboard-list .item-thumbnail {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        flex-shrink: 0; /* Prevent thumbnail from shrinking */
+    }
+    .dashboard-list .copy-id-btn { /* Renamed class */
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        background-color: #28a745;
+        color: white;
+        transition: background-color 0.2s;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    .dashboard-list .copy-id-btn:hover {
+        background-color: #218838;
+    }
+  </style>
+</head>
+<body class="light">
+  <div class="w-full max-w-4xl mx-auto p-2 sm:p-4">
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6 animate-fade-in">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight mb-2 sm:mb-0" data-i18n="appTitle">Liquid Glass Organizer</h1>
+      <div class="flex flex-wrap gap-2 sm:gap-4">
+        <button id="settings-btn" class="menu-button px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-white glass-effect font-semibold" data-i18n="settingsBtn">
+          Settings
+        </button>
+        <button id="manage-data-btn" class="menu-button px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg text-white glass-effect font-semibold" data-i18n="manageDataBtn">
+          Manage Data
+        </button>
+      </div>
+    </div>
+
+    <div id="settings-panel" class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in hidden w-full">
+      <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="settingsTitle">Settings</h2>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <button id="toggle-theme-btn" class="px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-green-600 to-lime-600 rounded-lg text-white font-semibold hover:from-green-700 hover:to-lime-700">
+          Toggle Dark Theme
+        </button>
+        <button id="clear-items-btn" class="px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg text-white font-semibold hover:from-red-700 hover:to-orange-700" data-i18n="clearAllItemsBtn">
+          Clear All Items
+        </button>
+      </div>
+      <div class="input-group mt-4">
+        <label for="language-select" class="text-gray-800" data-i18n="languageLabel">Language:</label>
+        <select id="language-select" class="flex-1">
+          <option value="pt-BR">Português (Brasil)</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2" data-i18n="manageTagsTitle">Manage Tags</h3>
+        <div class="flex flex-col sm:flex-row gap-2 mb-4 input-with-clear">
+          <input type="text" id="new-tag-input" placeholder="New tag name" class="flex-1" data-i18n-placeholder="newTagPlaceholder">
+          <button class="clear-input-btn" data-target-input="new-tag-input" data-i18n="clearBtn" title="Clear input">✕</button>
+          <button id="add-tag-btn" class="px-3 py-1 bg-gradient-to-r from-green-500 to-green-700 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-800" data-i18n="addTagBtn">Add Tag</button>
+        </div>
+        <div id="tags-list" class="flex flex-wrap gap-2">
+          </div>
+      </div>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab-button active" data-tab="dashboard" data-i18n="dashboardTab">Dashboard</button>
+        <button class="tab-button" data-tab="create-save" data-i18n="createSaveTab">Criar/Salvar Links</button>
+        <button class="tab-button" data-tab="folders-items" data-i18n="foldersItemsTab">Pastas & Itens Salvos</button>
+    </div>
+
+    <div id="dashboard-tab" class="tab-content active glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="dashboardTitle">Dashboard</h2>
+        <p class="text-gray-600 mb-4" data-i18n="dashboardContent">Bem-vindo ao seu painel! Aqui você encontrará um resumo de seus dados:</p>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3 data-i18n="totalItems">Total de Itens</h3>
+                <p id="dashboard-total-items" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByType">Itens por Tipo</h3>
+                <ul id="dashboard-items-by-type" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="totalFolders">Total de Pastas</h3>
+                <p id="dashboard-total-folders" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByFolder">Itens por Pasta</h3>
+                <ul id="dashboard-items-by-folder" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="totalTags">Total de Tags</h3>
+                <p id="dashboard-total-tags" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="topTags">Tags Mais Usadas</h3>
+                <ul id="dashboard-top-tags" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByRating">Itens por Avaliação</h3>
+                <ul id="dashboard-items-by-rating" class="dashboard-list ratings"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="systemInfo">Informações do Sistema</h3>
+                <p><span data-i18n="currentTheme">Tema Atual:</span> <span id="dashboard-current-theme"></span></p>
+                <p><span data-i18n="currentLanguage">Idioma Atual:</span> <span id="dashboard-current-language"></span></p>
+            </div>
+            <div class="dashboard-card col-span-full">
+                <h3 data-i18n="lastAccessedItemsTitle">Últimos Acessos (Vídeos)</h3>
+                <ul id="dashboard-last-accessed-items" class="dashboard-list">
+                    </ul>
+            </div>
+            <div class="dashboard-card col-span-full">
+                <h3 data-i18n="mostAccessedItemsTitle">Vídeos Mais Acessados</h3>
+                <ul id="dashboard-most-accessed-videos" class="dashboard-list">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-save-tab" class="tab-content">
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="addNewItemTitle">Add New Item</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="item-url"
+                        type="text"
+                        placeholder="Enter or paste URL (e.g., video, photo, website)"
+                        class="flex-1"
+                        data-i18n-placeholder="itemUrlPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="item-url" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="item-tags"
+                        type="text"
+                        placeholder="Tags (e.g., inspiration, work, separated by commas)"
+                        list="saved-tags-datalist"
+                        class="flex-1"
+                        data-i18n-placeholder="itemTagsPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="item-tags" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <datalist id="saved-tags-datalist"></datalist>
+                <button id="paste-link-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg text-white font-semibold hover:from-yellow-700 hover:to-orange-700" data-i18n="pasteLinkBtn">
+                    Paste Link
+                </button>
+                <select id="item-type" class="flex-1" data-i18n="itemTypeSelect">
+                    <option value="link" data-i18n="optionLink">Link</option>
+                    <option value="video" data-i18n="optionVideo">Video</option>
+                    <option value="photo" data-i18n="optionPhoto">Photo</option>
+                </select>
+                <select id="item-folder" class="flex-1">
+                </select>
+                <button id="add-item-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg text-white font-semibold hover:from-pink-700 hover:to-purple-700" data-i18n="addItemBtn">
+                    Add Item
+                </button>
+            </div>
+            <div id="preview-container" class="mt-2 sm:mt-4 p-2 bg-white/40 rounded-lg hidden">
+                <div class="flex items-start gap-2">
+                    <img id="preview-image" src="" alt="Preview" class="add-item-preview-img">
+                    <div>
+                        <a id="preview-title" class="font-semibold text-gray-800 truncate hover:underline"></a>
+                        <p id="preview-description" class="text-sm text-gray-600 truncate"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="createNewFolderTitle">Create New Folder</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="new-folder"
+                        type="text"
+                        placeholder="New folder name"
+                        data-i18n-placeholder="newFolderNamePlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="new-folder" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <select id="folder-color" class="flex-1">
+                    <option value="bg-blue-500" data-i18n="colorBlue">Blue</option>
+                    <option value="bg-green-500" data-i18n="colorGreen">Green</option>
+                    <option value="bg-red-500" data-i18n="colorRed">Red</option>
+                    <option value="bg-purple-500" data-i18n="colorPurple">Purple</option>
+                    <option value="bg-yellow-500" data-i18n="colorYellow">Yellow</option>
+                    <option value="bg-black" data-i18n="colorBlack">Black</option>
+                    <option value="bg-teal-600" data-i18n="colorTeal">Teal</option>
+                    <option value="bg-pink-600" data-i18n="colorPink">Pink</option>
+                </select>
+                <select id="folder-icon" class="flex-1">
+                    <option value="svg/tiktok.svg" data-i18n="iconTikTok">TikTok</option>
+                    <option value="svg/kwai.svg" data-i18n="iconKwai">Kwai</option>
+                    <option value="svg/facebook.svg" data-i18n="iconFacebook">Facebook</option>
+                    <option value="svg/instagram.svg" data-i18n="iconInstagram">Instagram</option>
+                    <option value="svg/youtube.svg" data-i18n="iconYouTube">YouTube</option>
+                    <option value="svg/dailymotion.svg" data-i18n="iconDailymotion">Dailymotion</option>
+                    <option value="svg/folder.svg" data-i18n="iconFolder">Folder</option>
+                    <option value="svg/link.svg" data-i18n="iconLink">Outro Link</option>
+                </select>
+                <button id="add-folder-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg text-white font-semibold hover:from-blue-700 hover:to-teal-700" data-i18n="addFolderBtn">
+                    Add Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="folders-items-tab" class="tab-content">
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="foldersTitle">Folders</h2>
+            <div id="folders-list" class="flex flex-wrap gap-2 sm:gap-4">
+                <button id="all-items-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-gray-600 to-gray-800 rounded-lg text-white font-semibold hover:from-gray-700 hover:to-gray-900" data-i18n="allItemsBtn">
+                    All Items
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="searchItemsTitle">Search Items</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="search-query"
+                        type="text"
+                        placeholder="Search by URL or tags..."
+                        data-i18n-placeholder="searchQueryPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="search-query" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="search-tags-input"
+                        type="text"
+                        placeholder="Search by tags (comma-separated)..."
+                        list="saved-tags-datalist-search"
+                        class="flex-1"
+                        data-i18n-placeholder="searchTagsPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="search-tags-input" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <datalist id="saved-tags-datalist-search"></datalist>
+                <select id="search-type" class="flex-1">
+                    <option value="all" data-i18n="allTypes">All Types</option>
+                    <option value="link" data-i18n="optionLink">Link</option>
+                    <option value="video" data-i18n="optionVideo">Video</option>
+                    <option value="photo" data-i18n="optionPhoto">Photo</option>
+                </select>
+                <select id="search-folder" class="flex-1">
+                    <option value="all" data-i18n="allFolders">All Folders</option>
+                </select>
+                <select id="search-rating" class="flex-1">
+                    <option value="all" data-i18n="allRatings">Todas as Avaliações</option>
+                    <option value="1">1 Estrela ou mais</option>
+                    <option value="2">2 Estrelas ou mais</option>
+                    <option value="3">3 Estrelas ou mais</option>
+                    <option value="4">4 Estrelas ou mais</option>
+                    <option value="5">5 Estrelas</option>
+                    <option value="0">Não Avaliado</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="savedItemsTitle">Saved Items</h2>
+            <div id="items-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 overflow-hidden">
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="edit-folder-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-folder-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editFolderTitle">Editar Pasta</h3>
+      <div class="modal-input-group">
+        <label for="edit-folder-name" data-i18n="folderNameLabel">Nome da Pasta:</label>
+        <input type="text" id="edit-folder-name">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-folder-color" data-i18n="folderColorLabel">Cor da Pasta:</label>
+        <select id="edit-folder-color">
+          <option value="bg-blue-500" data-i18n="colorBlue">Blue</option>
+          <option value="bg-green-500" data-i18n="colorGreen">Green</option>
+          <option value="bg-red-500" data-i18n="colorRed">Red</option>
+          <option value="bg-purple-500" data-i18n="colorPurple">Purple</option>
+          <option value="bg-yellow-500" data-i18n="colorYellow">Yellow</option>
+          <option value="bg-black" data-i18n="colorBlack">Black</option>
+          <option value="bg-teal-600" data-i18n="colorTeal">Teal</option>
+          <option value="bg-pink-600" data-i18n="colorPink">Pink</option>
+        </select>
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-folder-icon" data-i18n="folderIconLabel">Ícone da Pasta:</label>
+        <select id="edit-folder-icon">
+          <option value="svg/tiktok.svg" data-i18n="iconTikTok">TikTok</option>
+          <option value="svg/kwai.svg" data-i18n="iconKwai">Kwai</option>
+          <option value="svg/facebook.svg" data-i18n="iconFacebook">Facebook</option>
+          <option value="svg/instagram.svg" data-i18n="iconInstagram">Instagram</option>
+          <option value="svg/youtube.svg" data-i18n="iconYouTube">YouTube</option>
+          <option value="svg/dailymotion.svg" data-i18n="iconDailymotion">Dailymotion</option>
+          <option value="svg/folder.svg" data-i18n="iconFolder">Folder</option>
+          <option value="svg/link.svg" data-i18n="iconLink">Outro Link</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button id="save-folder-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button id="delete-folder-from-modal-btn" class="modal-btn delete-folder" data-i18n="deleteFolderBtn">Excluir Pasta</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-folder-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-item-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-item-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editItemTitle">Editar Elemento</h3>
+      <div class="modal-input-group">
+        <label for="edit-item-url" data-i18n="urlLabel">URL:</label>
+        <input type="text" id="edit-item-url">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-tags" data-i18n="tagsLabel">Etiquetas (separadas por vírgulas):</label>
+        <input type="text" id="edit-item-tags" list="saved-tags-datalist">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-type" data-i18n="typeLabel">Tipo:</label>
+        <select id="edit-item-type">
+          <option value="link" data-i18n="optionLink">Link</option>
+          <option value="video" data-i18n="optionVideo">Video</option>
+          <option value="photo" data-i18n="optionPhoto">Photo</option>
+        </select>
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-folder" data-i18n="folderLabel">Pasta:</label>
+        <select id="edit-item-folder">
+          </select>
+      </div>
+      <div class="modal-input-group">
+          <label for="edit-item-rating" data-i18n="ratingLabel">Avaliação:</label>
+          <div id="edit-item-rating" class="star-rating justify-center">
+              <input type="radio" id="edit-star-5" name="rating-edit" value="5" /><label for="edit-star-5" title="5 estrelas">★</label>
+              <input type="radio" id="edit-star-4" name="rating-edit" value="4" /><label for="edit-star-4" title="4 estrelas">★</label>
+              <input type="radio" id="edit-star-3" name="rating-edit" value="3" /><label for="edit-star-3" title="3 estrelas">★</label>
+              <input type="radio" id="edit-star-2" name="rating-edit" value="2" /><label for="edit-star-2" title="2 estrelas">★</label>
+              <input type="radio" id="edit-star-1" name="rating-edit" value="1" /><label for="edit-star-1" title="1 estrela">★</label>
+              <input type="radio" id="edit-star-0" name="rating-edit" value="0" class="hidden" checked />
+          </div>
+      </div>
+      <div class="modal-actions">
+        <button id="save-item-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-item-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-tag-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-tag-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editTagTitle">Editar Etiqueta</h3>
+      <div class="modal-input-group">
+        <label for="edit-tag-name" data-i18n="tagNameLabel">Nome da Etiqueta:</label>
+        <input type="text" id="edit-tag-name">
+      </div>
+      <div class="modal-actions">
+        <button id="save-tag-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-tag-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="manage-data-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('manage-data-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="manageDataTitle">Gerenciar Dados</h3>
+      <div class="flex flex-col gap-4">
+        <button id="export-data-option-btn" class="modal-btn confirm" data-i18n="exportDataOption">Exportar Dados</button>
+        <label class="modal-btn confirm cursor-pointer" data-i18n="importDataOption">
+          Importar Dados
+          <input id="import-file-modal-input" type="file" accept=".json" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div id="import-selection-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('import-selection-modal').classList.add('hidden'); importFileModalInput.value='';">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="selectImportOptions">Selecionar Opções de Importação</h3>
+      <div class="modal-checkbox-group">
+        <label>
+          <input type="checkbox" id="import-items-checkbox" checked>
+          <span data-i18n="itemsCheckbox">Itens</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-folders-checkbox" checked>
+          <span data-i18n="foldersCheckbox">Pastas</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-tags-checkbox" checked>
+          <span data-i18n="tagsCheckbox">Tags</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-theme-checkbox" checked>
+          <span data-i18n="themeCheckbox">Tema</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-language-checkbox" checked>
+          <span data-i18n="languageCheckbox">Idioma</span>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="confirm-import-selection-btn" class="modal-btn confirm" data-i18n="confirmImportBtn">Confirmar Importação</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('import-selection-modal').classList.add('hidden'); importFileModalInput.value='';" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="loading-message" class="loading-message"></div>
+
+  <script>
+    // Load data from localStorage
+    let items = JSON.parse(localStorage.getItem('items')) || [];
+    // Ensure each item has 'tags', 'metadata', 'rating', and 'accessHistory' properties
+    items = items.map(item => ({
+      ...item,
+      tags: item.tags || [],
+      metadata: item.metadata || {},
+      rating: item.rating !== undefined ? item.rating : 0,
+      accessHistory: item.accessHistory || [] // Initialize accessHistory
+    }));
+
+    let folders = JSON.parse(localStorage.getItem('folders')) || [
+      { name: 'TikTok', color: 'bg-black', icon: 'svg/tiktok.svg' },
+      { name: 'Kwai', color: 'bg-yellow-500', icon: 'svg/kwai.svg' },
+      { name: 'Facebook', color: 'bg-blue-600', icon: 'svg/facebook.svg' },
+      { name: 'Instagram', color: 'bg-pink-600', icon: 'svg/instagram.svg' },
+      { name: 'YouTube', color: 'bg-red-600', icon: 'svg/youtube.svg' },
+      { name: 'Dailymotion', color: 'bg-teal-600', icon: 'svg/dailymotion.svg' },
+      { name: 'Outros Links', color: 'bg-gray-500', icon: 'svg/link.svg' }
+    ];
+    let savedTags = JSON.parse(localStorage.getItem('savedTags')) || [];
+    let theme = localStorage.getItem('theme') || 'light';
+    let currentLanguage = localStorage.getItem('language') || 'pt-BR';
+
+    let selectedFolder = null;
+    let currentEditingTag = null;
+    let importedDataCache = null; // Cache for imported data
+
+    // DOM elements
+    const itemUrlInput = document.getElementById('item-url');
+    const itemTagsInput = document.getElementById('item-tags');
+    const itemTypeSelect = document.getElementById('item-type');
+    const itemFolderSelect = document.getElementById('item-folder');
+    const addItemBtn = document.getElementById('add-item-btn');
+    const pasteLinkBtn = document.getElementById('paste-link-btn');
+    const newFolderInput = document.getElementById('new-folder');
+    const folderColorSelect = document.getElementById('folder-color');
+    const folderIconSelect = document.getElementById('folder-icon');
+    const addFolderBtn = document.getElementById('add-folder-btn');
+    const searchQueryInput = document.getElementById('search-query');
+    const searchTagsInput = document.getElementById('search-tags-input');
+    const searchTypeSelect = document.getElementById('search-type');
+    const searchFolderSelect = document.getElementById('search-folder');
+    const searchRatingSelect = document.getElementById('search-rating'); // New search rating select
+    const foldersList = document.getElementById('folders-list');
+    const allItemsBtn = document.getElementById('all-items-btn');
+    const itemsList = document.getElementById('items-list');
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const toggleThemeBtn = document.getElementById('toggle-theme-btn');
+    const clearItemsBtn = document.getElementById('clear-items-btn');
+    const manageDataBtn = document.getElementById('manage-data-btn');
+    const languageSelect = document.getElementById('language-select');
+
+    // Tag Management DOM elements
+    const newTagInput = document.getElementById('new-tag-input');
+    const addTagBtn = document.getElementById('add-tag-btn');
+    const tagsList = document.getElementById('tags-list');
+    const savedTagsDatalist = document.getElementById('saved-tags-datalist');
+    const savedTagsDatalistSearch = document.getElementById('saved-tags-datalist-search');
+
+    // Modals elements
+    const editFolderModal = document.getElementById('edit-folder-modal');
+    const editFolderNameInput = document.getElementById('edit-folder-name');
+    const editFolderColorSelect = document.getElementById('edit-folder-color');
+    const editFolderIconSelect = document.getElementById('edit-folder-icon');
+    const saveFolderChangesBtn = document.getElementById('save-folder-changes-btn');
+    const deleteFolderFromModalBtn = document.getElementById('delete-folder-from-modal-btn');
+    let currentEditingFolder = null;
+
+    const editItemModal = document.getElementById('edit-item-modal');
+    const editItemUrlInput = document.getElementById('edit-item-url');
+    const editItemTagsInput = document.getElementById('edit-item-tags');
+    const editItemTypeSelect = document.getElementById('edit-item-type');
+    const editItemFolderSelect = document.getElementById('edit-item-folder');
+    const editItemRatingInputs = document.querySelectorAll('#edit-item-rating input[name="rating-edit"]'); // Rating inputs
+    const saveItemChangesBtn = document.getElementById('save-item-changes-btn');
+    let currentEditingItem = null;
+
+    const editTagModal = document.getElementById('edit-tag-modal');
+    const editTagNameInput = document.getElementById('edit-tag-name');
+    const saveTagChangesBtn = document.getElementById('save-tag-changes-btn');
+
+    // Data Management Modal elements
+    const manageDataModal = document.getElementById('manage-data-modal');
+    const exportDataOptionBtn = document.getElementById('export-data-option-btn');
+    const importFileModalInput = document.getElementById('import-file-modal-input');
+    const loadingMessage = document.getElementById('loading-message');
+
+    // Import Selection Modal elements
+    const importSelectionModal = document.getElementById('import-selection-modal');
+    const importItemsCheckbox = document.getElementById('import-items-checkbox');
+    const importFoldersCheckbox = document.getElementById('import-folders-checkbox');
+    const importTagsCheckbox = document.getElementById('import-tags-checkbox');
+    const importThemeCheckbox = document.getElementById('import-theme-checkbox');
+    const importLanguageCheckbox = document.getElementById('import-language-checkbox');
+    const confirmImportSelectionBtn = document.getElementById('confirm-import-selection-btn');
+
+    // Tab System Elements
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Dashboard Elements
+    const dashboardTotalItems = document.getElementById('dashboard-total-items');
+    const dashboardItemsByType = document.getElementById('dashboard-items-by-type');
+    const dashboardTotalFolders = document.getElementById('dashboard-total-folders');
+    const dashboardItemsByFolder = document.getElementById('dashboard-items-by-folder');
+    const dashboardTotalTags = document.getElementById('dashboard-total-tags');
+    const dashboardTopTags = document.getElementById('dashboard-top-tags');
+    const dashboardItemsByRating = document.getElementById('dashboard-items-by-rating');
+    const dashboardCurrentTheme = document.getElementById('dashboard-current-theme');
+    const dashboardCurrentLanguage = document.getElementById('dashboard-current-language');
+    const dashboardLastAccessedItems = document.getElementById('dashboard-last-accessed-items');
+    const dashboardMostAccessedVideos = document.getElementById('dashboard-most-accessed-videos'); // New element
+
+
+    // Translation dictionary
+    window.translations = {
+      'pt-BR': {
+        appTitle: 'Organizador Liquid Glass',
+        settingsBtn: 'Configurações',
+        exportBtn: 'Exportar',
+        manageDataBtn: 'Gerenciar Dados',
+        settingsTitle: 'Configurações',
+        toggleDarkThemeBtn: 'Alternar Tema Escuro',
+        clearAllItemsBtn: 'Limpar Todos os Itens',
+        importBtn: 'Importar',
+        selectImportOptions: 'Selecionar Opções de Importação',
+        foldersCheckbox: 'Pastas',
+        itemsCheckbox: 'Itens',
+        tagsCheckbox: 'Tags',
+        themeCheckbox: 'Tema',
+        languageCheckbox: 'Idioma',
+        confirmImportBtn: 'Confirmar Importação',
+        languageLabel: 'Idioma:',
+        addNewItemTitle: 'Adicionar Novo Item',
+        itemUrlPlaceholder: 'Inserir ou colar URL (ex: vídeo, foto, site)',
+        itemTagsPlaceholder: 'Tags (ex: inspiração, trabalho, separadas por vírgulas)',
+        pasteLinkBtn: 'Colar Link',
+        optionLink: 'Link',
+        optionVideo: 'Vídeo',
+        optionPhoto: 'Foto',
+        addItemBtn: 'Adicionar Item',
+        createNewFolderTitle: 'Criar Nova Pasta',
+        newFolderNamePlaceholder: 'Nome da nova pasta',
+        colorBlue: 'Azul',
+        colorGreen: 'Verde',
+        colorRed: 'Vermelho',
+        colorPurple: 'Roxo',
+        colorYellow: 'Amarelo',
+        colorBlack: 'Preto',
+        colorTeal: 'Ciano',
+        colorPink: 'Rosa',
+        iconTikTok: 'TikTok',
+        iconKwai: 'Kwai',
+        iconFacebook: 'Facebook',
+        iconInstagram: 'Instagram',
+        iconYouTube: 'YouTube',
+        iconDailymotion: 'Dailymotion',
+        iconFolder: 'Pasta',
+        iconLink: 'Outro Link',
+        addFolderBtn: 'Adicionar Pasta',
+        foldersTitle: 'Pastas',
+        allItemsBtn: 'Todos os Itens',
+        searchItemsTitle: 'Buscar Itens',
+        searchQueryPlaceholder: 'Buscar por URL ou título/descrição...',
+        searchTagsPlaceholder: 'Buscar por tags (separadas por vírgulas)...',
+        allTypes: 'Todos os Tipos',
+        allFolders: 'Todas as Pastas',
+        allRatings: 'Todas as Avaliações',
+        savedItemsTitle: 'Itens Salvos',
+        editFolderTitle: 'Editar Pasta',
+        folderNameLabel: 'Nome da Pasta:',
+        folderColorLabel: 'Cor da Pasta:',
+        folderIconLabel: 'Ícone da Pasta:',
+        saveChangesBtn: 'Salvar Alterações',
+        deleteFolderBtn: 'Excluir Pasta',
+        cancelBtn: 'Cancelar',
+        editItemTitle: 'Editar Elemento',
+        urlLabel: 'URL:',
+        tagsLabel: 'Tags (separadas por vírgula):',
+        typeLabel: 'Tipo:',
+        folderLabel: 'Pasta:',
+        ratingLabel: 'Avaliação:',
+        copyBtn: 'Copiar',
+        editBtn: 'Editar',
+        deleteBtn: 'Excluir',
+        rateBtn: 'Avaliar',
+        noItemsFound: 'Nenhum item encontrado.',
+        itemType: 'Tipo',
+        itemFolder: 'Pasta',
+        noFolder: 'N/A',
+        youtubeVideoPrefix: 'Vídeo do YouTube',
+        youtubeVideoDescription: 'Assista a este vídeo no YouTube.',
+        dailymotionVideoPrefix: 'Vídeo do Dailymotion',
+        dailymotionVideoDescription: 'Assista a este vídeo no Dailymotion.',
+        instagramLinkPrefix: 'Link do Instagram',
+        instagramLinkDescription: 'Ver este conteúdo no Instagram.',
+        tiktokVideoPrefix: 'Vídeo do TikTok',
+        tiktokVideoDescription: 'Veja este vídeo no TikTok.',
+        kwaiVideoPrefix: 'Vídeo do Kwai',
+        kwaiVideoDescription: 'Veja este vídeo no Kwai.',
+        facebookLinkPrefix: 'Link do Facebook',
+        facebookLinkDescription: 'Veja este conteúdo no Facebook.',
+        genericLinkPrefix: 'Link',
+        genericContentFrom: 'Conteúdo de',
+        noMetadataAvailable: 'Nenhum metadado disponível',
+        noPreview: 'Sem Pré-visualização',
+        loadingPreview: 'Carregando pré-visualização...',
+        fetchingPreview: 'Buscando pré-visualização...',
+        invalidUrl: 'Link Inválido',
+        enterValidUrl: 'Por favor, insira uma URL válida.',
+        pasteFailed: 'Falha ao colar: O navegador pode ter impedido o acesso à área de transferência.',
+        urlCopied: 'URL copiada para a área de transferência!',
+        copyFailed: 'Falha ao copiar: Por favor, tente copiar manualmente.',
+        confirmDeleteItem: 'Tem certeza de que deseja excluir este item?',
+        confirmClearAllItems: 'Tem certeza de que deseja limpar todos os itens?',
+        confirmImport: 'Confirmar importação? Isso pode substituir dados existentes. Você pode escolher quais dados importar.',
+        folderAlreadyExists: (name) => `A pasta "${name}" já existe.`,
+        folderNameEmpty: 'Por favor, insira um nome para a pasta.',
+        confirmDeleteFolder: (name, linksCount) => {
+            if (linksCount > 0) {
+                return `Tem certeza de que deseja excluir a pasta "${name}"? Todos os ${linksCount} links dentro dela serão movidos para "All Items".`;
+            } else {
+                return `Tem certeza de que deseja excluir a pasta "${name}"? Não há links nesta pasta.`;
+            }
+        },
+        invalidJsonFile: 'Arquivo JSON inválido.',
+        yesBtn: 'Sim',
+        noBtn: 'Não',
+        okBtn: 'OK',
+        manageTagsTitle: 'Gerenciar Tags',
+        newTagPlaceholder: 'Nome da nova tag',
+        addTagBtn: 'Adicionar Tag',
+        editTagTitle: 'Editar Tag',
+        tagNameLabel: 'Nome da Tag:',
+        itemsInFolder: 'itens',
+        dashboardTab: 'Dashboard',
+        createSaveTab: 'Criar/Salvar Links',
+        foldersItemsTab: 'Pastas & Itens Salvos',
+        dashboardTitle: 'Dashboard',
+        dashboardContent: 'Bem-vindo ao seu painel! Aqui você encontrará um resumo de seus dados.',
+        totalItems: 'Total de Itens',
+        itemsByType: 'Itens por Tipo',
+        totalFolders: 'Total de Pastas',
+        itemsByFolder: 'Itens por Pasta',
+        totalTags: 'Total de Tags',
+        topTags: 'Tags Mais Usadas',
+        itemsByRating: 'Itens por Avaliação',
+        systemInfo: 'Informações do Sistema',
+        currentTheme: 'Tema Atual:',
+        currentLanguage: 'Idioma Atual:',
+        linkType: 'Link',
+        videoType: 'Vídeo',
+        photoType: 'Foto',
+        noRating: 'Não Avaliado',
+        star: 'Estrela',
+        stars: 'Estrelas',
+        noFolderAssigned: 'Não atribuído',
+        dataPlaceholder: 'Nenhum dado',
+        lastAccessedItemsTitle: 'Últimos Acessos (Vídeos)',
+        accessedOn: 'Acessado em',
+        mostAccessedItemsTitle: 'Vídeos Mais Acessados',
+        copyIdBtn: 'Copiar ID' /* Changed from copyTagsBtn */
+      },
+      'en': {
+        appTitle: 'Liquid Glass Organizer',
+        settingsBtn: 'Settings',
+        exportBtn: 'Export',
+        manageDataBtn: 'Manage Data',
+        settingsTitle: 'Settings',
+        toggleDarkThemeBtn: 'Toggle Dark Theme',
+        clearAllItemsBtn: 'Clear All Items',
+        importBtn: 'Import',
+        selectImportOptions: 'Select Import Options',
+        foldersCheckbox: 'Folders',
+        itemsCheckbox: 'Items',
+        tagsCheckbox: 'Tags',
+        themeCheckbox: 'Theme',
+        languageCheckbox: 'Language',
+        confirmImportBtn: 'Confirm Import',
+        languageLabel: 'Language:',
+        addNewItemTitle: 'Add New Item',
+        itemUrlPlaceholder: 'Enter or paste URL (e.g., video, photo, website)',
+        itemTagsPlaceholder: 'Tags (e.g., inspiration, work, separated by commas)',
+        pasteLinkBtn: 'Paste Link',
+        optionLink: 'Link',
+        optionVideo: 'Video',
+        optionPhoto: 'Photo',
+        addItemBtn: 'Add Item',
+        createNewFolderTitle: 'Create New Folder',
+        newFolderNamePlaceholder: 'New folder name',
+        colorBlue: 'Blue',
+        colorGreen: 'Green',
+        colorRed: 'Red',
+        colorPurple: 'Purple',
+        colorYellow: 'Yellow',
+        colorBlack: 'Black',
+        colorTeal: 'Teal',
+        colorPink: 'Pink',
+        iconTikTok: 'TikTok',
+        iconKwai: 'Kwai',
+        iconFacebook: 'Facebook',
+        iconInstagram: 'Instagram',
+        iconYouTube: 'YouTube',
+        iconDailymotion: 'Dailymotion',
+        iconFolder: 'Folder',
+        iconLink: 'Other Link',
+        addFolderBtn: 'Add Folder',
+        foldersTitle: 'Folders',
+        allItemsBtn: 'All Items',
+        searchItemsTitle: 'Search Items',
+        searchQueryPlaceholder: 'Search by URL or title/description...',
+        searchTagsPlaceholder: 'Search by tags (comma-separated)...',
+        allTypes: 'All Types',
+        allFolders: 'All Folders',
+        allRatings: 'All Ratings',
+        savedItemsTitle: 'Saved Items',
+        editFolderTitle: 'Edit Folder',
+        folderNameLabel: 'Folder Name:',
+        folderColorLabel: 'Folder Color:',
+        folderIconLabel: 'Folder Icon:',
+        saveChangesBtn: 'Save Changes',
+        deleteFolderBtn: 'Delete Folder',
+        cancelBtn: 'Cancel',
+        editItemTitle: 'Edit Item',
+        urlLabel: 'URL:',
+        tagsLabel: 'Tags (comma-separated):',
+        typeLabel: 'Type:',
+        folderLabel: 'Folder:',
+        ratingLabel: 'Rating:',
+        copyBtn: 'Copy',
+        editBtn: 'Edit',
+        deleteBtn: 'Delete',
+        rateBtn: 'Rate',
+        noItemsFound: 'No items found.',
+        itemType: 'Type',
+        itemFolder: 'Folder',
+        noFolder: 'N/A',
+        youtubeVideoPrefix: 'YouTube Video',
+        youtubeVideoDescription: 'Watch this video on YouTube.',
+        dailymotionVideoPrefix: 'Dailymotion Video',
+        dailymotionVideoDescription: 'Watch this video on Dailymotion.',
+        instagramLinkPrefix: 'Instagram Link',
+        instagramLinkDescription: 'View this content on Instagram.',
+        tiktokVideoPrefix: 'TikTok Video',
+        tiktokVideoDescription: 'View this video on TikTok.',
+        kwaiVideoPrefix: 'Kwai Video',
+        kwaiVideoDescription: 'View this video on Kwai.',
+        facebookLinkPrefix: 'Facebook Link',
+        facebookLinkDescription: 'View this content on Facebook.',
+        genericLinkPrefix: 'Link',
+        genericContentFrom: 'Content from',
+        noMetadataAvailable: 'No metadata available',
+        noPreview: 'No Preview',
+        loadingPreview: 'Loading preview...',
+        fetchingPreview: 'Fetching preview...',
+        invalidUrl: 'Invalid Link',
+        enterValidUrl: 'Please enter a valid URL.',
+        pasteFailed: 'Paste failed: Browser may have blocked clipboard access.',
+        urlCopied: 'URL copied to clipboard!',
+        copyFailed: 'Copy failed: Please try copying manually.',
+        confirmDeleteItem: 'Are you sure you want to delete this item?',
+        confirmClearAllItems: 'Are you sure you want to clear all items?',
+        confirmImport: 'Confirm import? This may overwrite existing data. You can choose which data to import.',
+        folderAlreadyExists: (name) => `Folder "${name}" already exists.`,
+        folderNameEmpty: 'Please enter a folder name.',
+        confirmDeleteFolder: (name, linksCount) => {
+            if (linksCount > 0) {
+                return `Are you sure you want to delete folder "${name}"? All ${linksCount} links inside it will be moved to "All Items".`;
+            } else {
+                return `Are you sure you want to delete folder "${name}"? There are no links in this folder.`;
+            }
+        },
+        invalidJsonFile: 'Invalid JSON file.',
+        yesBtn: 'Yes',
+        noBtn: 'No',
+        okBtn: 'OK',
+        manageTagsTitle: 'Manage Tags',
+        newTagPlaceholder: 'New tag name',
+        addTagBtn: 'Add Tag',
+        editTagTitle: 'Edit Tag',
+        tagNameLabel: 'Tag Name:',
+        itemsInFolder: 'items',
+        dashboardTab: 'Dashboard',
+        createSaveTab: 'Create/Save Links',
+        foldersItemsTab: 'Folders & Saved Items',
+        dashboardTitle: 'Dashboard',
+        dashboardContent: 'Welcome to your dashboard! Here you will find a summary of your data.',
+        totalItems: 'Total Items',
+        itemsByType: 'Items by Type',
+        totalFolders: 'Total Folders',
+        itemsByFolder: 'Items by Folder',
+        totalTags: 'Total Tags',
+        topTags: 'Most Used Tags',
+        itemsByRating: 'Items by Rating',
+        systemInfo: 'System Info',
+        currentTheme: 'Current Theme:',
+        currentLanguage: 'Current Language:',
+        linkType: 'Link',
+        videoType: 'Video',
+        photoType: 'Photo',
+        noRating: 'Not Rated',
+        star: 'Star',
+        stars: 'Stars',
+        noFolderAssigned: 'Not assigned',
+        dataPlaceholder: 'No data',
+        lastAccessedItemsTitle: 'Last Accessed Items (Videos)',
+        accessedOn: 'Accessed on',
+        mostAccessedItemsTitle: 'Most Accessed Videos',
+        copyIdBtn: 'Copy ID'
+      },
+      'es': {
+        appTitle: 'Organizador Vidrio Líquido',
+        settingsBtn: 'Ajustes',
+        exportBtn: 'Exportar',
+        manageDataBtn: 'Gestionar Datos',
+        settingsTitle: 'Ajustes',
+        toggleDarkThemeBtn: 'Alternar Tema Oscuro',
+        clearAllItemsBtn: 'Borrar Todos los Elementos',
+        importBtn: 'Importar',
+        selectImportOptions: 'Seleccionar Opciones de Importación',
+        foldersCheckbox: 'Carpetas',
+        itemsCheckbox: 'Elementos',
+        tagsCheckbox: 'Etiquetas',
+        themeCheckbox: 'Tema',
+        languageCheckbox: 'Idioma',
+        confirmImportBtn: 'Confirmar Importación',
+        languageLabel: 'Idioma:',
+        addNewItemTitle: 'Añadir Nuevo Elemento',
+        itemUrlPlaceholder: 'Introducir o pegar URL (ej: vídeo, foto, sitio web)',
+        itemTagsPlaceholder: 'Etiquetas (ej: inspiración, trabajo, separadas por comas)',
+        pasteLinkBtn: 'Pegar Enlace',
+        optionLink: 'Enlace',
+        optionVideo: 'Vídeo',
+        optionPhoto: 'Foto',
+        addItemBtn: 'Añadir Elemento',
+        createNewFolderTitle: 'Crear Nueva Carpeta',
+        newFolderNamePlaceholder: 'Nombre de la nueva carpeta',
+        colorBlue: 'Azul',
+        colorGreen: 'Verde',
+        colorRed: 'Rojo',
+        colorPurple: 'Morado',
+        colorYellow: 'Amarillo',
+        colorBlack: 'Negro',
+        colorTeal: 'Cian',
+        colorPink: 'Rosa',
+        iconTikTok: 'TikTok',
+        iconKwai: 'Kwai',
+        iconFacebook: 'Facebook',
+        iconInstagram: 'Instagram',
+        iconYouTube: 'YouTube',
+        iconDailymotion: 'Dailymotion',
+        iconFolder: 'Carpeta',
+        iconLink: 'Otro Enlace',
+        addFolderBtn: 'Añadir Carpeta',
+        foldersTitle: 'Carpetas',
+        allItemsBtn: 'Todos los Elementos',
+        searchItemsTitle: 'Buscar Elementos',
+        searchQueryPlaceholder: 'Buscar por URL o título/descripción...',
+        searchTagsPlaceholder: 'Buscar por etiquetas (separadas por comas)...',
+        allTypes: 'Todos los Tipos',
+        allFolders: 'Todas las Carpetas',
+        allRatings: 'Todas las Valoraciones',
+        savedItemsTitle: 'Elementos Guardados',
+        editFolderTitle: 'Editar Carpeta',
+        folderNameLabel: 'Nombre de la Carpeta:',
+        folderColorLabel: 'Color de la Carpeta:',
+        folderIconLabel: 'Icono de la Carpeta:',
+        saveChangesBtn: 'Guardar Cambios',
+        deleteFolderBtn: 'Eliminar Carpeta',
+        cancelBtn: 'Cancelar',
+        editItemTitle: 'Editar Elemento',
+        urlLabel: 'URL:',
+        tagsLabel: 'Etiquetas (separadas por comas):',
+        typeLabel: 'Tipo:',
+        folderLabel: 'Carpeta:',
+        ratingLabel: 'Valoración:',
+        copyBtn: 'Copiar',
+        editBtn: 'Editar',
+        deleteBtn: 'Eliminar',
+        rateBtn: 'Valorar',
+        noItemsFound: 'No se encontraron elementos.',
+        itemType: 'Tipo',
+        itemFolder: 'Carpeta',
+        noFolder: 'N/A',
+        youtubeVideoPrefix: 'Video de YouTube',
+        youtubeVideoDescription: 'Mira este video en YouTube.',
+        dailymotionVideoPrefix: 'Video de Dailymotion',
+        dailymotionVideoDescription: 'Mira este video en Dailymotion.',
+        instagramLinkPrefix: 'Enlace de Instagram',
+        instagramLinkDescription: 'Ver este contenido en Instagram.',
+        tiktokVideoPrefix: 'Video de TikTok',
+        tiktokVideoDescription: 'Mira este video en TikTok.',
+        kwaiVideoPrefix: 'Video de Kwai',
+        kwaiVideoDescription: 'Mira este video en Kwai.',
+        facebookLinkPrefix: 'Enlace de Facebook',
+        facebookLinkDescription: 'Ver este contenido en Facebook.',
+        genericLinkPrefix: 'Enlace',
+        genericContentFrom: 'Contenido de',
+        noMetadataAvailable: 'No hay metadatos disponibles',
+        noPreview: 'Sin Vista Previa',
+        loadingPreview: 'Cargando vista previa...',
+        fetchingPreview: 'Obteniendo vista previa...',
+        invalidUrl: 'Enlace Inválido',
+        enterValidUrl: 'Por favor, introduce una URL válida.',
+        pasteFailed: 'Error al pegar: El navegador pudo haber bloqueado el acceso al portapapeles.',
+        urlCopied: '¡URL copiada al portapapeles!',
+        copyFailed: 'Error al copiar: Por favor, intenta copiar manualmente.',
+        confirmDeleteItem: '¿Estás seguro de que quieres eliminar este elemento?',
+        confirmClearAllItems: '¿Estás seguro de que quieres borrar todos los elementos?',
+        confirmImport: '¿Estás seguro de que quieres importar los datos seleccionados? Esto sobrescribirá tus datos existentes.',
+        folderAlreadyExists: (name) => `La carpeta "${name}" ya existe.`,
+        folderNameEmpty: 'Por favor, introduce un nombre para la carpeta.',
+        confirmDeleteFolder: (name, linksCount) => {
+            if (linksCount > 0) {
+                return `¿Estás seguro de que quieres eliminar la carpeta "${name}"? Todos los ${linksCount} enlaces dentro de ella se moverán a "Todos los Elementos".`;
+            } else {
+                return `¿Estás seguro de que quieres eliminar la carpeta "${name}"? No hay enlaces en esta carpeta.`;
+            }
+        },
+        invalidJsonFile: 'Archivo JSON inválido. Asegúrate de que sea un JSON válido.',
+        yesBtn: 'Sí',
+        noBtn: 'No',
+        okBtn: 'OK',
+        manageTagsTitle: 'Administrar Etiquetas',
+        newTagPlaceholder: 'Nombre de la nueva etiqueta',
+        addTagBtn: 'Añadir Etiqueta',
+        editTagTitle: 'Editar Etiqueta',
+        tagNameLabel: 'Nombre de la Etiqueta:',
+        itemsInFolder: 'elementos',
+        dashboardTab: 'Dashboard',
+        createSaveTab: 'Crear/Guardar Enlaces',
+        foldersItemsTab: 'Carpetas y Elementos Guardados',
+        dashboardTitle: 'Dashboard',
+        dashboardContent: '¡Bienvenido a tu panel! Aquí encontrarás un resumen de tus datos.',
+        totalItems: 'Total de Elementos',
+        itemsByType: 'Elementos por Tipo',
+        totalFolders: 'Total de Carpetas',
+        itemsByFolder: 'Elementos por Carpeta',
+        totalTags: 'Total de Etiquetas',
+        topTags: 'Etiquetas Más Usadas',
+        itemsByRating: 'Elementos por Valoración',
+        systemInfo: 'Información del Sistema',
+        currentTheme: 'Tema Actual:',
+        currentLanguage: 'Idioma Actual:',
+        linkType: 'Enlace',
+        videoType: 'Video',
+        photoType: 'Foto',
+        noRating: 'No Valorado',
+        star: 'Estrella',
+        stars: 'Estrellas',
+        noFolderAssigned: 'No asignado',
+        dataPlaceholder: 'No hay datos',
+        lastAccessedItemsTitle: 'Últimos Elementos Accedidos (Vídeos)',
+        accessedOn: 'Accedido el',
+        mostAccessedItemsTitle: 'Elementos Más Accedidos',
+        copyIdBtn: 'Copiar ID'
+      }
+    };
+
+    // Tab switching logic
+    function showTab(tabId) {
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+        tabButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab-button[data-tab="${tabId.replace('-tab', '')}"]`).classList.add('active');
+
+        // Re-render items and dashboard when switching to their respective tabs
+        if (tabId === 'folders-items-tab') {
+            renderItems();
+            updateFolderSelects(); // Ensure folder counts are updated
+        } else if (tabId === 'dashboard-tab') {
+            updateDashboard();
+        }
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab + '-tab';
+            showTab(tabId);
+        });
+    });
+
+    // Function to extract video ID based on URL type
+    function getVideoIdFromUrl(url, type) {
+        if (!url) return null;
+
+        if (type === 'youtube') {
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        } else if (type === 'dailymotion') {
+            const regex = /(?:dailymotion\.com\/(?:video|embed)\/|dai\.ly\/)([a-zA-Z0-9]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        } else if (type === 'tiktok') {
+            const regex = /(?:tiktok\.com\/@(?:[a-zA-Z0-9_]+\/video|v)\/)([0-9]+)/;
+            const match = regex.exec(url);
+            return match ? match[1] : null;
+        } else if (type === 'kwai') {
+            const regex = /(?:kwai\.com\/(?:photo|video)\/)([0-9]+)/;
+            const match = regex.exec(url);
+            return match ? match[1] : null;
+        } else if (type === 'facebook') {
+            // Facebook links often don't have a simple embed ID, returning full URL or a placeholder
+            return 'facebook-video'; // Placeholder for Facebook if specific ID isn't easily extractable
+        }
+        return null; // For other types or if no ID found
+    }
+
+    // Dashboard Data Aggregation and Rendering
+    function updateDashboard() {
+        // Total Items
+        dashboardTotalItems.textContent = items.length;
+
+        // Items by Type
+        const itemsByTypeCounts = items.reduce((acc, item) => {
+            acc[item.type] = (acc[item.type] || 0) + 1;
+            return acc;
+        }, {});
+        dashboardItemsByType.innerHTML = '';
+        if (Object.keys(itemsByTypeCounts).length > 0) {
+            for (const type in itemsByTypeCounts) {
+                const typeName = window.translations[currentLanguage][`${type}Type`] || type;
+                dashboardItemsByType.innerHTML += `<li><span>${typeName}:</span> <span>${itemsByTypeCounts[type]}</span></li>`;
+            }
+        } else {
+            dashboardItemsByType.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+
+
+        // Total Folders
+        dashboardTotalFolders.textContent = folders.length;
+
+        // Items by Folder
+        const itemsByFolderCounts = items.reduce((acc, item) => {
+            const folderName = item.folder || window.translations[currentLanguage]['noFolderAssigned'];
+            acc[folderName] = (acc[folderName] || 0) + 1;
+            return acc;
+        }, {});
+        dashboardItemsByFolder.innerHTML = '';
+        if (Object.keys(itemsByFolderCounts).length > 0) {
+            // Sort by count descending, then by name ascending
+            const sortedFolders = Object.entries(itemsByFolderCounts).sort(([nameA, countA], [nameB, countB]) => {
+                if (countB !== countA) return countB - countA;
+                return nameA.localeCompare(nameB);
+            });
+            sortedFolders.forEach(([folderName, count]) => {
+                dashboardItemsByFolder.innerHTML += `<li><span>${folderName}:</span> <span>${count}</span></li>`;
+            });
+        } else {
+            dashboardItemsByFolder.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+        
+
+        // Total Tags
+        dashboardTotalTags.textContent = savedTags.length;
+
+        // Top Used Tags
+        const tagCounts = {};
+        items.forEach(item => {
+            if (item.tags) {
+                item.tags.forEach(tag => {
+                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                });
+            }
+        });
+        const sortedTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a).slice(0, 5);
+        dashboardTopTags.innerHTML = '';
+        if (sortedTags.length > 0) {
+            sortedTags.forEach(([tag, count]) => {
+                dashboardTopTags.innerHTML += `<li><span>${tag}:</span> <span>${count}</span></li>`;
+            });
+        } else {
+            dashboardTopTags.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+
+        // Items by Rating
+        const ratingCounts = items.reduce((acc, item) => {
+            const rating = item.rating !== undefined ? item.rating : 0;
+            acc[rating] = (acc[rating] || 0) + 1;
+            return acc;
+        }, {});
+        dashboardItemsByRating.innerHTML = '';
+        const sortedRatings = Object.keys(ratingCounts).sort((a, b) => b - a); // Sort from 5 to 0
+        if (sortedRatings.length > 0) {
+            sortedRatings.forEach(rating => {
+                const displayRating = parseInt(rating) === 0 
+                    ? window.translations[currentLanguage]['noRating'] 
+                    : '★'.repeat(parseInt(rating)) + (parseInt(rating) === 1 ? ` (${window.translations[currentLanguage]['star']})` : ` (${window.translations[currentLanguage]['stars']})`);
+                dashboardItemsByRating.innerHTML += `<li><span>${displayRating}:</span> <span>${ratingCounts[rating]}</span></li>`;
+            });
+        } else {
+            dashboardItemsByRating.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+
+
+        // System Info
+        dashboardCurrentTheme.textContent = theme === 'light' ? 'Light' : 'Dark';
+        dashboardCurrentLanguage.textContent = currentLanguage;
+
+        // Last Accessed Items (Videos Only) - Limited to 5
+        const allVideoAccesses = [];
+        items.filter(item => item.type === 'video' && item.accessHistory && item.accessHistory.length > 0).forEach(videoItem => {
+            videoItem.accessHistory.forEach(timestamp => {
+                allVideoAccesses.push({
+                    item: videoItem,
+                    timestamp: timestamp
+                });
+            });
+        });
+
+        allVideoAccesses.sort((a, b) => b.timestamp - a.timestamp); // Sort by most recent access
+        const lastAccessedVideos = allVideoAccesses.slice(0, 5); // Get top 5
+
+        dashboardLastAccessedItems.innerHTML = '';
+        if (lastAccessedVideos.length > 0) {
+            lastAccessedVideos.forEach(access => {
+                const accessDate = new Date(access.timestamp).toLocaleDateString(currentLanguage, { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const accessTime = new Date(access.timestamp).toLocaleTimeString(currentLanguage, { hour: '2-digit', minute: '2-digit' });
+                const videoId = getVideoIdFromUrl(access.item.url, access.item.type);
+
+                dashboardLastAccessedItems.innerHTML += `
+                    <li>
+                        <div class="item-info-row">
+                            <img src="${access.item.metadata.image}" alt="Thumb" class="item-thumbnail" onerror="this.src='https://placehold.co/40?text=No+Preview'">
+                            <span>${access.item.metadata.title}</span>
+                        </div>
+                        <span>${window.translations[currentLanguage]['accessedOn']} ${accessDate} ${accessTime}</span>
+                        <button class="copy-id-btn" data-video-id="${videoId || access.item.url}" data-item-type="${access.item.type}" data-url="${access.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
+                            ${window.translations[currentLanguage]['copyIdBtn']}
+                        </button>
+                    </li>`;
+            });
+        } else {
+            dashboardLastAccessedItems.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+
+        // Most Accessed Videos (by total count) - Limited to 5
+        const videoAccessCounts = {};
+        items.filter(item => item.type === 'video').forEach(videoItem => {
+            videoAccessCounts[videoItem.id] = (videoItem.accessHistory ? videoItem.accessHistory.length : 0);
+        });
+        const sortedMostAccessedVideos = Object.entries(videoAccessCounts)
+            .map(([id, count]) => {
+                const item = items.find(i => i.id == id);
+                return { item, count };
+            })
+            .filter(entry => entry.item && entry.count > 0)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5); // Top 5 most accessed videos
+
+        dashboardMostAccessedVideos.innerHTML = '';
+        if (sortedMostAccessedVideos.length > 0) {
+            sortedMostAccessedVideos.forEach(entry => {
+                const videoId = getVideoIdFromUrl(entry.item.url, entry.item.type);
+                dashboardMostAccessedVideos.innerHTML += `
+                    <li>
+                        <div class="item-info-row">
+                            <img src="${entry.item.metadata.image}" alt="Thumb" class="item-thumbnail" onerror="this.src='https://placehold.co/40?text=No+Preview'">
+                            <span>${entry.item.metadata.title}:</span> <span>${entry.count} ${window.translations[currentLanguage]['accesses']}</span>
+                        </div>
+                        <button class="copy-id-btn" data-video-id="${videoId || entry.item.url}" data-item-type="${entry.item.type}" data-url="${entry.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
+                            ${window.translations[currentLanguage]['copyIdBtn']}
+                        </button>
+                    </li>`;
+            });
+        } else {
+            dashboardMostAccessedVideos.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
+        }
+
+        // Add event listeners for new copy ID buttons
+        document.querySelectorAll('.dashboard-list .copy-id-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const videoIdOrUrl = e.target.dataset.videoId;
+                const itemType = e.target.dataset.itemType;
+                const originalUrl = e.target.dataset.url;
+
+                let contentToCopy = videoIdOrUrl;
+
+                // Handle cases where a simple ID might not be available or URL is more useful
+                if (!videoIdOrUrl && (itemType === 'facebook' || itemType === 'instagram')) {
+                    contentToCopy = originalUrl;
+                }
+
+                if (contentToCopy) {
+                    navigator.clipboard.writeText(contentToCopy)
+                        .then(() => showCustomModal(`ID/URL copied: ${contentToCopy}`, window.translations[currentLanguage]['okBtn']))
+                        .catch(err => {
+                            console.error('Failed to copy ID/URL:', err);
+                            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']);
+                        });
+                    // Switch to "Folders & Saved Items" tab and populate search bar
+                    showTab('folders-items-tab');
+                    searchQueryInput.value = contentToCopy;
+                    searchItems();
+                }
+            });
+        });
+    }
+
+
+    // Apply theme
+    function applyTheme() {
+      document.body.className = theme;
+      toggleThemeBtn.textContent = `Toggle ${theme === 'light' ? 'Dark' : 'Light'} Theme`;
+      localStorage.setItem('theme', theme);
+      // Update header text color based on theme
+      const appTitle = document.querySelector('h1[data-i18n="appTitle"]');
+      const settingsTitle = document.querySelector('h2[data-i18n="settingsTitle"]');
+      const languageLabel = document.querySelector('label[data-i18n="languageLabel"]');
+      const manageTagsTitle = document.querySelector('h3[data-i18n="manageTagsTitle"]');
+      const addNewItemTitle = document.querySelector('#create-save-tab h2[data-i18n="addNewItemTitle"]');
+      const createNewFolderTitle = document.querySelector('#create-save-tab h2[data-i18n="createNewFolderTitle"]');
+      const foldersTitle = document.querySelector('#folders-items-tab h2[data-i18n="foldersTitle"]');
+      const searchItemsTitle = document.querySelector('#folders-items-tab h2[data-i18n="searchItemsTitle"]');
+      const savedItemsTitle = document.querySelector('#folders-items-tab h2[data-i18n="savedItemsTitle"]');
+      const dashboardTitle = document.querySelector('#dashboard-tab h2[data-i18n="dashboardTitle"]');
+      const dashboardContent = document.querySelector('#dashboard-tab p[data-i18n="dashboardContent"]');
+
+      const textElements = [
+        appTitle, settingsTitle, languageLabel, manageTagsTitle,
+        addNewItemTitle, createNewFolderTitle, foldersTitle,
+        searchItemsTitle, savedItemsTitle, dashboardTitle, dashboardContent
+      ];
+
+      textElements.forEach(element => {
+        if (element) {
+          if (theme === 'light') {
+            element.classList.remove('text-white');
+            element.classList.add('text-gray-800');
+          } else {
+            element.classList.remove('text-gray-800');
+            element.classList.add('text-white');
+          }
+        }
+      });
+
+      // Update preview container background
+      const previewContainer = document.getElementById('preview-container');
+      const previewTitle = document.getElementById('preview-title');
+      const previewDescription = document.getElementById('preview-description');
+
+      if (previewContainer) {
+        if (theme === 'light') {
+          previewContainer.classList.remove('bg-white/10');
+          previewContainer.classList.add('bg-white/40');
+          previewTitle.classList.remove('text-white');
+          previewTitle.classList.add('text-gray-800');
+          previewDescription.classList.remove('text-gray-200');
+          previewDescription.classList.add('text-gray-600');
+        } else {
+          previewContainer.classList.remove('bg-white/40');
+          previewContainer.classList.add('bg-white/10');
+          previewTitle.classList.remove('text-gray-800');
+          previewTitle.classList.add('text-white');
+          previewDescription.classList.remove('text-gray-600');
+          previewDescription.classList.add('text-gray-200');
+        }
+      }
+
+      // Update modal content colors
+      const modalContents = document.querySelectorAll('.modal-content');
+      modalContents.forEach(modal => {
+        const labels = modal.querySelectorAll('.modal-input-group label');
+        const inputs = modal.querySelectorAll('.modal-input-group input, .modal-input-group select');
+        const closeBtn = modal.querySelector('.modal-close-btn');
+
+        if (theme === 'light') {
+            modal.style.backgroundColor = '#fff';
+            modal.style.color = '#333';
+            modal.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
+            closeBtn.style.color = '#888';
+            closeBtn.onmouseover = () => closeBtn.style.color = '#333';
+            closeBtn.onmouseout = () => closeBtn.style.color = '#888';
+
+            labels.forEach(label => label.style.color = '#333');
+            inputs.forEach(input => {
+                input.style.backgroundColor = '#f0f0f0';
+                input.style.borderColor = '#ddd';
+                input.style.color = '#333';
+            });
+        } else {
+            modal.style.backgroundColor = '#2a2a2a';
+            modal.style.color = '#e0e7ff';
+            modal.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.6)';
+            closeBtn.style.color = '#bbb';
+            closeBtn.onmouseover = () => closeBtn.style.color = '#fff';
+            closeBtn.onmouseout = () => closeBtn.style.color = '#bbb';
+
+            labels.forEach(label => label.style.color = '#e0e7ff');
+            inputs.forEach(input => {
+                input.style.backgroundColor = '#3a3a3a';
+                input.style.borderColor = '#555';
+                input.style.color = '#e0e7ff';
+            });
+        }
+      });
+      // Update tag-item background and text color
+      document.querySelectorAll('.tag-item').forEach(tagItem => {
+          if (theme === 'light') {
+              tagItem.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+              tagItem.style.color = '#333';
+          } else {
+              tagItem.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+              tagItem.style.color = 'white';
+          }
+      });
+      // Update .icon-svg filter
+      document.querySelectorAll('.icon-svg').forEach(icon => {
+          if (theme === 'light') {
+              icon.style.filter = 'invert(0)';
+          } else {
+              icon.style.filter = 'invert(1)';
+          }
+      });
+
+      // Update dashboard cards
+      document.querySelectorAll('.dashboard-card').forEach(card => {
+          if (theme === 'light') {
+              card.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+              card.style.borderColor = 'rgba(255, 255, 255, 0.7)';
+              card.style.boxShadow = '0 4px 10px rgba(0,0,0,0.05)';
+              card.style.color = '#333';
+              card.querySelector('h3').style.color = '#007bff';
+          } else {
+              card.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+              card.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+              card.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+              card.style.color = '#e0e7ff';
+              card.querySelector('h3').style.color = '#4ecdc4';
+          }
+      });
+    }
+
+    // Function to apply selected language
+    function applyLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('language', currentLanguage);
+
+      // Update static text content
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (window.translations[currentLanguage] && window.translations[currentLanguage][key]) {
+          element.textContent = window.translations[currentLanguage][key];
+        }
+      });
+
+      // Update placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (window.translations[currentLanguage] && window.translations[currentLanguage][key]) {
+          element.placeholder = window.translations[currentLanguage][key];
+        }
+      });
+
+      // Special case for Toggle Dark Theme button, as its text changes
+      toggleThemeBtn.textContent = window.translations[currentLanguage]['toggleDarkThemeBtn'];
+
+      // Re-render dynamic content that uses translations
+      updateFolderSelects();
+      updateSavedTagsList();
+      renderItems(items);
+      updateDashboard(); // Update dashboard content with new language
+    }
+
+    // Update folder select options
+    function updateFolderSelects() {
+      // Helper function to create an option element with an SVG
+      const createOptionWithSVG = (value, textKey, iconPath) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.setAttribute('data-i18n', textKey); // Keep data-i18n for translation
+        // Use innerHTML for SVG img tag
+        option.innerHTML = `<img src="${iconPath}" alt="" class="icon-svg inline-block"> ${window.translations[currentLanguage][textKey]}`;
+        return option;
+      };
+
+      // Define a lista de opções de ícones de pastas para os selects
+      const folderIconOptions = [
+        { value: "svg/tiktok.svg", textKey: "iconTikTok" },
+        { value: "svg/kwai.svg", textKey: "iconKwai" },
+        { value: "svg/facebook.svg", textKey: "iconFacebook" },
+        { value: "svg/instagram.svg", textKey: "iconInstagram" },
+        { value: "svg/youtube.svg", textKey: "iconYouTube" },
+        { value: "svg/dailymotion.svg", textKey: "iconDailymotion" },
+        { value: "svg/folder.svg", textKey: "iconFolder" },
+        { value: "svg/link.svg", textKey: "iconLink" }
+      ];
+
+
+      // Update itemFolderSelect (Add Item Section)
+      itemFolderSelect.innerHTML = '';
+      folders.forEach(folder => {
+        const option = document.createElement('option');
+        option.value = folder.name;
+        option.innerHTML = `<img src="${folder.icon}" alt="" class="icon-svg inline-block"> ${folder.name}`;
+        itemFolderSelect.appendChild(option);
+      });
+      
+      // Update searchFolderSelect (Search Bar Section)
+      searchFolderSelect.innerHTML = `<option value="all" data-i18n="allFolders">${window.translations[currentLanguage]['allFolders']}</option>`;
+      folders.forEach(folder => {
+        const option = document.createElement('option');
+        option.value = folder.name;
+        option.innerHTML = `<img src="${folder.icon}" alt="" class="icon-svg inline-block"> ${folder.name}`;
+        searchFolderSelect.appendChild(option);
+      });
+      
+      // Update editItemFolderSelect (Edit Item Modal)
+      editItemFolderSelect.innerHTML = `<option value="">${window.translations[currentLanguage]['noFolder']}</option>`;
+      folders.forEach(folder => {
+        const option = document.createElement('option');
+        option.value = folder.name;
+        option.innerHTML = `<img src="${folder.icon}" alt="" class="icon-svg inline-block"> ${folder.name}`;
+        editItemFolderSelect.appendChild(option);
+      });
+      
+      // Update foldersList (Folders Section)
+      foldersList.innerHTML = `<button id="all-items-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-gray-600 to-gray-800 rounded-lg text-white font-semibold hover:from-gray-700 hover:to-gray-900" data-i18n="allItemsBtn">${window.translations[currentLanguage]['allItemsBtn']}</button>`;
+      folders.forEach(folder => {
+          const itemCount = items.filter(item => item.folder === folder.name).length;
+          const folderButtonHtml = `
+              <div class="flex items-center gap-1 relative">
+                  <button class="folder-btn px-2 sm:px-3 py-1 sm:py-2 ${folder.color} rounded-lg text-white font-semibold hover:filter hover:brightness-110" data-folder="${folder.name}">
+                      <img src="${folder.icon}" alt="" class="icon-svg inline-block"> ${folder.name} (${itemCount} ${window.translations[currentLanguage]['itemsInFolder']})
+                  </button>
+                  <button class="edit-folder-btn folder-action-btn edit" data-folder-name="${folder.name}" data-i18n="editBtn">${window.translations[currentLanguage]['editBtn']}</button>
+              </div>`;
+          foldersList.innerHTML += folderButtonHtml;
+      });
+
+      localStorage.setItem('folders', JSON.stringify(folders));
+
+      document.querySelectorAll('.folder-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedFolder = btn.dataset.folder;
+          searchItems();
+        });
+      });
+      document.getElementById('all-items-btn').addEventListener('click', () => {
+        selectedFolder = null;
+        searchItems();
+      });
+
+      foldersList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-folder-btn')) {
+          e.preventDefault();
+          const folderName = e.target.dataset.folderName;
+          currentEditingFolder = folders.find(f => f.name === folderName);
+          if (currentEditingFolder) {
+            editFolderNameInput.value = currentEditingFolder.name;
+            editFolderColorSelect.value = currentEditingFolder.color;
+            editFolderIconSelect.value = currentEditingFolder.icon;
+            editFolderModal.classList.remove('hidden');
+          }
+        } else if (e.target.classList.contains('folder-btn')) {
+          selectedFolder = e.target.dataset.folder;
+          searchItems();
+        }
+      });
+
+      // Populate icon select options dynamically with SVGs
+      folderIconSelect.innerHTML = '';
+      editFolderIconSelect.innerHTML = '';
+
+      folderIconOptions.forEach(optionData => {
+        folderIconSelect.appendChild(createOptionWithSVG(optionData.value, optionData.textKey, optionData.value));
+        editFolderIconSelect.appendChild(createOptionWithSVG(optionData.value, optionData.textKey, optionData.value));
+      });
+      applyTheme(); // Re-apply theme to ensure new icons get the correct filter
+    }
+
+    // Update saved tags list and datalists
+    function updateSavedTagsList() {
+        tagsList.innerHTML = '';
+        savedTagsDatalist.innerHTML = '';
+        savedTagsDatalistSearch.innerHTML = '';
+
+        savedTags.forEach(tag => {
+            const tagElement = document.createElement('div');
+            tagElement.classList.add('tag-item');
+            tagElement.innerHTML = `
+                <span>${tag}</span>
+                <div class="tag-item-buttons">
+                    <button class="edit-tag-btn edit" data-tag="${tag}" data-i18n="editBtn">${window.translations[currentLanguage]['editBtn']}</button>
+                    <button class="delete-tag-btn delete" data-tag="${tag}" data-i18n="deleteBtn">${window.translations[currentLanguage]['deleteBtn']}</button>
+                </div>
+            `;
+            tagsList.appendChild(tagElement);
+
+            const option = document.createElement('option');
+            option.value = tag;
+            savedTagsDatalist.appendChild(option);
+
+            const searchOption = document.createElement('option');
+            searchOption.value = tag;
+            savedTagsDatalistSearch.appendChild(searchOption);
+        });
+        localStorage.setItem('savedTags', JSON.stringify(savedTags));
+        applyTheme(); // Re-apply theme to ensure tag items get the correct colors
+    }
+
+    // Add new tag
+    addTagBtn.addEventListener('click', () => {
+        const newTag = newTagInput.value.trim();
+        if (newTag && !savedTags.includes(newTag)) {
+            savedTags.push(newTag);
+            newTagInput.value = '';
+            updateSavedTagsList();
+        } else if (newTag) {
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newTag));
+        } else {
+            showCustomModal(window.translations[currentLanguage]['newTagPlaceholder']);
+        }
+    });
+
+    // Edit tag
+    tagsList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-tag-btn')) {
+            const tagToEdit = e.target.dataset.tag;
+            currentEditingTag = tagToEdit;
+            editTagNameInput.value = tagToEdit;
+            editTagModal.classList.remove('hidden');
+        } else if (e.target.classList.contains('delete-tag-btn')) {
+            const tagToDelete = e.target.dataset.tag;
+            showConfirmModal(`Tem certeza de que deseja excluir a tag "${tagToDelete}"? Esta tag será removida de todos os links que a utilizam.`, () => {
+                savedTags = savedTags.filter(tag => tag !== tagToDelete);
+                items = items.map(item => {
+                    if (item.tags && item.tags.includes(tagToDelete)) {
+                        return { ...item, tags: item.tags.filter(t => t !== tagToDelete) };
+                    }
+                    return item;
+                });
+                localStorage.setItem('items', JSON.stringify(items));
+                updateSavedTagsList();
+                renderItems();
+            }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+        }
+    });
+
+    // Save edited tag
+    saveTagChangesBtn.addEventListener('click', () => {
+        const oldTag = currentEditingTag;
+        const newTag = editTagNameInput.value.trim();
+
+        if (newTag && newTag !== oldTag && savedTags.includes(newTag)) {
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newTag));
+            return;
+        }
+        if (!newTag) {
+            showCustomModal(window.translations[currentLanguage]['newTagPlaceholder']);
+            return;
+        }
+
+        savedTags = savedTags.map(tag => tag === oldTag ? newTag : tag);
+        items = items.map(item => {
+            if (item.tags) {
+                return { ...item, tags: item.tags.map(tag => tag === oldTag ? newTag : tag) };
+            }
+            return item;
+        });
+
+        localStorage.setItem('items', JSON.stringify(items));
+        updateSavedTagsList();
+        renderItems();
+        editTagModal.classList.add('hidden');
+        currentEditingTag = null;
+    });
+
+    // Save folder changes
+    saveFolderChangesBtn.addEventListener('click', () => {
+      if (currentEditingFolder) {
+        const oldFolderName = currentEditingFolder.name;
+        const newFolderName = editFolderNameInput.value.trim();
+        const newFolderColor = editFolderColorSelect.value;
+        const newFolderIcon = editFolderIconSelect.value;
+
+        if (newFolderName && newFolderName !== oldFolderName && folders.some(f => f.name === newFolderName)) {
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newFolderName));
+            return;
+        }
+        if (!newFolderName) {
+            showCustomModal(window.translations[currentLanguage]['folderNameEmpty']);
+            return;
+        }
+
+        currentEditingFolder.name = newFolderName;
+        currentEditingFolder.color = newFolderColor;
+        currentEditingFolder.icon = newFolderIcon;
+
+        if (oldFolderName !== newFolderName) {
+          items = items.map(item => {
+            if (item.folder === oldFolderName) {
+              return { ...item, folder: newFolderName };
+            }
+            return item;
+          });
+        }
+        localStorage.setItem('folders', JSON.stringify(folders));
+        localStorage.setItem('items', JSON.stringify(items));
+        updateFolderSelects();
+        searchItems();
+        editFolderModal.classList.add('hidden');
+        currentEditingFolder = null;
+      }
+    });
+
+    // Delete folder from edit modal
+    deleteFolderFromModalBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentEditingFolder) {
+            const folderName = currentEditingFolder.name;
+            const linksInFolder = items.filter(item => item.folder === folderName).length;
+            
+            showConfirmModal(window.translations[currentLanguage]['confirmDeleteFolder'](folderName, linksInFolder), () => {
+                folders = folders.filter(f => f.name !== folderName);
+                items = items.map(item => {
+                    if (item.folder === folderName) {
+                        return { ...item, folder: null };
+                    }
+                    return item;
+                });
+                localStorage.setItem('items', JSON.stringify(items));
+                localStorage.setItem('folders', JSON.stringify(folders));
+                updateFolderSelects();
+                searchItems();
+                editFolderModal.classList.add('hidden');
+                currentEditingFolder = null;
+            }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+        }
+    });
+
+    // Fetch metadata from URL
+    async function fetchMetadata(url) {
+      try {
+        const youtubeVideoId = getYouTubeVideoId(url);
+        if (youtubeVideoId) {
+            return {
+                title: `${window.translations[currentLanguage]['youtubeVideoPrefix']}: ${youtubeVideoId}`,
+                description: window.translations[currentLanguage]['youtubeVideoDescription'],
+                image: `https://img.youtube.com/vi/${youtubeVideoId}/sddefault.jpg`
+            };
+        }
+
+        const dailymotionRegex = /(?:dailymotion\.com\/(?:video|embed)\/|dai\.ly\/)([a-zA-Z0-9]+)/;
+        const dailymotionMatch = url.match(dailymotionRegex);
+        if (dailymotionMatch && dailymotionMatch[1]) {
+            const dailymotionVideoId = dailymotionMatch[1];
+            return {
+                title: `${window.translations[currentLanguage]['dailymotionVideoPrefix']}: ${dailymotionVideoId}`,
+                description: window.translations[currentLanguage]['dailymotionVideoDescription'],
+                image: `https://www.dailymotion.com/thumbnail/video/${dailymotionVideoId}`
+            };
+        }
+
+        if (url.includes('tiktok.com')) {
+          const tiktokRegex = /(?:tiktok\.com\/@(?:[a-zA-Z0-9_]+\/video|v)\/)([0-9]+)/;
+          const tiktokMatch = tiktokRegex.exec(url);
+          const tiktokVideoId = tiktokMatch ? tiktokMatch[1] : 'Unknown';
+          return {
+            title: `${window.translations[currentLanguage]['tiktokVideoPrefix']}: ${tiktokVideoId}`,
+            description: `${window.translations[currentLanguage]['tiktokVideoDescription']}`,
+            image: `https://placehold.co/200x150?text=TikTok+Video`
+          };
+        }
+
+        if (url.includes('kwai.com')) {
+          const kwaiRegex = /(?:kwai\.com\/(?:photo|video)\/)([0-9]+)/;
+          const kwaiMatch = kwaiRegex.exec(url);
+          const kwaiContentId = kwaiMatch ? kwaiMatch[1] : 'Unknown';
+          return {
+            title: `${window.translations[currentLanguage]['kwaiVideoPrefix']}: ${kwaiContentId}`,
+            description: `${window.translations[currentLanguage]['kwaiVideoDescription']}`,
+            image: `https://placehold.co/200x150?text=Kwai+Content`
+          };
+        }
+
+        if (url.includes('facebook.com')) {
+            return {
+                title: `${window.translations[currentLanguage]['facebookLinkPrefix']}`,
+                description: `${window.translations[currentLanguage]['facebookLinkDescription']}`,
+                image: `https://placehold.co/200x150?text=Facebook+Link`
+            };
+        }
+
+        if (url.includes('instagram.com')) {
+          return {
+            title: `${window.translations[currentLanguage]['instagramLinkPrefix']}`,
+            description: `${window.translations[currentLanguage]['instagramLinkDescription']}`,
+            image: `https://placehold.co/200x150?text=Instagram+Content`
+          };
+        }
+
+        const urlObj = new URL(url);
+        const displayUrl = urlObj.hostname.replace('www.', '');
+        const pathSegments = urlObj.pathname.split('/').filter(segment => segment.length > 0);
+        let dynamicTitle = `${window.translations[currentLanguage]['genericLinkPrefix']}: ${displayUrl}`;
+        if (pathSegments.length > 0) {
+            dynamicTitle = `${window.translations[currentLanguage]['genericLinkPrefix']}: ${pathSegments[pathSegments.length - 1].replace(/[-_]/g, ' ')}`;
+            dynamicTitle = dynamicTitle.charAt(0).toUpperCase() + dynamicTitle.slice(1);
+        }
+
+        return {
+          title: dynamicTitle,
+          description: `${window.translations[currentLanguage]['genericContentFrom']} ${displayUrl}. (${window.translations[currentLanguage]['noMetadataAvailable']})`,
+          image: `https://placehold.co/200x150?text=No+Preview`
+        };
+      } catch (error) {
+        console.error('Failed to generate metadata placeholder:', error);
+        return { title: url, description: window.translations[currentLanguage]['noMetadataAvailable'], image: `https://placehold.co/200x150?text=No+Preview` };
+      }
+    }
+
+    function getYouTubeVideoId(url) {
+        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
+    // Update preview in real-time
+    async function updatePreview(url) {
+      if (url.trim()) {
+        previewContainer.classList.remove('hidden');
+        previewImage.src = '';
+        previewTitle.textContent = window.translations[currentLanguage]['loadingPreview'];
+        previewDescription.textContent = window.translations[currentLanguage]['fetchingPreview'];
+
+        const metadata = await fetchMetadata(url);
+        previewImage.src = metadata.image;
+        previewTitle.textContent = metadata.title;
+        previewDescription.textContent = metadata.description;
+        previewImage.onerror = function() {
+            this.src = `https://placehold.co/80?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}`;
+        };
+      } else {
+        previewContainer.classList.add('hidden');
+      }
+    }
+
+    // Render items list
+    async function renderItems(filteredItems = items) {
+      itemsList.innerHTML = '';
+      if (filteredItems.length === 0) {
+        itemsList.innerHTML = `<p class="text-gray-200">${window.translations[currentLanguage]['noItemsFound']}</p>`;
+        return;
+      }
+
+      for (const item of filteredItems) {
+        const folder = folders.find(f => f.name === item.folder) || { color: 'bg-gray-500', icon: 'svg/folder.svg', name: window.translations[currentLanguage]['noFolder'] };
+        
+        if (!item.metadata || !item.metadata.title || (item.metadata.image && item.metadata.image.includes('placehold.co'))) {
+          item.metadata = await fetchMetadata(item.url);
+          localStorage.setItem('items', JSON.stringify(items));
+        }
+        const { title, description, image } = item.metadata;
+        const addedDate = item.timestamp ? new Date(item.timestamp).toLocaleString(currentLanguage) : '';
+
+        // Generate star rating display
+        let starsHtml = '<div class="display-rating">';
+        for (let i = 1; i <= 5; i++) {
+            starsHtml += `<span class="star${item.rating >= i ? '' : '-empty'}">★</span>`;
+        }
+        starsHtml += '</div>';
+
+        const itemHtml = `
+          <div class="glass-effect p-3 sm:p-4 rounded-xl hover:shadow-xl transition-all flex flex-col items-center justify-between h-full" style="border-color: ${folder.color.replace('bg-', '#').replace('-500', '50').replace('-600', '60').replace('black', '000')};">
+            <a href="${item.url}" target="_blank" class="flex flex-col items-center text-center w-full flex-grow no-underline ${theme === 'light' ? 'text-gray-800' : 'text-white'}" data-item-id="${item.id}">
+              <img src="${image}" alt="Preview" class="item-thumbnail-img" onerror="this.src='https://placehold.co/200x150?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}'">
+              <div class="w-full mt-3 flex-grow flex flex-col justify-center">
+                <div class="item-title truncate-lines-2 leading-tight">${title}</div>
+                <p class="item-url-short">${item.url.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0]}</p>
+                <p class="item-added-date">${addedDate}</p>
+              </div>
+            </a>
+            <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mt-4 pt-4 border-t border-white/10 w-full item-actions-bottom">
+              <span class="inline-block w-3 h-3 sm:w-4 sm:h-4 ${folder.color} rounded-full"></span>
+              ${starsHtml} <button class="copy-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 rounded-lg text-white text-sm hover:from-green-700 hover:to-green-800" data-url="${item.url}" data-i18n="copyBtn">${window.translations[currentLanguage]['copyBtn']}</button>
+              <button class="edit-item-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg text-white text-sm hover:from-blue-700 hover:to-blue-800" data-id="${item.id}" data-i18n="editBtn">${window.translations[currentLanguage]['editBtn']}</button>
+              <button class="delete-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-red-500 to-red-700 rounded-lg text-white text-sm hover:from-red-600 hover:to-red-800" data-id="${item.id}" data-i18n="deleteBtn">${window.translations[currentLanguage]['deleteBtn']}</button>
+            </div>
+          </div>
+        `;
+        itemsList.innerHTML += itemHtml;
+      }
+      applyTheme(); // Re-apply theme to ensure item titles and urls get correct colors
+
+      // Add event listener to track clicks on item URLs
+      document.querySelectorAll('#items-list .glass-effect > a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const itemId = parseInt(e.currentTarget.dataset.itemId);
+            const item = items.find(i => i.id === itemId);
+            if (item) {
+                if (!item.accessHistory) {
+                    item.accessHistory = [];
+                }
+                item.accessHistory.push(Date.now());
+                localStorage.setItem('items', JSON.stringify(items));
+                // No need to update dashboard immediately here, as it will be updated when user switches back to Dashboard tab.
+            }
+        });
+    });
+    }
+
+    // Add item
+    addItemBtn.addEventListener('click', async () => {
+      const url = itemUrlInput.value.trim();
+      const tags = itemTagsInput.value.trim().split(',').map(tag => tag.trim()).filter(tag => tag);
+      if (url) {
+        const isDuplicate = items.some(item => item.url === url);
+        if (isDuplicate) {
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](url));
+            return;
+        }
+
+        const metadata = await fetchMetadata(url);
+        items.push({
+          id: Date.now(),
+          url,
+          type: itemTypeSelect.value,
+          folder: itemFolderSelect.value,
+          tags: tags.length > 0 ? tags : [],
+          metadata,
+          timestamp: Date.now(),
+          rating: 0, // New item starts with 0 rating
+          accessHistory: [] // Initialize access history for new items
+        });
+        tags.forEach(tag => {
+            if (!savedTags.includes(tag)) {
+                savedTags.push(tag);
+            }
+        });
+        localStorage.setItem('savedTags', JSON.stringify(savedTags));
+        localStorage.setItem('items', JSON.stringify(items));
+        itemUrlInput.value = '';
+        itemTagsInput.value = '';
+        previewContainer.classList.add('hidden');
+        updateSavedTagsList();
+        renderItems();
+        updateFolderSelects();
+        updateDashboard(); // Update dashboard after adding item
+      }
+    });
+
+    // Paste link
+    pasteLinkBtn.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        itemUrlInput.value = text;
+        await updatePreview(text);
+      } catch (err) {
+        console.error('Paste failed:', err);
+        showCustomModal(window.translations[currentLanguage]['pasteFailed']);
+      }
+    });
+
+    // Add folder
+    addFolderBtn.addEventListener('click', () => {
+      const folderName = newFolderInput.value.trim();
+      if (folderName && !folders.some(f => f.name === folderName)) {
+        folders.push({
+          name: folderName,
+          color: folderColorSelect.value,
+          icon: folderIconSelect.value
+        });
+        updateFolderSelects();
+        newFolderInput.value = '';
+        renderItems();
+        updateDashboard(); // Update dashboard after adding folder
+      } else if (folderName) {
+        showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](folderName));
+      } else {
+        showCustomModal(window.translations[currentLanguage]['folderNameEmpty']);
+      }
+    });
+
+    // Search items
+    function searchItems() {
+      const query = searchQueryInput.value.toLowerCase();
+      const tagsQuery = searchTagsInput.value.toLowerCase().split(',').map(tag => tag.trim()).filter(tag => tag);
+      const type = searchTypeSelect.value;
+      const folder = searchFolderSelect.value;
+      const minRating = parseInt(searchRatingSelect.value); // Get min rating from select
+
+      const filteredItems = items.filter(item => {
+        const matchesQuery = query === '' || item.url.toLowerCase().includes(query) || 
+                            (item.metadata && item.metadata.title.toLowerCase().includes(query)) ||
+                            (item.metadata && item.metadata.description.toLowerCase().includes(query));
+        
+        const matchesTags = tagsQuery.length === 0 || 
+                            (item.tags && item.tags.some(tag => tagsQuery.some(searchTag => tag.toLowerCase().includes(searchTag))));
+
+        const matchesType = type === 'all' || item.type === type;
+        const matchesFolder = (folder === 'all' && (selectedFolder === null || item.folder === selectedFolder)) || 
+                              (item.folder === folder);
+        
+        // New: Filter by rating
+        const matchesRating = isNaN(minRating) || searchRatingSelect.value === 'all' ||
+                              (searchRatingSelect.value === '0' && (item.rating === 0 || item.rating === undefined)) ||
+                              (item.rating >= minRating);
+
+        return matchesQuery && matchesTags && matchesType && matchesFolder && matchesRating;
+      });
+      renderItems(filteredItems);
+    }
+
+    searchQueryInput.addEventListener('input', searchItems);
+    searchTagsInput.addEventListener('input', searchItems);
+    searchTypeSelect.addEventListener('change', searchItems);
+    searchFolderSelect.addEventListener('change', (e) => {
+      selectedFolder = e.target.value === 'all' ? null : e.target.value;
+      searchItems();
+    });
+    searchRatingSelect.addEventListener('change', searchItems); // New: Listen to rating filter change
+
+    // Delegation of events for copy, edit, and delete item buttons
+    itemsList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-btn')) {
+        const id = parseInt(e.target.dataset.id);
+        showConfirmModal(window.translations[currentLanguage]['confirmDeleteItem'], () => {
+          items = items.filter(item => item.id !== id);
+          localStorage.setItem('items', JSON.stringify(items));
+          renderItems();
+          updateFolderSelects();
+          updateDashboard(); // Update dashboard after deleting item
+        }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+      } else if (e.target.classList.contains('copy-btn')) {
+        const url = e.target.dataset.url;
+        
+        try {
+            navigator.clipboard.writeText(url).then(() => {
+                showCustomModal(window.translations[currentLanguage]['urlCopied'], window.translations[currentLanguage]['okBtn']);
+            }).catch(err => {
+                console.error('Failed to copy using navigator.clipboard (promessa):', err);
+                fallbackCopyTextToClipboard(url);
+            });
+        } catch (err) {
+            console.error('Failed to copy using navigator.clipboard (síncrono):', err);
+            fallbackCopyTextToClipboard(url);
+        }
+      } else if (e.target.classList.contains('edit-item-btn')) {
+        const id = parseInt(e.target.dataset.id);
+        currentEditingItem = items.find(item => item.id === id);
+        if (currentEditingItem) {
+          editItemUrlInput.value = currentEditingItem.url;
+          editItemTagsInput.value = currentEditingItem.tags.join(', ');
+          editItemTypeSelect.value = currentEditingItem.type;
+          editItemFolderSelect.value = currentEditingItem.folder || '';
+
+          // Set current rating in the edit modal
+          editItemRatingInputs.forEach(radio => {
+              radio.checked = parseInt(radio.value) === currentEditingItem.rating;
+          });
+
+          editItemModal.classList.remove('hidden');
+        }
+      }
+    });
+
+    // Save edited link changes
+    saveItemChangesBtn.addEventListener('click', async () => {
+      if (currentEditingItem) {
+        const newUrl = editItemUrlInput.value.trim();
+        const newTags = editItemTagsInput.value.trim().split(',').map(tag => tag.trim()).filter(tag => tag);
+        const newType = editItemTypeSelect.value;
+        const newFolder = editItemFolderSelect.value || null;
+        
+        // Get new rating from radio buttons
+        let newRating = 0;
+        editItemRatingInputs.forEach(radio => {
+            if (radio.checked) {
+                newRating = parseInt(radio.value);
+            }
+        });
+
+        const isDuplicate = items.some(item => item.url === newUrl && item.id !== currentEditingItem.id);
+        if (isDuplicate) {
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newUrl));
+            return;
+        }
+
+        currentEditingItem.url = newUrl;
+        currentEditingItem.tags = newTags;
+        currentEditingItem.type = newType;
+        currentEditingItem.folder = newFolder;
+        currentEditingItem.rating = newRating; // Update item rating
+        
+        if (newUrl !== currentEditingItem.url) {
+            currentEditingItem.metadata = await fetchMetadata(newUrl);
+        }
+        newTags.forEach(tag => {
+            if (!savedTags.includes(tag)) {
+                savedTags.push(tag);
+            }
+        });
+
+        localStorage.setItem('savedTags', JSON.stringify(savedTags));
+        localStorage.setItem('items', JSON.stringify(items));
+        renderItems();
+        editItemModal.classList.add('hidden');
+        currentEditingItem = null;
+        updateSavedTagsList();
+        updateFolderSelects();
+        updateDashboard(); // Update dashboard after editing item
+      }
+    });
+
+    // Fallback function for copying text to clipboard
+    function fallbackCopyTextToClipboard(text) {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+            document.execCommand('copy');
+            showCustomModal(window.translations[currentLanguage]['urlCopied'] + ' (Fallback)', window.translations[currentLanguage]['okBtn']);
+        } catch (err) {
+            console.error('Failed to copy using document.execCommand:', err);
+            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']);
+        } finally {
+            document.body.removeChild(tempInput);
+        }
+    }
+
+    // Toggle settings panel
+    settingsBtn.addEventListener('click', () => {
+      settingsPanel.classList.toggle('hidden');
+    });
+
+    // Toggle theme
+    toggleThemeBtn.addEventListener('click', () => {
+      theme = theme === 'light' ? 'dark' : 'light';
+      applyTheme();
+    });
+
+    // Clear all items
+    clearItemsBtn.addEventListener('click', () => {
+      showConfirmModal(window.translations[currentLanguage]['confirmClearAllItems'], () => {
+          items = [];
+          localStorage.setItem('items', JSON.stringify(items));
+          renderItems();
+          updateFolderSelects();
+          updateDashboard(); // Update dashboard after clearing all items
+      }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+    });
+
+    // Open Manage Data Modal
+    manageDataBtn.addEventListener('click', () => {
+      manageDataModal.classList.remove('hidden');
+    });
+
+    // Export Data from Manage Data Modal
+    exportDataOptionBtn.addEventListener('click', () => {
+      const data = {
+        items,
+        folders,
+        savedTags, // Include savedTags in export
+        theme,
+        currentLanguage
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'liquid-glass-data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      manageDataModal.classList.add('hidden');
+    });
+
+    // Trigger Import Selection Modal
+    importFileModalInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            importedDataCache = data; // Store data in cache
+
+            // Reset checkboxes to checked by default for convenience
+            importItemsCheckbox.checked = true;
+            importFoldersCheckbox.checked = true;
+            importTagsCheckbox.checked = true;
+            importThemeCheckbox.checked = true;
+            importLanguageCheckbox.checked = true;
+
+            manageDataModal.classList.add('hidden'); // Hide manage data modal
+            importSelectionModal.classList.remove('hidden'); // Show import selection modal
+
+          } catch (err) {
+            console.error("Error parsing JSON file:", err);
+            showCustomModal(window.translations[currentLanguage]['invalidJsonFile'], window.translations[currentLanguage]['okBtn']);
+            importFileModalInput.value = ''; // Clear file input
+          }
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // Confirm Import from Import Selection Modal
+    confirmImportSelectionBtn.addEventListener('click', async () => {
+      if (!importedDataCache) {
+          showCustomModal("Nenhum dado para importar. Por favor, selecione um arquivo JSON primeiro.", window.translations[currentLanguage]['okBtn']);
+          return;
+      }
+
+      showLoadingMessage(window.translations[currentLanguage]['importingData']);
+      
+      const importItems = importItemsCheckbox.checked;
+      const importFolders = importFoldersCheckbox.checked;
+      const importTags = importTagsCheckbox.checked;
+      const importTheme = importThemeCheckbox.checked;
+      const importLanguage = importLanguageCheckbox.checked;
+
+      // Wrap in a confirm dialog for overwrite warning
+      showConfirmModal(window.translations[currentLanguage]['confirmImport'], async () => {
+          // Import Items
+          if (importItems && importedDataCache.items && Array.isArray(importedDataCache.items)) {
+              const newItems = [];
+              for (const ni of importedDataCache.items) {
+                  // Check for duplicates based on URL
+                  if (!items.some(i => i.url === ni.url)) {
+                      // Ensure rating exists for imported items
+                      ni.rating = ni.rating !== undefined ? ni.rating : 0;
+                      // Ensure accessHistory exists for imported items
+                      ni.accessHistory = ni.accessHistory || [];
+                      // Re-fetch metadata if it's missing or a placeholder from old export
+                      if (!ni.metadata || !ni.metadata.title || (ni.metadata.image && ni.metadata.image.includes('placehold.co'))) {
+                          ni.metadata = await fetchMetadata(ni.url);
+                      }
+                      newItems.push(ni);
+                  }
+              }
+              items = [...items, ...newItems]; // Add new items, keep existing unique
+          }
+
+          // Import Folders
+          if (importFolders && importedDataCache.folders && Array.isArray(importedDataCache.folders)) {
+              const newFolders = importedDataCache.folders.filter(nf => !folders.some(f => f.name === nf.name));
+              folders = [...folders, ...newFolders]; // Add new folders, keep existing unique
+          }
+
+          // Import Saved Tags
+          if (importTags && importedDataCache.savedTags && Array.isArray(importedDataCache.savedTags)) {
+              const newSavedTags = importedDataCache.savedTags.filter(nst => !savedTags.includes(nst));
+              savedTags = [...savedTags, ...newSavedTags]; // Add new tags, keep existing unique
+          }
+
+          // Import Theme
+          if (importTheme && importedDataCache.theme) {
+              theme = importedDataCache.theme;
+          }
+
+          // Import Language
+          if (importLanguage && importedDataCache.currentLanguage) {
+              currentLanguage = importedDataCache.currentLanguage;
+          }
+
+          // Save all to localStorage
+          localStorage.setItem('items', JSON.stringify(items));
+          localStorage.setItem('folders', JSON.stringify(folders));
+          localStorage.setItem('savedTags', JSON.stringify(savedTags));
+          localStorage.setItem('theme', theme); 
+          localStorage.setItem('language', currentLanguage);
+
+          // Update UI
+          applyTheme();
+          updateFolderSelects();
+          updateSavedTagsList();
+          applyLanguage(currentLanguage);
+          renderItems();
+          updateDashboard(); // Update dashboard after import
+          
+          importSelectionModal.classList.add('hidden'); // Close selection modal
+          importFileModalInput.value = ''; // Clear file input
+          importedDataCache = null; // Clear cache
+          showLoadingMessage(window.translations[currentLanguage]['importSuccess'], 2000);
+
+      }, () => { // On Cancel callback for confirmModal
+          hideLoadingMessage();
+          importSelectionModal.classList.add('hidden');
+          importFileModalInput.value = ''; // Clear file input
+          importedDataCache = null; // Clear cache
+          showCustomModal(window.translations[currentLanguage]['importCanceled'], window.translations[currentLanguage]['okBtn']);
+      }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+    });
+
+
+    // Function to display a custom modal (replaces alert/confirm)
+    function showCustomModal(message, okBtnText = 'OK') {
+        const modal = document.createElement('div');
+        modal.classList.add('modal-overlay');
+        modal.innerHTML = `
+            <div class="modal-content">
+                <p>${message}</p>
+                <div class="modal-actions">
+                    <button class="modal-btn confirm" id="modal-ok-btn">${okBtnText}</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('modal-ok-btn').addEventListener('click', () => {
+            modal.remove();
+        });
+    }
+
+    // Function to display a confirmation modal
+    function showConfirmModal(message, onConfirm, onCancel, yesBtnText = 'Sim', noBtnText = 'Não') {
+        const modal = document.createElement('div');
+        modal.classList.add('modal-overlay');
+        modal.innerHTML = `
+            <div class="modal-content">
+                <p>${message}</p>
+                <div class="modal-actions">
+                    <button class="modal-btn confirm" id="confirm-action-btn">${yesBtnText}</button>
+                    <button class="modal-btn cancel" id="cancel-action-btn">${noBtnText}</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('confirm-action-btn').addEventListener('click', () => {
+            modal.remove();
+            onConfirm();
+        });
+
+        document.getElementById('cancel-action-btn').addEventListener('click', () => {
+            modal.remove();
+            if (onCancel) onCancel();
+        });
+    }
+
+    // Funções para mostrar/esconder mensagem de carregamento
+    function showLoadingMessage(message, duration = 0) {
+        loadingMessage.textContent = message;
+        loadingMessage.style.display = 'block';
+        if (duration > 0) {
+            setTimeout(() => {
+                hideLoadingMessage();
+            }, duration);
+        }
+    }
+
+    function hideLoadingMessage() {
+        loadingMessage.style.display = 'none';
+    }
+
+    // Event listener for language selection
+    languageSelect.addEventListener('change', (e) => {
+      applyLanguage(e.target.value);
+    });
+
+    // Initialize the language select with the current language
+    languageSelect.value = currentLanguage;
+
+    // Add event listeners for quick clear buttons
+    document.querySelectorAll('.clear-input-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const targetInputId = e.target.dataset.targetInput;
+            const targetInput = document.getElementById(targetInputId);
+            if (targetInput) {
+                targetInput.value = '';
+                if (targetInputId === 'item-url') {
+                    updatePreview('');
+                }
+                if (targetInputId.startsWith('search-')) {
+                    searchItems();
+                }
+            }
+        });
+    });
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+        applyTheme();
+        updateFolderSelects();
+        updateSavedTagsList();
+        applyLanguage(currentLanguage);
+        renderItems();
+        updateDashboard(); // Initial dashboard render
+        showTab('dashboard-tab'); // Show dashboard tab by default
+    });
+  </script>
+</body>
+</html>
