@@ -4,615 +4,793 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Liquid Glass Productivity App</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
   <style>
+    /* Estilos básicos do corpo da página */
     body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.8s ease-in-out;
-      overflow-x: hidden;
-      padding-top: 1rem;
+      min-height: 100vh; /* Altura mínima de 100% da viewport */
+      display: flex; /* Usa flexbox para centralizar conteúdo */
+      justify-content: center; /* Centraliza horizontalmente */
+      align-items: flex-start; /* Alinha ao topo verticalmente */
+      font-family: 'Inter', sans-serif; /* Define a fonte principal */
+      transition: background 0.8s ease-in-out; /* Transição suave para mudança de fundo (tema) */
+      overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+      padding-top: 1rem; /* Espaçamento no topo */
     }
+
+    /* Tema claro: gradiente de fundo azul/verde claro */
     body.light {
       background: linear-gradient(135deg, #e0f2f7, #c1e7f0, #9fd8e6);
     }
+
+    /* Tema escuro: gradiente de fundo escuro */
     body.dark {
       background: linear-gradient(135deg, #1a2a3a, #0a1a2a, #050f1a);
     }
+
+    /* Efeito de vidro (glass effect) aplicado a vários elementos */
     .glass-effect {
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      border-radius: 16px;
-      transition: all 0.4s ease-in-out;
-      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.4); /* Fundo translúcido (40% opacidade) */
+      backdrop-filter: blur(12px); /* Efeito de desfoque no que está por trás */
+      border: 1px solid rgba(255, 255, 255, 0.5); /* Borda semi-transparente */
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      border-radius: 16px; /* Bordas arredondadas */
+      transition: all 0.4s ease-in-out; /* Transição para todas as propriedades em 0.4s */
+      box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
     }
+
+    /* Estilos do efeito de vidro no tema escuro */
     body.dark .glass-effect {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.2); /* Fundo mais escuro */
+      border: 1px solid rgba(255, 255, 255, 0.08); /* Borda mais sutil */
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* Sombra mais pronunciada */
     }
+
+    /* Efeito de hover para elementos com 'glass-effect' */
     .glass-effect:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px); /* Leve levantamento ao passar o mouse */
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15); /* Sombra maior ao passar o mouse */
     }
+
+    /* Efeito de hover no tema escuro para 'glass-effect' */
     body.dark .glass-effect:hover {
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6); /* Sombra ainda mais pronunciada */
     }
+
+    /* Estilos para botões de menu (Settings, Manage Data) */
     .menu-button {
-      transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out; /* Transição suave para interações */
     }
+
+    /* Efeito de hover para botões de menu */
     .menu-button:hover {
-      transform: scale(1.08);
-      filter: brightness(1.1);
+      transform: scale(1.08); /* Aumento de escala leve */
+      filter: brightness(1.1); /* Aumento de brilho leve */
     }
+
+    /* Estilos para inputs de texto e selects */
     input, select {
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      transition: all 0.3s ease-in-out;
-      width: 100%;
-      height: 3rem;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      color: #333;
-      font-size: 0.875rem;
-      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.6); /* Fundo translúcido (tema claro) */
+      border: 1px solid rgba(255, 255, 255, 0.7); /* Borda semi-transparente (tema claro) */
+      transition: all 0.3s ease-in-out; /* Transição suave */
+      width: 100%; /* Ocupa a largura total do contêiner */
+      height: 3rem; /* Altura fixa */
+      padding: 0.75rem; /* Preenchimento interno */
+      border-radius: 0.5rem; /* Bordas arredondadas */
+      color: #333; /* Cor do texto (tema claro) */
+      font-size: 0.875rem; /* Tamanho da fonte */
+      box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
     }
+
+    /* Estilos de inputs e selects no tema escuro */
     body.dark input, body.dark select {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #e0e7ff;
+      background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+      border: 1px solid rgba(255, 255, 255, 0.1); /* Borda mais sutil */
+      color: #e0e7ff; /* Cor do texto mais clara */
     }
+
+    /* Estilos para opções de select (dropdown) */
     select option {
-        background-color: #ffffff;
-        color: #333;
+        background-color: #ffffff; /* Fundo branco (tema claro) */
+        color: #333; /* Texto escuro (tema claro) */
     }
+
+    /* Estilos para opções de select no tema escuro */
     body.dark select option {
-        background-color: #2a2a2a;
-        color: #e0e7ff;
+        background-color: #2a2a2a; /* Fundo escuro */
+        color: #e0e7ff; /* Texto claro */
     }
+
+    /* Estilos de foco para inputs e selects */
     input:focus, select:focus {
-      background: rgba(255, 255, 255, 0.7);
-      border-color: #007bff;
-      box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
-      outline: none;
+      background: rgba(255, 255, 255, 0.7); /* Fundo mais opaco ao focar */
+      border-color: #007bff; /* Borda azul ao focar */
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); /* Sombra azul ao focar */
+      outline: none; /* Remove o contorno padrão do navegador */
     }
+
+    /* Estilos de foco no tema escuro para inputs e selects */
     body.dark input:focus, body.dark select:focus {
-      background: rgba(255, 107, 107, 0.1);
-      border-color: #ff6b6b;
-      box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+      background: rgba(255, 107, 107, 0.1); /* Fundo vermelho/transparente */
+      border-color: #ff6b6b; /* Borda vermelha */
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.6); /* Sombra vermelha */
     }
+
+    /* Animação de fade-in para elementos que aparecem na tela */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(15px); } /* Começa invisível e ligeiramente abaixo */
+      to { opacity: 1; transform: translateY(0); } /* Termina visível e na posição original */
     }
     .animate-fade-in {
-      animation: fadeIn 0.6s ease-out;
+      animation: fadeIn 0.6s ease-out; /* Aplica a animação fadeIn */
     }
+
+    /* Estilos da imagem de preview ao adicionar um item */
     .add-item-preview-img {
-      max-width: 80px;
-      max-height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
+      max-width: 80px; /* Largura máxima */
+      max-height: 80px; /* Altura máxima */
+      object-fit: cover; /* Ajusta a imagem para preencher, cortando se necessário */
+      border-radius: 8px; /* Bordas arredondadas */
     }
+
+    /* Estilos da imagem de thumbnail dos itens salvos */
     .item-thumbnail-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 8px;
+      width: 100%; /* Ocupa a largura total do contêiner */
+      height: 180px; /* Altura fixa */
+      object-fit: cover; /* Ajusta a imagem para preencher, cortando se necessário */
+      border-radius: 12px; /* Bordas arredondadas */
+      margin-bottom: 8px; /* Espaçamento inferior */
     }
+
+    /* Estilos para os itens individuais na lista de itens salvos */
     #items-list .glass-effect {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0.75rem;
-      border-radius: 1rem;
-      border: 2px solid transparent;
+      display: flex; /* Usa flexbox */
+      flex-direction: column; /* Itens empilhados verticalmente */
+      align-items: center; /* Centraliza itens horizontalmente */
+      text-align: center; /* Centraliza texto */
+      padding: 0.75rem; /* Preenchimento interno */
+      border-radius: 1rem; /* Bordas arredondadas */
+      border: 2px solid transparent; /* Borda transparente (para ser alterada via JS com a cor da pasta) */
     }
-    #items-list .glass-effect > a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-      flex-grow: 1;
-      text-decoration: none;
-      color: inherit;
+
+    /* Estilos para o link/contêiner clicável dentro do item da lista */
+    #items-list .glass-effect > a, #items-list .glass-effect > div[onclick] {
+      display: flex; /* Usa flexbox */
+      flex-direction: column; /* Conteúdo empilhado verticalmente */
+      align-items: center; /* Centraliza horizontalmente */
+      text-align: center; /* Centraliza texto */
+      width: 100%; /* Ocupa a largura total */
+      flex-grow: 1; /* Permite que cresça para preencher espaço */
+      text-decoration: none; /* Remove sublinhado de links */
+      color: inherit; /* Herda a cor do texto do pai */
     }
+
+    /* Estilos do título do item na lista */
     #items-list .glass-effect .item-title {
-      font-size: 1.15rem;
-      line-height: 1.3;
-      margin-top: 0.5rem;
-      font-weight: 600;
+      font-size: 1.15rem; /* Tamanho da fonte */
+      line-height: 1.3; /* Altura da linha */
+      margin-top: 0.5rem; /* Espaçamento superior */
+      font-weight: 600; /* Peso da fonte */
     }
+
+    /* Cor do título do item no tema claro */
     body.light #items-list .glass-effect .item-title {
-      color: #000000;
+      color: #000000; /* Preto para alto contraste */
     }
+
+    /* Cor do título do item no tema escuro */
     body.dark #items-list .glass-effect .item-title {
-      color: rgb(21, 132, 63);
+      color: rgb(21, 132, 63); /* Verde mais claro */
     }
+
+    /* Descrição do item (oculta na lista principal) */
     #items-list .glass-effect .item-description {
-      display: none;
+      display: none; /* Oculta a descrição */
     }
+
+    /* Estilos da URL curta do item na lista */
     #items-list .glass-effect .item-url-short {
-      font-size: 0.75rem;
-      opacity: 0.8;
-      margin-top: 0.25rem;
+      font-size: 0.75rem; /* Tamanho da fonte menor */
+      opacity: 0.8; /* Levemente transparente */
+      margin-top: 0.25rem; /* Espaçamento superior */
     }
+
+    /* Cor da URL curta no tema claro */
     body.light #items-list .glass-effect .item-url-short {
-      color: rgb(50, 50, 50);
+      color: rgb(50, 50, 50); /* Cinza escuro */
     }
+
+    /* Cor da URL curta no tema escuro */
     body.dark #items-list .glass-effect .item-url-short {
-      color: #b9b9b9;
+      color: #b9b9b9; /* Cinza claro */
     }
+
+    /* Estilos da data de adição do item na lista */
     #items-list .glass-effect .item-added-date {
-      font-size: 0.7rem;
-      color: #718096;
-      opacity: 0.9;
-      margin-top: 0.5rem;
+      font-size: 0.7rem; /* Tamanho da fonte menor */
+      color: #718096; /* Cinza */
+      opacity: 0.9; /* Quase opaco */
+      margin-top: 0.5rem; /* Espaçamento superior */
     }
+
+    /* Cor da data de adição no tema escuro */
     body.dark #items-list .glass-effect .item-added-date {
-      color: #718096;
+      color: #718096; /* Cinza */
     }
+
+    /* Utilidades para truncar texto em 2 linhas */
     .truncate-lines-2 {
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 2; /* Limita a 2 linhas */
         -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: hidden; /* Oculta o conteúdo extra */
+        text-overflow: ellipsis; /* Adiciona "..." no final */
     }
+
+    /* Utilidades para truncar texto em 3 linhas */
     .truncate-lines-3 {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 3; /* Limita a 3 linhas */
         -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: hidden; /* Oculta o conteúdo extra */
+        text-overflow: ellipsis; /* Adiciona "..." no final */
     }
+
+    /* Estilos para o painel de configurações */
     #settings-panel {
-      max-height: 70vh;
-      overflow-y: auto;
+      max-height: 70vh; /* Altura máxima para rolagem */
+      overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo exceder */
     }
+
+    /* Estilos para o overlay de modais (fundo escuro por trás do modal) */
     .modal-overlay {
-      position: fixed;
+      position: fixed; /* Fixa na viewport */
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease-out;
+      width: 100%; /* Largura total */
+      height: 100%; /* Altura total */
+      background: rgba(0, 0, 0, 0.7); /* Fundo preto translúcido */
+      display: flex; /* Usa flexbox para centralizar o conteúdo do modal */
+      justify-content: center; /* Centraliza horizontalmente */
+      align-items: center; /* Centraliza verticalmente */
+      z-index: 1000; /* Fica acima de outros elementos */
+      animation: fadeIn 0.3s ease-out; /* Animação de fade-in ao aparecer */
     }
+
+    /* Estilos para o conteúdo do modal */
     .modal-content {
-      background: #fff;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      color: #333;
-      max-width: 400px;
-      width: 90%;
-      position: relative;
-      animation: scaleIn 0.3s ease-out;
+      background: #fff; /* Fundo branco (tema claro) */
+      padding: 25px; /* Preenchimento interno */
+      border-radius: 15px; /* Bordas arredondadas */
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* Sombra suave */
+      text-align: center; /* Centraliza texto */
+      color: #333; /* Cor do texto (tema claro) */
+      max-width: 400px; /* Largura máxima */
+      width: 90%; /* Ocupa 90% da largura do contêiner */
+      position: relative; /* Para posicionar o botão de fechar */
+      animation: scaleIn 0.3s ease-out; /* Animação de escala ao aparecer */
     }
+
+    /* Estilos do conteúdo do modal no tema escuro */
     body.dark .modal-content {
-      background: #2a2a2a;
-      color: #e0e7ff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+      background: #2a2a2a; /* Fundo escuro */
+      color: #e0e7ff; /* Texto claro */
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6); /* Sombra mais escura */
     }
+
+    /* Animação de escala para modais */
     @keyframes scaleIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from { transform: scale(0.9); opacity: 0; } /* Começa menor e invisível */
+      to { transform: scale(1); opacity: 1; } /* Termina no tamanho original e visível */
     }
+
+    /* Estilos para o botão de fechar do modal */
     .modal-close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #888;
-      transition: color 0.2s ease-in-out;
+      position: absolute; /* Posiciona absolutamente */
+      top: 10px; /* 10px do topo */
+      right: 10px; /* 10px da direita */
+      background: none; /* Sem fundo */
+      border: none; /* Sem borda */
+      font-size: 1.5rem; /* Tamanho do ícone "X" */
+      cursor: pointer; /* Cursor de ponteiro */
+      color: #888; /* Cor cinza */
+      transition: color 0.2s ease-in-out; /* Transição de cor */
     }
+
+    /* Efeito de hover no botão de fechar do modal */
     .modal-close-btn:hover {
-      color: #333;
+      color: #333; /* Cor mais escura no hover */
     }
+
+    /* Estilos do botão de fechar do modal no tema escuro */
     body.dark .modal-close-btn {
-      color: #bbb;
+      color: #bbb; /* Cor mais clara */
     }
     body.dark .modal-close-btn:hover {
-      color: #fff;
+      color: #fff; /* Cor branca no hover */
     }
+
+    /* Grupo de input dentro do modal */
     .modal-input-group {
-        margin-bottom: 15px;
-        text-align: left;
+        margin-bottom: 15px; /* Espaço entre grupos de input */
+        text-align: left; /* Alinha texto à esquerda */
     }
+
+    /* Label do grupo de input do modal */
     .modal-input-group label {
-      color: #333;
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
+      color: #333; /* Cor do texto (tema claro) */
+      display: block; /* Garante que o label ocupe sua própria linha */
+      margin-bottom: 5px; /* Espaço entre label e input */
+      font-weight: 600; /* Peso da fonte */
     }
+
+    /* Label do grupo de input do modal no tema escuro */
     body.dark .modal-input-group label {
-      color: #e0e7ff;
+      color: #e0e7ff; /* Cor do texto mais clara */
     }
+
+    /* Inputs e selects dentro do modal */
     .modal-input-group input, .modal-input-group select {
-      background: #f0f0f0;
-      border: 1px solid #ddd;
-      color: #333;
-      width: 100%;
-      padding: 8px 12px;
-      border-radius: 5px;
+      background: #f0f0f0; /* Fundo cinza claro */
+      border: 1px solid #ddd; /* Borda cinza */
+      color: #333; /* Cor do texto */
+      width: 100%; /* Ocupa a largura total */
+      padding: 8px 12px; /* Preenchimento interno */
+      border-radius: 5px; /* Bordas arredondadas */
     }
-    body.dark .modal-input-group input, body.dark select {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #e0e7ff;
+
+    /* Inputs e selects dentro do modal no tema escuro */
+    body.dark .modal-input-group input, body.dark .modal-input-group select {
+      background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+      border: 1px solid rgba(255, 255, 255, 0.1); /* Borda mais sutil */
+      color: #e0e7ff; /* Texto mais claro */
     }
+
+    /* Ações do modal (botões) */
     .modal-actions {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
+      display: flex; /* Usa flexbox */
+      justify-content: center; /* Centraliza botões */
+      gap: 15px; /* Espaçamento entre botões */
+      margin-top: 20px; /* Espaçamento superior */
     }
+
+    /* Estilo base para botões de modal */
     .modal-btn {
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s ease-in-out;
+      padding: 10px 20px; /* Preenchimento interno */
+      border-radius: 8px; /* Bordas arredondadas */
+      font-weight: 600; /* Peso da fonte */
+      cursor: pointer; /* Cursor de ponteiro */
+      border: none; /* Sem borda */
+      transition: all 0.2s ease-in-out; /* Transição suave */
     }
+
+    /* Botão de confirmação no modal */
     .modal-btn.confirm {
-      background-color: #007bff;
-      color: white;
+      background-color: #007bff; /* Azul brilhante */
+      color: white; /* Texto branco */
     }
     .modal-btn.confirm:hover {
-      background-color: #0056b3;
-      transform: translateY(-1px);
+      background-color: #0056b3; /* Azul mais escuro no hover */
+      transform: translateY(-1px); /* Leve levantamento */
     }
+
+    /* Botão de cancelar no modal */
     .modal-btn.cancel {
-      background-color: #cccccc;
-      color: #333;
+      background-color: #cccccc; /* Cinza claro */
+      color: #333; /* Texto escuro */
     }
     .modal-btn.cancel:hover {
-      background-color: #b0b0b0;
-      transform: translateY(-1px);
+      background-color: #b0b0b0; /* Cinza mais escuro no hover */
+      transform: translateY(-1px); /* Leve levantamento */
     }
+
+    /* Botão de excluir pasta no modal */
     .modal-btn.delete-folder {
-      background-color: #dc3545;
-      color: white;
+      background-color: #dc3545; /* Vermelho */
+      color: white; /* Texto branco */
     }
     .modal-btn.delete-folder:hover {
-      background-color: #c82333;
+      background-color: #c82333; /* Vermelho mais escuro no hover */
     }
+
+    /* Botões de ação para pastas (editar) */
     .folder-action-btn {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      margin-left: 5px;
-      transition: all 0.2s ease-in-out;
+      padding: 4px 8px; /* Preenchimento interno */
+      border-radius: 6px; /* Bordas arredondadas */
+      font-size: 0.75rem; /* Tamanho da fonte menor */
+      font-weight: 500; /* Peso da fonte */
+      margin-left: 5px; /* Espaçamento à esquerda */
+      transition: all 0.2s ease-in-out; /* Transição suave */
     }
     .folder-action-btn.edit {
-      background-color: #007bff;
-      color: white;
+      background-color: #007bff; /* Azul */
+      color: white; /* Texto branco */
     }
     .folder-action-btn.edit:hover {
-      background-color: #0056b3;
+      background-color: #0056b3; /* Azul mais escuro no hover */
     }
+
+    /* Botão de editar item */
     .edit-item-btn {
-        background-color: #28a745;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-left: 5px;
-        transition: all 0.2s ease-in-out;
+        background-color: #28a745; /* Verde */
+        color: white; /* Texto branco */
+        padding: 4px 8px; /* Preenchimento interno */
+        border-radius: 6px; /* Bordas arredondadas */
+        font-size: 0.75rem; /* Tamanho da fonte menor */
+        font-weight: 500; /* Peso da fonte */
+        margin-left: 5px; /* Espaçamento à esquerda */
+        transition: all 0.2s ease-in-out; /* Transição suave */
     }
     .edit-item-btn:hover {
-        background-color: #218838;
+        background-color: #218838; /* Verde mais escuro no hover */
     }
+
+    /* Estilos para itens de tag na lista de tags */
     .tag-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 8px;
-        margin-bottom: 8px;
-        color: #333;
+        display: flex; /* Usa flexbox */
+        justify-content: space-between; /* Espaçamento entre os elementos */
+        align-items: center; /* Alinha verticalmente ao centro */
+        padding: 8px 12px; /* Preenchimento interno */
+        background: rgba(255, 255, 255, 0.4); /* Fundo translúcido (tema claro) */
+        border-radius: 8px; /* Bordas arredondadas */
+        margin-bottom: 8px; /* Espaçamento inferior */
+        color: #333; /* Cor do texto (tema claro) */
     }
+
+    /* Estilos para itens de tag no tema escuro */
     body.dark .tag-item {
-        background: rgba(255, 255, 255, 0.05);
-        color: white;
+        background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+        color: white; /* Texto branco */
     }
+
+    /* Botões dentro de itens de tag */
     .tag-item-buttons button {
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-left: 8px;
-        transition: all 0.2s ease-in-out;
+        padding: 4px 8px; /* Preenchimento interno */
+        border-radius: 6px; /* Bordas arredondadas */
+        font-size: 0.75rem; /* Tamanho da fonte menor */
+        font-weight: 500; /* Peso da fonte */
+        margin-left: 8px; /* Espaçamento à esquerda */
+        transition: all 0.2s ease-in-out; /* Transição suave */
     }
     .tag-item-buttons .edit {
-        background-color: #007bff;
-        color: white;
+        background-color: #007bff; /* Azul */
+        color: white; /* Texto branco */
     }
     .tag-item-buttons .edit:hover {
-        background-color: #0056b3;
+        background-color: #0056b3; /* Azul mais escuro no hover */
     }
     .tag-item-buttons .delete {
-        background-color: #dc3545;
-        color: white;
+        background-color: #dc3545; /* Vermelho */
+        color: white; /* Texto branco */
     }
     .tag-item-buttons .delete:hover {
-        background-color: #c82333;
+        background-color: #c82333; /* Vermelho mais escuro no hover */
     }
+
+    /* Botão para limpar input */
     .clear-input-btn {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: #888;
-        cursor: pointer;
-        font-size: 1rem;
-        padding: 5px;
-        line-height: 1;
-        transition: color 0.2s ease-in-out;
+        position: absolute; /* Posiciona absolutamente */
+        right: 10px; /* 10px da direita */
+        top: 50%; /* Centraliza verticalmente */
+        transform: translateY(-50%); /* Ajusta para centralização exata */
+        background: none; /* Sem fundo */
+        border: none; /* Sem borda */
+        color: #888; /* Cor cinza */
+        cursor: pointer; /* Cursor de ponteiro */
+        font-size: 1rem; /* Tamanho da fonte */
+        padding: 5px; /* Preenchimento interno */
+        line-height: 1; /* Altura da linha */
+        transition: color 0.2s ease-in-out; /* Transição de color */
     }
     .clear-input-btn:hover {
-        color: #333;
+        color: #333; /* Cor mais escura no hover */
     }
     body.dark .clear-input-btn {
-        color: #bbb;
+        color: #bbb; /* Cor mais clara */
     }
     body.dark .clear-input-btn:hover {
-        color: #fff;
+        color: #fff; /* Cor branca no hover */
     }
     .input-with-clear {
-        position: relative;
+        position: relative; /* Permite posicionamento absoluto do botão de limpar */
     }
     .hidden {
-      display: none;
+      display: none; /* Utilidade para ocultar elementos */
     }
+
+    /* Mensagem de carregamento */
     .loading-message {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 15px 30px;
-        border-radius: 10px;
-        z-index: 1001;
-        font-size: 1.2rem;
-        display: none;
+        position: fixed; /* Fixo na tela */
+        top: 50%; /* Centraliza verticalmente */
+        left: 50%; /* Centraliza horizontalmente */
+        transform: translate(-50%, -50%); /* Ajusta para centralização exata */
+        background: rgba(0, 0, 0, 0.8); /* Fundo preto translúcido */
+        color: white; /* Texto branco */
+        padding: 15px 30px; /* Preenchimento */
+        border-radius: 10px; /* Bordas arredondadas */
+        z-index: 1001; /* Fica acima de outros elementos */
+        font-size: 1.2rem; /* Tamanho da fonte */
+        display: none; /* Inicia oculto */
     }
+
     /* Estilo para ícones SVG em selects e buttons */
     .icon-svg {
-        height: 1em;
-        width: 1em;
-        vertical-align: middle;
-        margin-right: 0.25em;
-        filter: invert(0);
+        height: 1em; /* Altura proporcional ao texto */
+        width: 1em; /* Largura proporcional ao texto */
+        vertical-align: middle; /* Alinha verticalmente com o texto */
+        margin-right: 0.25em; /* Espaçamento à direita */
+        filter: invert(0); /* Padrão: sem inversão de cor (tema claro) */
     }
+    /* Inverte a cor do SVG no tema escuro */
     body.dark .icon-svg {
-        filter: invert(1);
+        filter: invert(1); /* Inverte a cor (branco para preto, etc.) */
     }
-    /* Estilos para o sistema de estrelas */
+
+    /* Estilos para o sistema de estrelas (avaliação) */
     .star-rating {
-        display: inline-flex;
-        direction: rtl;
-        unicode-bidi: isolate;
-        gap: 2px;
+        display: inline-flex; /* Estrelas em linha */
+        direction: rtl; /* Direção do texto da direita para a esquerda (para alinhar estrelas) */
+        unicode-bidi: isolate; /* Controla o algoritmo bidirecional */
+        gap: 2px; /* Espaçamento entre estrelas */
     }
     .star-rating input[type="radio"] {
-        display: none;
+        display: none; /* Oculta os botões de rádio nativos */
     }
     .star-rating label {
-        color: #ccc;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: color 0.2s;
+        color: #ccc; /* Cor da estrela vazia */
+        font-size: 1.5rem; /* Tamanho da estrela */
+        cursor: pointer; /* Cursor de ponteiro */
+        transition: color 0.2s; /* Transição de cor */
     }
     .star-rating label:hover,
     .star-rating label:hover ~ label,
     .star-rating input[type="radio"]:checked ~ label {
-        color: #ffb700;
+        color: #ffb700; /* Cor da estrela preenchida (amarelo/laranja) */
     }
+
     /* Estilo para exibição das estrelas (não clicável) */
     .display-rating .star {
-        font-size: 1.2rem;
-        color: #ffb700;
-        margin: 0 1px;
+        font-size: 1.2rem; /* Tamanho menor para exibição */
+        color: #ffb700; /* Cor da estrela preenchida */
+        margin: 0 1px; /* Margem horizontal */
     }
     .display-rating .star-empty {
-        font-size: 1.2rem;
-        color: #ccc;
-        margin: 0 1px;
-    }
-    .item-actions-bottom {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
+        font-size: 1.2rem; /* Tamanho menor para exibição */
+        color: #ccc; /* Cor da estrela vazia */
+        margin: 0 1px; /* Margem horizontal */
     }
 
-    /* checkbox para importação */
+    /* Ações do item na parte inferior (botões de copiar, editar, excluir) */
+    .item-actions-bottom {
+      display: flex; /* Usa flexbox */
+      flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+      justify-content: center; /* Centraliza botões */
+      align-items: center; /* Alinha verticalmente ao centro */
+      gap: 0.5rem; /* Espaçamento entre os botões */
+    }
+
+    /* Estilos para grupos de checkbox no modal de importação */
     .modal-checkbox-group {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin-top: 15px;
-        gap: 10px;
+        display: flex; /* Usa flexbox */
+        flex-direction: column; /* Checkboxes empilhados verticalmente */
+        align-items: flex-start; /* Alinha checkboxes à esquerda */
+        margin-top: 15px; /* Espaçamento superior */
+        gap: 10px; /* Espaçamento entre checkboxes */
     }
     .modal-checkbox-group label {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        font-size: 1rem;
-        color: #333;
+        display: flex; /* Usa flexbox para alinhar checkbox e texto */
+        align-items: center; /* Alinha verticalmente ao centro */
+        cursor: pointer; /* Cursor de ponteiro */
+        font-size: 1rem; /* Tamanho da fonte */
+        color: #333; /* Cor do texto (tema claro) */
     }
     body.dark .modal-checkbox-group label {
-        color: #e0e7ff;
+        color: #e0e7ff; /* Cor do texto (tema escuro) */
     }
     .modal-checkbox-group input[type="checkbox"] {
-        margin-right: 10px;
-        transform: scale(1.2);
+        margin-right: 10px; /* Espaçamento à direita do checkbox */
+        transform: scale(1.2); /* Aumenta o tamanho do checkbox */
     }
 
-    /* Tab System Styles */
+    /* Estilos para os botões das abas */
     .tab-buttons {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      display: flex; /* Usa flexbox */
+      justify-content: center; /* Centraliza os botões das abas */
+      margin-bottom: 1rem; /* Espaçamento inferior */
+      gap: 0.5rem; /* Espaçamento entre os botões */
+      flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
     }
 
+    /* Estilo base para cada botão de aba */
     .tab-button {
-      padding: 0.75rem 1.5rem;
-      background-color: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 12px;
-      color: #333;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 0.75rem 1.5rem; /* Preenchimento interno */
+      background-color: rgba(255, 255, 255, 0.2); /* Fundo translúcido (tema claro) */
+      backdrop-filter: blur(8px); /* Desfoque de fundo */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Borda */
+      border-radius: 12px; /* Bordas arredondadas */
+      color: #333; /* Cor do texto (tema claro) */
+      font-weight: 600; /* Peso da fonte */
+      cursor: pointer; /* Cursor de ponteiro */
+      transition: all 0.3s ease; /* Transição suave para interações */
     }
 
+    /* Estilo dos botões de aba no tema escuro */
     body.dark .tab-button {
-      background-color: rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      color: white;
+      background-color: rgba(0, 0, 0, 0.15); /* Fundo mais escuro */
+      border: 1px solid rgba(255, 255, 255, 0.05); /* Borda mais sutil */
+      color: white; /* Texto branco */
     }
 
+    /* Efeito de hover nos botões de aba */
     .tab-button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-2px);
+      background-color: rgba(255, 255, 255, 0.4); /* Fundo mais opaco */
+      border-color: rgba(255, 255, 255, 0.5); /* Borda mais visível */
+      transform: translateY(-2px); /* Leve levantamento */
     }
 
+    /* Efeito de hover nos botões de aba no tema escuro */
     body.dark .tab-button:hover {
-      background-color: rgba(0, 0, 0, 0.3);
-      border-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(0, 0, 0, 0.3); /* Fundo mais escuro */
+      border-color: rgba(255, 255, 255, 0.1); /* Borda mais visível */
     }
 
+    /* Estilo para a aba ativa */
     .tab-button.active {
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      color: white;
-      border-color: #007bff;
-      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+      background: linear-gradient(135deg, #007bff, #0056b3); /* Gradiente azul forte */
+      color: white; /* Texto branco */
+      border-color: #007bff; /* Borda azul */
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Sombra azul */
     }
 
+    /* Estilo para a aba ativa no tema escuro */
     body.dark .tab-button.active {
-      background: linear-gradient(135deg, #4ecdc4, #45b7d1);
-      border-color: #4ecdc4;
-      box-shadow: 0 4px 10px rgba(78, 205, 196, 0.3);
+      background: linear-gradient(135deg, #4ecdc4, #45b7d1); /* Gradiente ciano/azul */
+      border-color: #4ecdc4; /* Borda ciano */
+      box-shadow: 0 4px 10px rgba(78, 205, 196, 0.3); /* Sombra ciano */
     }
 
+    /* Conteúdo das abas (inicialmente oculto) */
     .tab-content {
-      display: none;
+      display: none; /* Oculta todo o conteúdo das abas por padrão */
     }
 
+    /* Conteúdo da aba ativa (visível) */
     .tab-content.active {
-      display: block;
+      display: block; /* Torna o conteúdo da aba ativa visível */
     }
 
-    /* Dashboard specific styles */
+    /* Estilos específicos para o layout do dashboard */
     .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
+        display: grid; /* Usa grid layout */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Colunas responsivas */
+        gap: 1rem; /* Espaçamento entre os itens da grid */
+        margin-top: 1rem; /* Espaçamento superior */
     }
     .dashboard-card {
-        background: rgba(255, 255, 255, 0.6);
-        padding: 1rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        color: #333;
+        background: rgba(255, 255, 255, 0.6); /* Fundo translúcido (tema claro) */
+        padding: 1rem; /* Preenchimento */
+        border-radius: 8px; /* Bordas arredondadas */
+        border: 1px solid rgba(255, 255, 255, 0.7); /* Borda */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Sombra */
+        color: #333; /* Cor do texto (tema claro) */
     }
     body.dark .dashboard-card {
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #e0e7ff;
+        background: rgba(0, 0, 0, 0.2); /* Fundo mais escuro */
+        border: 1px solid rgba(255, 255, 255, 0.08); /* Borda mais sutil */
+        color: #e0e7ff; /* Cor do texto (tema escuro) */
     }
     .dashboard-card h3 {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #007bff;
+        font-weight: 600; /* Peso da fonte */
+        margin-bottom: 0.5rem; /* Espaçamento inferior */
+        color: #007bff; /* Cor do título (tema claro) */
     }
     body.dark .dashboard-card h3 {
-        color: #4ecdc4;
+        color: #4ecdc4; /* Cor do título (tema escuro) */
     }
     .dashboard-card p {
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* Tamanho da fonte */
     }
     .dashboard-list {
-        list-style-type: none;
-        padding: 0;
+        list-style-type: none; /* Remove marcadores de lista */
+        padding: 0; /* Remove preenchimento da lista */
     }
     .dashboard-list li {
-        margin-bottom: 0.25rem;
-        font-size: 0.9rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap; /* Allow content to wrap */
-        gap: 0.5rem;
+        margin-bottom: 0.25rem; /* Espaçamento inferior para cada item da lista */
+        font-size: 0.9rem; /* Tamanho da fonte */
+        display: flex; /* Usa flexbox */
+        justify-content: space-between; /* Espaço entre os elementos (nome e valor) */
+        align-items: center; /* Alinha verticalmente ao centro */
+        flex-wrap: wrap; /* Permite que o conteúdo quebre a linha */
+        gap: 0.5rem; /* Espaçamento entre elementos em linha */
     }
     .dashboard-list li span:first-child {
-        font-weight: 500;
+        font-weight: 500; /* Peso da fonte para o primeiro span (nome) */
     }
+    /* Estilos específicos para listas de avaliação no dashboard */
     .dashboard-list.ratings li span:first-child {
-        display: flex;
-        align-items: center;
-        gap: 2px;
+        display: flex; /* Usa flexbox para estrelas */
+        align-items: center; /* Alinha estrelas verticalmente */
+        gap: 2px; /* Espaçamento entre estrelas */
     }
+    /* Linha de informações do item no dashboard (thumbnail + título) */
     .dashboard-list .item-info-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-grow: 1;
-        min-width: 0; /* Allow content to shrink */
+        display: flex; /* Usa flexbox */
+        align-items: center; /* Alinha verticalmente ao centro */
+        gap: 0.5rem; /* Espaçamento entre thumbnail e título */
+        flex-grow: 1; /* Permite que cresça */
+        min-width: 0; /* Permite que o conteúdo encolha para caber */
     }
+    /* Thumbnail dos itens no dashboard */
     .dashboard-list .item-thumbnail {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 4px;
-        flex-shrink: 0; /* Prevent thumbnail from shrinking */
+        width: 40px; /* Largura fixa */
+        height: 40px; /* Altura fixa */
+        object-fit: cover; /* Ajusta a imagem */
+        border-radius: 4px; /* Bordas arredondadas */
+        flex-shrink: 0; /* Impede que a thumbnail encolha */
     }
-    .dashboard-list .copy-id-btn { /* Renamed class */
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        background-color: #28a745;
-        color: white;
-        transition: background-color 0.2s;
-        flex-shrink: 0;
-        cursor: pointer;
+    /* Botão "Copiar ID" no dashboard */
+    .dashboard-list .copy-id-btn {
+        padding: 4px 8px; /* Preenchimento */
+        border-radius: 6px; /* Bordas arredondadas */
+        font-size: 0.7rem; /* Tamanho da fonte */
+        background-color: #28a745; /* Verde */
+        color: white; /* Texto branco */
+        transition: background-color 0.2s; /* Transição de cor */
+        flex-shrink: 0; /* Impede que o botão encolha */
+        cursor: pointer; /* Cursor de ponteiro */
     }
     .dashboard-list .copy-id-btn:hover {
-        background-color: #218838;
+        background-color: #218838; /* Verde mais escuro no hover */
+    }
+
+    /* Estilos do modal do reprodutor de vídeo */
+    #video-player-modal .modal-content {
+        max-width: 90%; /* Largura máxima */
+        max-height: 90%; /* Altura máxima */
+        width: 800px; /* Largura padrão para vídeos */
+        height: auto; /* Altura automática para manter a proporção */
+        background: #000; /* Fundo preto */
+        padding: 0; /* Sem preenchimento */
+        overflow: hidden; /* Oculta conteúdo extra */
+        color: white; /* Cor do texto (se houver) */
+        display: flex; /* Usa flexbox */
+        flex-direction: column; /* Conteúdo empilhado verticalmente */
+        justify-content: center; /* Centraliza verticalmente */
+        align-items: center; /* Centraliza horizontalmente */
+        aspect-ratio: 16/9; /* Proporção de vídeo padrão 16:9 */
+    }
+
+    /* Botão de fechar no modal do reprodutor de vídeo */
+    #video-player-modal .modal-close-btn {
+        color: white; /* Cor branca */
+        top: 5px; /* 5px do topo */
+        right: 5px; /* 5px da direita */
+        z-index: 1001; /* Acima do vídeo */
+        background: rgba(0,0,0,0.5); /* Fundo translúcido */
+        border-radius: 50%; /* Circular */
+        width: 30px; /* Largura */
+        height: 30px; /* Altura */
+        display: flex; /* Usa flexbox para centralizar "X" */
+        justify-content: center; /* Centraliza "X" horizontalmente */
+        align-items: center; /* Centraliza "X" verticalmente */
+        font-size: 1.2rem; /* Tamanho da fonte do "X" */
+    }
+
+    /* Efeito de hover no botão de fechar do reprodutor de vídeo */
+    #video-player-modal .modal-close-btn:hover {
+        color: #eee; /* Cor mais clara */
+        background: rgba(0,0,0,0.8); /* Fundo mais escuro */
+    }
+
+    /* Iframe dentro do contêiner do reprodutor de vídeo */
+    #video-player-modal #video-player-iframe-container iframe {
+        width: 100%; /* Largura total */
+        height: 100%; /* Altura total */
+        border: none; /* Sem borda */
     }
   </style>
 </head>
@@ -813,7 +991,7 @@
                 <button id="all-items-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-gray-600 to-gray-800 rounded-lg text-white font-semibold hover:from-gray-700 hover:to-gray-900" data-i18n="allItemsBtn">
                     All Items
                 </button>
-            </div>
+                </div>
         </div>
 
         <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
@@ -824,6 +1002,7 @@
                         id="search-query"
                         type="text"
                         placeholder="Search by URL or tags..."
+                        class="flex-1"
                         data-i18n-placeholder="searchQueryPlaceholder"
                     />
                     <button class="clear-input-btn" data-target-input="search-query" data-i18n="clearBtn" title="Clear input">✕</button>
@@ -835,7 +1014,7 @@
                         placeholder="Search by tags (comma-separated)..."
                         list="saved-tags-datalist-search"
                         class="flex-1"
-                        data-i18n-placeholder="searchTagsPlaceholder"
+                        data-i18n-placeholder="itemTagsPlaceholder"
                     />
                     <button class="clear-input-btn" data-target-input="search-tags-input" data-i18n="clearBtn" title="Clear input">✕</button>
                 </div>
@@ -864,7 +1043,7 @@
         <div class="glass-effect rounded-lg p-2 sm:p-4 animate-fade-in">
             <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="savedItemsTitle">Saved Items</h2>
             <div id="items-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 overflow-hidden">
-            </div>
+                </div>
         </div>
     </div>
   </div>
@@ -1016,22 +1195,30 @@
     </div>
   </div>
 
+  <div id="video-player-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeVideoPlayerModal()">×</button>
+      <div id="video-player-iframe-container" style="width: 100%; height: 100%;"></div>
+    </div>
+  </div>
 
   <div id="loading-message" class="loading-message"></div>
 
   <script>
-    // Load data from localStorage
+    // **Variáveis de Estado Globais:**
+    // Armazenam os dados principais do aplicativo, carregados do localStorage ou inicializados.
     let items = JSON.parse(localStorage.getItem('items')) || [];
-    // Ensure each item has 'tags', 'metadata', 'rating', and 'accessHistory' properties
+    // Garante que cada item tenha as propriedades esperadas. Isso é importante para compatibilidade com versões antigas dos dados.
     items = items.map(item => ({
       ...item,
-      tags: item.tags || [],
-      metadata: item.metadata || {},
-      rating: item.rating !== undefined ? item.rating : 0,
-      accessHistory: item.accessHistory || [] // Initialize accessHistory
+      tags: item.tags || [], // Assegura que 'tags' é um array
+      metadata: item.metadata || {}, // Assegura que 'metadata' é um objeto
+      rating: item.rating !== undefined ? item.rating : 0, // Define 'rating' como 0 se não existir
+      accessHistory: item.accessHistory || [] // Inicializa 'accessHistory' como um array vazio
     }));
 
     let folders = JSON.parse(localStorage.getItem('folders')) || [
+      // Pastas padrão iniciais para o aplicativo
       { name: 'TikTok', color: 'bg-black', icon: 'svg/tiktok.svg' },
       { name: 'Kwai', color: 'bg-yellow-500', icon: 'svg/kwai.svg' },
       { name: 'Facebook', color: 'bg-blue-600', icon: 'svg/facebook.svg' },
@@ -1040,76 +1227,87 @@
       { name: 'Dailymotion', color: 'bg-teal-600', icon: 'svg/dailymotion.svg' },
       { name: 'Outros Links', color: 'bg-gray-500', icon: 'svg/link.svg' }
     ];
-    let savedTags = JSON.parse(localStorage.getItem('savedTags')) || [];
-    let theme = localStorage.getItem('theme') || 'light';
-    let currentLanguage = localStorage.getItem('language') || 'pt-BR';
+    let savedTags = JSON.parse(localStorage.getItem('savedTags')) || []; // Tags salvas pelo usuário
+    let theme = localStorage.getItem('theme') || 'light'; // Tema atual (claro/escuro)
+    let currentLanguage = localStorage.getItem('language') || 'pt-BR'; // Idioma atual
 
-    let selectedFolder = null;
-    let currentEditingTag = null;
-    let importedDataCache = null; // Cache for imported data
+    let selectedFolder = null; // A pasta atualmente selecionada para filtrar itens (null para "Todos os Itens")
+    let currentEditingTag = null; // Armazena a tag que está sendo editada no modal
+    let importedDataCache = null; // Cache temporário para os dados lidos de um arquivo JSON importado
 
-    // DOM elements
+    // **Referências a Elementos do DOM (Document Object Model):**
+    // Captura elementos HTML pelo ID para manipulá-los via JavaScript.
+
+    // Seção de Adicionar Novo Item
     const itemUrlInput = document.getElementById('item-url');
     const itemTagsInput = document.getElementById('item-tags');
     const itemTypeSelect = document.getElementById('item-type');
     const itemFolderSelect = document.getElementById('item-folder');
     const addItemBtn = document.getElementById('add-item-btn');
     const pasteLinkBtn = document.getElementById('paste-link-btn');
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDescription = document.getElementById('preview-description');
+
+    // Seção de Criar Nova Pasta
     const newFolderInput = document.getElementById('new-folder');
     const folderColorSelect = document.getElementById('folder-color');
     const folderIconSelect = document.getElementById('folder-icon');
     const addFolderBtn = document.getElementById('add-folder-btn');
+
+    // Seção de Busca de Itens
     const searchQueryInput = document.getElementById('search-query');
     const searchTagsInput = document.getElementById('search-tags-input');
     const searchTypeSelect = document.getElementById('search-type');
     const searchFolderSelect = document.getElementById('search-folder');
-    const searchRatingSelect = document.getElementById('search-rating'); // New search rating select
-    const foldersList = document.getElementById('folders-list');
-    const allItemsBtn = document.getElementById('all-items-btn');
-    const itemsList = document.getElementById('items-list');
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsPanel = document.getElementById('settings-panel');
-    const toggleThemeBtn = document.getElementById('toggle-theme-btn');
-    const clearItemsBtn = document.getElementById('clear-items-btn');
-    const manageDataBtn = document.getElementById('manage-data-btn');
-    const languageSelect = document.getElementById('language-select');
+    const searchRatingSelect = document.getElementById('search-rating');
 
-    // Tag Management DOM elements
+    // Listas e Paineis Globais
+    const foldersList = document.getElementById('folders-list');
+    const allItemsBtn = document.getElementById('all-items-btn'); // Botão "Todos os Itens" na lista de pastas
+    const itemsList = document.getElementById('items-list'); // Contêiner para a lista de itens salvos
+    const settingsBtn = document.getElementById('settings-btn'); // Botão para abrir o painel de configurações
+    const settingsPanel = document.getElementById('settings-panel'); // O painel de configurações em si
+    const toggleThemeBtn = document.getElementById('toggle-theme-btn'); // Botão para alternar o tema
+    const clearItemsBtn = document.getElementById('clear-items-btn'); // Botão para limpar todos os itens
+    const manageDataBtn = document.getElementById('manage-data-btn'); // Botão para abrir o modal de gerenciamento de dados
+    const languageSelect = document.getElementById('language-select'); // Select de idioma
+
+    // Elementos do Gerenciamento de Tags (no Painel de Configurações)
     const newTagInput = document.getElementById('new-tag-input');
     const addTagBtn = document.getElementById('add-tag-btn');
-    const tagsList = document.getElementById('tags-list');
-    const savedTagsDatalist = document.getElementById('saved-tags-datalist');
-    const savedTagsDatalistSearch = document.getElementById('saved-tags-datalist-search');
+    const tagsList = document.getElementById('tags-list'); // Lista visual das tags salvas
+    const savedTagsDatalist = document.getElementById('saved-tags-datalist'); // Datalist para autocompletar tags ao adicionar item
+    const savedTagsDatalistSearch = document.getElementById('saved-tags-datalist-search'); // Datalist para autocompletar tags na busca
 
-    // Modals elements
+    // Elementos dos Modais de Edição (Pasta, Item, Tag)
     const editFolderModal = document.getElementById('edit-folder-modal');
     const editFolderNameInput = document.getElementById('edit-folder-name');
     const editFolderColorSelect = document.getElementById('edit-folder-color');
     const editFolderIconSelect = document.getElementById('edit-folder-icon');
     const saveFolderChangesBtn = document.getElementById('save-folder-changes-btn');
     const deleteFolderFromModalBtn = document.getElementById('delete-folder-from-modal-btn');
-    let currentEditingFolder = null;
 
     const editItemModal = document.getElementById('edit-item-modal');
     const editItemUrlInput = document.getElementById('edit-item-url');
     const editItemTagsInput = document.getElementById('edit-item-tags');
     const editItemTypeSelect = document.getElementById('edit-item-type');
     const editItemFolderSelect = document.getElementById('edit-item-folder');
-    const editItemRatingInputs = document.querySelectorAll('#edit-item-rating input[name="rating-edit"]'); // Rating inputs
+    const editItemRatingInputs = document.querySelectorAll('#edit-item-rating input[name="rating-edit"]'); // Inputs de rádio para avaliação
     const saveItemChangesBtn = document.getElementById('save-item-changes-btn');
-    let currentEditingItem = null;
 
     const editTagModal = document.getElementById('edit-tag-modal');
     const editTagNameInput = document.getElementById('edit-tag-name');
     const saveTagChangesBtn = document.getElementById('save-tag-changes-btn');
 
-    // Data Management Modal elements
+    // Elementos do Modal de Gerenciamento de Dados (Import/Export)
     const manageDataModal = document.getElementById('manage-data-modal');
     const exportDataOptionBtn = document.getElementById('export-data-option-btn');
-    const importFileModalInput = document.getElementById('import-file-modal-input');
-    const loadingMessage = document.getElementById('loading-message');
+    const importFileModalInput = document.getElementById('import-file-modal-input'); // Input de arquivo para importação
+    const loadingMessage = document.getElementById('loading-message'); // Mensagem de carregamento
 
-    // Import Selection Modal elements
+    // Elementos do Modal de Seleção de Opções de Importação
     const importSelectionModal = document.getElementById('import-selection-modal');
     const importItemsCheckbox = document.getElementById('import-items-checkbox');
     const importFoldersCheckbox = document.getElementById('import-folders-checkbox');
@@ -1118,11 +1316,11 @@
     const importLanguageCheckbox = document.getElementById('import-language-checkbox');
     const confirmImportSelectionBtn = document.getElementById('confirm-import-selection-btn');
 
-    // Tab System Elements
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
+    // Elementos do Sistema de Abas
+    const tabButtons = document.querySelectorAll('.tab-button'); // Todos os botões das abas
+    const tabContents = document.querySelectorAll('.tab-content'); // Todos os contêineres de conteúdo das abas
 
-    // Dashboard Elements
+    // Elementos específicos do Dashboard
     const dashboardTotalItems = document.getElementById('dashboard-total-items');
     const dashboardItemsByType = document.getElementById('dashboard-items-by-type');
     const dashboardTotalFolders = document.getElementById('dashboard-total-folders');
@@ -1132,11 +1330,16 @@
     const dashboardItemsByRating = document.getElementById('dashboard-items-by-rating');
     const dashboardCurrentTheme = document.getElementById('dashboard-current-theme');
     const dashboardCurrentLanguage = document.getElementById('dashboard-current-language');
-    const dashboardLastAccessedItems = document.getElementById('dashboard-last-accessed-items');
-    const dashboardMostAccessedVideos = document.getElementById('dashboard-most-accessed-videos'); // New element
+    const dashboardLastAccessedItems = document.getElementById('dashboard-last-accessed-items'); // Lista dos últimos acessos
+    const dashboardMostAccessedVideos = document.getElementById('dashboard-most-accessed-videos'); // Lista dos vídeos mais acessados
+
+    // Elementos do Reprodutor de Vídeo (modal)
+    const videoPlayerModal = document.getElementById('video-player-modal'); // O modal completo do reprodutor
+    const videoPlayerIframeContainer = document.getElementById('video-player-iframe-container'); // Contêiner onde o iframe do vídeo será injetado
 
 
-    // Translation dictionary
+    // **Objeto de Traduções:**
+    // Contém todas as strings do aplicativo em diferentes idiomas para internacionalização.
     window.translations = {
       'pt-BR': {
         appTitle: 'Organizador Liquid Glass',
@@ -1283,7 +1486,8 @@
         lastAccessedItemsTitle: 'Últimos Acessos (Vídeos)',
         accessedOn: 'Acessado em',
         mostAccessedItemsTitle: 'Vídeos Mais Acessados',
-        copyIdBtn: 'Copiar ID' /* Changed from copyTagsBtn */
+        copyIdBtn: 'Copiar ID',
+        videoPlayerTitle: 'Reprodutor de Vídeo'
       },
       'en': {
         appTitle: 'Liquid Glass Organizer',
@@ -1430,7 +1634,8 @@
         lastAccessedItemsTitle: 'Last Accessed Items (Videos)',
         accessedOn: 'Accessed on',
         mostAccessedItemsTitle: 'Most Accessed Videos',
-        copyIdBtn: 'Copy ID'
+        copyIdBtn: 'Copy ID',
+        videoPlayerTitle: 'Video Player'
       },
       'es': {
         appTitle: 'Organizador Vidrio Líquido',
@@ -1487,7 +1692,7 @@
         savedItemsTitle: 'Elementos Guardados',
         editFolderTitle: 'Editar Carpeta',
         folderNameLabel: 'Nombre de la Carpeta:',
-        folderColorLabel: 'Color de la Carpeta:',
+        folderColorLabel: 'Cor de la Carpeta:',
         folderIconLabel: 'Icono de la Carpeta:',
         saveChangesBtn: 'Guardar Cambios',
         deleteFolderBtn: 'Eliminar Carpeta',
@@ -1509,7 +1714,7 @@
         youtubeVideoPrefix: 'Video de YouTube',
         youtubeVideoDescription: 'Mira este video en YouTube.',
         dailymotionVideoPrefix: 'Video de Dailymotion',
-        dailymotionVideoDescription: 'Mira este video en Dailymotion.',
+dailymotionVideoDescription: 'Mira este video en Dailymotion.',
         instagramLinkPrefix: 'Enlace de Instagram',
         instagramLinkDescription: 'Ver este contenido en Instagram.',
         tiktokVideoPrefix: 'Video de TikTok',
@@ -1577,78 +1782,87 @@
         lastAccessedItemsTitle: 'Últimos Elementos Accedidos (Vídeos)',
         accessedOn: 'Accedido el',
         mostAccessedItemsTitle: 'Elementos Más Accedidos',
-        copyIdBtn: 'Copiar ID'
+        copyIdBtn: 'Copiar ID',
+        videoPlayerTitle: 'Reproductor de Vídeo'
       }
     };
 
-    // Tab switching logic
+    // Lógica para alternar entre as abas do aplicativo
     function showTab(tabId) {
+        // Oculta todos os conteúdos das abas
         tabContents.forEach(content => {
             content.classList.remove('active');
         });
+        // Desativa todos os botões das abas
         tabButtons.forEach(button => {
             button.classList.remove('active');
         });
 
+        // Ativa o conteúdo da aba selecionada
         document.getElementById(tabId).classList.add('active');
+        // Ativa o botão correspondente à aba selecionada
         document.querySelector(`.tab-button[data-tab="${tabId.replace('-tab', '')}"]`).classList.add('active');
 
-        // Re-render items and dashboard when switching to their respective tabs
+        // Renderiza itens ou atualiza o dashboard ao mudar de aba, garantindo dados corretos
         if (tabId === 'folders-items-tab') {
-            renderItems();
-            updateFolderSelects(); // Ensure folder counts are updated
+            renderItems(); // Renderiza a lista de itens
+            updateFolderSelects(); // Atualiza a lista de pastas e seus contadores
         } else if (tabId === 'dashboard-tab') {
-            updateDashboard();
+            updateDashboard(); // Atualiza todas as estatísticas do dashboard
         }
     }
 
+    // Adiciona event listeners para os botões das abas
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const tabId = button.dataset.tab + '-tab';
-            showTab(tabId);
+            const tabId = button.dataset.tab + '-tab'; // Obtém o ID da aba a ser mostrada
+            showTab(tabId); // Chama a função para mostrar a aba
         });
     });
 
-    // Function to extract video ID based on URL type
+    // Função auxiliar para extrair o ID de um vídeo de várias plataformas
     function getVideoIdFromUrl(url, type) {
-        if (!url) return null;
+        if (!url) return null; // Retorna nulo se a URL for vazia
 
+        // Expressões regulares para extrair o ID de cada plataforma
         if (type === 'youtube') {
-            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^#\&\?]*).*/;
             const match = url.match(regex);
-            return match ? match[1] : null;
+            return match ? match[1] : null; // Retorna o ID do YouTube
         } else if (type === 'dailymotion') {
             const regex = /(?:dailymotion\.com\/(?:video|embed)\/|dai\.ly\/)([a-zA-Z0-9]+)/;
             const match = url.match(regex);
-            return match ? match[1] : null;
+            return match ? match[1] : null; // Retorna o ID do Dailymotion
         } else if (type === 'tiktok') {
             const regex = /(?:tiktok\.com\/@(?:[a-zA-Z0-9_]+\/video|v)\/)([0-9]+)/;
             const match = regex.exec(url);
-            return match ? match[1] : null;
+            return match ? match[1] : null; // Retorna o ID do TikTok
         } else if (type === 'kwai') {
             const regex = /(?:kwai\.com\/(?:photo|video)\/)([0-9]+)/;
             const match = regex.exec(url);
-            return match ? match[1] : null;
+            return match ? match[1] : null; // Retorna o ID do Kwai
         } else if (type === 'facebook') {
-            // Facebook links often don't have a simple embed ID, returning full URL or a placeholder
-            return 'facebook-video'; // Placeholder for Facebook if specific ID isn't easily extractable
+            // Para Facebook, geralmente não há um ID simples para incorporação direta sem o SDK.
+            // Retorna a URL completa como fallback para que o usuário possa abrir.
+            return url; 
         }
-        return null; // For other types or if no ID found
+        return null; // Retorna nulo para outros tipos ou se o ID não for encontrado
     }
 
-    // Dashboard Data Aggregation and Rendering
+    // Função para atualizar os dados e a renderização do Dashboard
     function updateDashboard() {
-        // Total Items
+        // Atualiza o total de itens
         dashboardTotalItems.textContent = items.length;
 
-        // Items by Type
+        // Atualiza o contador de itens por tipo (Link, Vídeo, Foto)
         const itemsByTypeCounts = items.reduce((acc, item) => {
             acc[item.type] = (acc[item.type] || 0) + 1;
             return acc;
         }, {});
-        dashboardItemsByType.innerHTML = '';
+        dashboardItemsByType.innerHTML = ''; // Limpa a lista existente
         if (Object.keys(itemsByTypeCounts).length > 0) {
             for (const type in itemsByTypeCounts) {
+                // Usa tradução para o nome do tipo
                 const typeName = window.translations[currentLanguage][`${type}Type`] || type;
                 dashboardItemsByType.innerHTML += `<li><span>${typeName}:</span> <span>${itemsByTypeCounts[type]}</span></li>`;
             }
@@ -1656,19 +1870,18 @@
             dashboardItemsByType.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
 
-
-        // Total Folders
+        // Atualiza o total de pastas
         dashboardTotalFolders.textContent = folders.length;
 
-        // Items by Folder
+        // Atualiza o contador de itens por pasta
         const itemsByFolderCounts = items.reduce((acc, item) => {
             const folderName = item.folder || window.translations[currentLanguage]['noFolderAssigned'];
             acc[folderName] = (acc[folderName] || 0) + 1;
             return acc;
         }, {});
-        dashboardItemsByFolder.innerHTML = '';
+        dashboardItemsByFolder.innerHTML = ''; // Limpa a lista existente
         if (Object.keys(itemsByFolderCounts).length > 0) {
-            // Sort by count descending, then by name ascending
+            // Ordena as pastas por contagem (decrescente) e depois por nome (alfabética)
             const sortedFolders = Object.entries(itemsByFolderCounts).sort(([nameA, countA], [nameB, countB]) => {
                 if (countB !== countA) return countB - countA;
                 return nameA.localeCompare(nameB);
@@ -1680,11 +1893,10 @@
             dashboardItemsByFolder.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
         
-
-        // Total Tags
+        // Atualiza o total de tags
         dashboardTotalTags.textContent = savedTags.length;
 
-        // Top Used Tags
+        // Atualiza as tags mais usadas (limitado às 5 primeiras)
         const tagCounts = {};
         items.forEach(item => {
             if (item.tags) {
@@ -1694,7 +1906,7 @@
             }
         });
         const sortedTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a).slice(0, 5);
-        dashboardTopTags.innerHTML = '';
+        dashboardTopTags.innerHTML = ''; // Limpa a lista existente
         if (sortedTags.length > 0) {
             sortedTags.forEach(([tag, count]) => {
                 dashboardTopTags.innerHTML += `<li><span>${tag}:</span> <span>${count}</span></li>`;
@@ -1703,14 +1915,14 @@
             dashboardTopTags.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
 
-        // Items by Rating
+        // Atualiza os itens por avaliação (estrelas)
         const ratingCounts = items.reduce((acc, item) => {
             const rating = item.rating !== undefined ? item.rating : 0;
             acc[rating] = (acc[rating] || 0) + 1;
             return acc;
         }, {});
-        dashboardItemsByRating.innerHTML = '';
-        const sortedRatings = Object.keys(ratingCounts).sort((a, b) => b - a); // Sort from 5 to 0
+        dashboardItemsByRating.innerHTML = ''; // Limpa a lista existente
+        const sortedRatings = Object.keys(ratingCounts).sort((a, b) => b - a); // Ordena de 5 a 0 estrelas
         if (sortedRatings.length > 0) {
             sortedRatings.forEach(rating => {
                 const displayRating = parseInt(rating) === 0 
@@ -1722,40 +1934,42 @@
             dashboardItemsByRating.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
 
-
-        // System Info
+        // Atualiza informações do sistema (Tema e Idioma atuais)
         dashboardCurrentTheme.textContent = theme === 'light' ? 'Light' : 'Dark';
         dashboardCurrentLanguage.textContent = currentLanguage;
 
-        // Last Accessed Items (Videos Only) - Limited to 5
+        // Últimos Acessos (Apenas Vídeos) - Limite de 5
         const allVideoAccesses = [];
+        // Filtra apenas itens do tipo 'video' que possuem histórico de acesso
         items.filter(item => item.type === 'video' && item.accessHistory && item.accessHistory.length > 0).forEach(videoItem => {
+            // Para cada acesso no histórico do vídeo, cria uma entrada para a lista
             videoItem.accessHistory.forEach(timestamp => {
                 allVideoAccesses.push({
-                    item: videoItem,
-                    timestamp: timestamp
+                    item: videoItem, // Referência ao objeto do item
+                    timestamp: timestamp // O timestamp do acesso
                 });
             });
         });
 
-        allVideoAccesses.sort((a, b) => b.timestamp - a.timestamp); // Sort by most recent access
-        const lastAccessedVideos = allVideoAccesses.slice(0, 5); // Get top 5
+        // Ordena os acessos do mais recente para o mais antigo
+        allVideoAccesses.sort((a, b) => b.timestamp - a.timestamp); 
+        const lastAccessedVideos = allVideoAccesses.slice(0, 5); // Pega os 5 últimos
 
-        dashboardLastAccessedItems.innerHTML = '';
+        dashboardLastAccessedItems.innerHTML = ''; // Limpa a lista existente
         if (lastAccessedVideos.length > 0) {
             lastAccessedVideos.forEach(access => {
                 const accessDate = new Date(access.timestamp).toLocaleDateString(currentLanguage, { day: '2-digit', month: '2-digit', year: 'numeric' });
                 const accessTime = new Date(access.timestamp).toLocaleTimeString(currentLanguage, { hour: '2-digit', minute: '2-digit' });
-                const videoId = getVideoIdFromUrl(access.item.url, access.item.type);
+                const videoId = getVideoIdFromUrl(access.item.url, access.item.type); // Obtém o ID do vídeo para copiar
 
                 dashboardLastAccessedItems.innerHTML += `
                     <li>
                         <div class="item-info-row">
                             <img src="${access.item.metadata.image}" alt="Thumb" class="item-thumbnail" onerror="this.src='https://placehold.co/40?text=No+Preview'">
-                            <span>${access.item.metadata.title}</span>
+                            <span class="truncate">${access.item.metadata.title}</span>
                         </div>
-                        <span>${window.translations[currentLanguage]['accessedOn']} ${accessDate} ${accessTime}</span>
-                        <button class="copy-id-btn" data-video-id="${videoId || access.item.url}" data-item-type="${access.item.type}" data-url="${access.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
+                        <span class="text-xs text-gray-500 flex-shrink-0">${window.translations[currentLanguage]['accessedOn']} ${accessDate} ${accessTime}</span>
+                        <button class="copy-id-btn" data-video-id="${videoId || access.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
                             ${window.translations[currentLanguage]['copyIdBtn']}
                         </button>
                     </li>`;
@@ -1764,31 +1978,32 @@
             dashboardLastAccessedItems.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
 
-        // Most Accessed Videos (by total count) - Limited to 5
+        // Vídeos Mais Acessados (por contagem total de acessos) - Limite de 5
         const videoAccessCounts = {};
+        // Filtra apenas itens do tipo 'video'
         items.filter(item => item.type === 'video').forEach(videoItem => {
             videoAccessCounts[videoItem.id] = (videoItem.accessHistory ? videoItem.accessHistory.length : 0);
         });
         const sortedMostAccessedVideos = Object.entries(videoAccessCounts)
             .map(([id, count]) => {
-                const item = items.find(i => i.id == id);
-                return { item, count };
+                const item = items.find(i => i.id == id); // Encontra o objeto item original pelo ID
+                return { item, count }; // Retorna um objeto com o item e sua contagem de acessos
             })
-            .filter(entry => entry.item && entry.count > 0)
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 5); // Top 5 most accessed videos
+            .filter(entry => entry.item && entry.count > 0) // Garante que o item exista e tenha acessos
+            .sort((a, b) => b.count - a.count) // Ordena pela contagem de acessos (decrescente)
+            .slice(0, 5); // Pega os 5 vídeos mais acessados
 
-        dashboardMostAccessedVideos.innerHTML = '';
+        dashboardMostAccessedVideos.innerHTML = ''; // Limpa a lista existente
         if (sortedMostAccessedVideos.length > 0) {
             sortedMostAccessedVideos.forEach(entry => {
-                const videoId = getVideoIdFromUrl(entry.item.url, entry.item.type);
+                const videoId = getVideoIdFromUrl(entry.item.url, entry.item.type); // Obtém o ID do vídeo para copiar
                 dashboardMostAccessedVideos.innerHTML += `
                     <li>
                         <div class="item-info-row">
                             <img src="${entry.item.metadata.image}" alt="Thumb" class="item-thumbnail" onerror="this.src='https://placehold.co/40?text=No+Preview'">
-                            <span>${entry.item.metadata.title}:</span> <span>${entry.count} ${window.translations[currentLanguage]['accesses']}</span>
+                            <span class="truncate">${entry.item.metadata.title}:</span> <span class="flex-shrink-0">${entry.count} ${window.translations[currentLanguage]['accesses']}</span>
                         </div>
-                        <button class="copy-id-btn" data-video-id="${videoId || entry.item.url}" data-item-type="${entry.item.type}" data-url="${entry.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
+                        <button class="copy-id-btn" data-video-id="${videoId || entry.item.url}" title="${window.translations[currentLanguage]['copyIdBtn']}">
                             ${window.translations[currentLanguage]['copyIdBtn']}
                         </button>
                     </li>`;
@@ -1797,43 +2012,37 @@
             dashboardMostAccessedVideos.innerHTML = `<li><span>${window.translations[currentLanguage]['dataPlaceholder']}</span></li>`;
         }
 
-        // Add event listeners for new copy ID buttons
+        // Adiciona event listeners para os botões "Copiar ID" recém-criados no dashboard
         document.querySelectorAll('.dashboard-list .copy-id-btn').forEach(button => {
             button.addEventListener('click', (e) => {
-                const videoIdOrUrl = e.target.dataset.videoId;
-                const itemType = e.target.dataset.itemType;
-                const originalUrl = e.target.dataset.url;
-
-                let contentToCopy = videoIdOrUrl;
-
-                // Handle cases where a simple ID might not be available or URL is more useful
-                if (!videoIdOrUrl && (itemType === 'facebook' || itemType === 'instagram')) {
-                    contentToCopy = originalUrl;
-                }
-
-                if (contentToCopy) {
-                    navigator.clipboard.writeText(contentToCopy)
-                        .then(() => showCustomModal(`ID/URL copied: ${contentToCopy}`, window.translations[currentLanguage]['okBtn']))
+                const videoIdOrUrl = e.target.dataset.videoId; // Obtém o ID ou URL do atributo data-
+                if (videoIdOrUrl) {
+                    navigator.clipboard.writeText(videoIdOrUrl) // Copia para a área de transferência
+                        .then(() => showCustomModal(`ID/URL copied: ${videoIdOrUrl}`, window.translations[currentLanguage]['okBtn'])) // Mensagem de sucesso
                         .catch(err => {
                             console.error('Failed to copy ID/URL:', err);
-                            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']);
+                            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']); // Mensagem de erro
                         });
-                    // Switch to "Folders & Saved Items" tab and populate search bar
+                    // Opcional: Mudar para a aba "Pastas & Itens Salvos" e preencher a barra de pesquisa
                     showTab('folders-items-tab');
-                    searchQueryInput.value = contentToCopy;
-                    searchItems();
+                    searchQueryInput.value = videoIdOrUrl; // Preenche o input de busca
+                    searchItems(); // Realiza a busca
                 }
             });
         });
     }
 
 
-    // Apply theme
+    // **Funções Utilitárias:**
+
+    // Função para aplicar o tema (claro/escuro) em todo o aplicativo
     function applyTheme() {
-      document.body.className = theme;
+      document.body.className = theme; // Aplica a classe do tema ao corpo
+      // Atualiza o texto do botão de alternar tema
       toggleThemeBtn.textContent = `Toggle ${theme === 'light' ? 'Dark' : 'Light'} Theme`;
-      localStorage.setItem('theme', theme);
-      // Update header text color based on theme
+      localStorage.setItem('theme', theme); // Salva o tema no localStorage
+      
+      // Atualiza a cor do texto dos títulos principais
       const appTitle = document.querySelector('h1[data-i18n="appTitle"]');
       const settingsTitle = document.querySelector('h2[data-i18n="settingsTitle"]');
       const languageLabel = document.querySelector('label[data-i18n="languageLabel"]');
@@ -1855,16 +2064,16 @@
       textElements.forEach(element => {
         if (element) {
           if (theme === 'light') {
-            element.classList.remove('text-white');
-            element.classList.add('text-gray-800');
+            element.classList.remove('text-white'); // Remove classe de texto branco
+            element.classList.add('text-gray-800'); // Adiciona classe de texto cinza escuro
           } else {
-            element.classList.remove('text-gray-800');
-            element.classList.add('text-white');
+            element.classList.remove('text-gray-800'); // Remove classe de texto cinza escuro
+            element.classList.add('text-white'); // Adiciona classe de texto branco
           }
         }
       });
 
-      // Update preview container background
+      // Atualiza o fundo e cores do contêiner de pré-visualização
       const previewContainer = document.getElementById('preview-container');
       const previewTitle = document.getElementById('preview-title');
       const previewDescription = document.getElementById('preview-description');
@@ -1887,14 +2096,27 @@
         }
       }
 
-      // Update modal content colors
+      // Atualiza as cores do conteúdo dos modais
       const modalContents = document.querySelectorAll('.modal-content');
       modalContents.forEach(modal => {
         const labels = modal.querySelectorAll('.modal-input-group label');
         const inputs = modal.querySelectorAll('.modal-input-group input, .modal-input-group select');
         const closeBtn = modal.querySelector('.modal-close-btn');
 
-        if (theme === 'light') {
+        if (modal.id === 'video-player-modal' ) { // Estilo especial para o modal do player
+             // O modal do player tem um tratamento de cores diferente (sempre escuro)
+             // Então, ele não precisa mudar com o tema light/dark do app, apenas o X
+            if (theme === 'light') {
+                closeBtn.style.color = 'white'; // Sempre branco contra fundo preto do player
+                closeBtn.onmouseover = () => closeBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                closeBtn.onmouseout = () => closeBtn.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            } else { // Dark theme
+                closeBtn.style.color = 'white'; // Sempre branco contra fundo preto do player
+                closeBtn.onmouseover = () => closeBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                closeBtn.onmouseout = () => closeBtn.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            }
+        }
+        else if (theme === 'light') { // Para outros modais
             modal.style.backgroundColor = '#fff';
             modal.style.color = '#333';
             modal.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
@@ -1908,7 +2130,7 @@
                 input.style.borderColor = '#ddd';
                 input.style.color = '#333';
             });
-        } else {
+        } else { // Dark theme
             modal.style.backgroundColor = '#2a2a2a';
             modal.style.color = '#e0e7ff';
             modal.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.6)';
@@ -1924,7 +2146,7 @@
             });
         }
       });
-      // Update tag-item background and text color
+      // Atualiza fundo e cor do texto dos itens de tag
       document.querySelectorAll('.tag-item').forEach(tagItem => {
           if (theme === 'light') {
               tagItem.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
@@ -1934,16 +2156,16 @@
               tagItem.style.color = 'white';
           }
       });
-      // Update .icon-svg filter
+      // Atualiza o filtro de cor para ícones SVG
       document.querySelectorAll('.icon-svg').forEach(icon => {
           if (theme === 'light') {
-              icon.style.filter = 'invert(0)';
+              icon.style.filter = 'invert(0)'; // Sem inversão
           } else {
-              icon.style.filter = 'invert(1)';
+              icon.style.filter = 'invert(1)'; // Inverte a cor
           }
       });
 
-      // Update dashboard cards
+      // Atualiza as cores dos cards do dashboard
       document.querySelectorAll('.dashboard-card').forEach(card => {
           if (theme === 'light') {
               card.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
@@ -1961,20 +2183,21 @@
       });
     }
 
-    // Function to apply selected language
+    // Função para aplicar o idioma selecionado em toda a interface
     function applyLanguage(lang) {
-      currentLanguage = lang;
-      localStorage.setItem('language', currentLanguage);
+      currentLanguage = lang; // Define o idioma atual
+      localStorage.setItem('language', currentLanguage); // Salva o idioma no localStorage
 
-      // Update static text content
+      // Atualiza o texto de todos os elementos com o atributo 'data-i18n'
       document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
+        const key = element.getAttribute('data-i18n'); // Obtém a chave de tradução
+        // Verifica se a tradução existe e aplica
         if (window.translations[currentLanguage] && window.translations[currentLanguage][key]) {
           element.textContent = window.translations[currentLanguage][key];
         }
       });
 
-      // Update placeholders
+      // Atualiza o placeholder de todos os elementos com o atributo 'data-i18n-placeholder'
       document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         if (window.translations[currentLanguage] && window.translations[currentLanguage][key]) {
@@ -1982,29 +2205,29 @@
         }
       });
 
-      // Special case for Toggle Dark Theme button, as its text changes
+      // Caso especial para o texto do botão de alternar tema, pois seu texto muda dinamicamente
       toggleThemeBtn.textContent = window.translations[currentLanguage]['toggleDarkThemeBtn'];
 
-      // Re-render dynamic content that uses translations
+      // Re-renderiza conteúdos dinâmicos que usam traduções (para garantir que estejam no idioma correto)
       updateFolderSelects();
       updateSavedTagsList();
       renderItems(items);
-      updateDashboard(); // Update dashboard content with new language
+      updateDashboard(); // Atualiza o dashboard com o novo idioma
     }
 
-    // Update folder select options
+    // Função para atualizar as opções de pastas nos selects e renderizar a lista de pastas
     function updateFolderSelects() {
-      // Helper function to create an option element with an SVG
+      // Função auxiliar para criar um elemento <option> com um ícone SVG
       const createOptionWithSVG = (value, textKey, iconPath) => {
         const option = document.createElement('option');
         option.value = value;
-        option.setAttribute('data-i18n', textKey); // Keep data-i18n for translation
-        // Use innerHTML for SVG img tag
+        option.setAttribute('data-i18n', textKey);
+        // Usa innerHTML para incluir a tag <img> do SVG e o texto traduzido
         option.innerHTML = `<img src="${iconPath}" alt="" class="icon-svg inline-block"> ${window.translations[currentLanguage][textKey]}`;
         return option;
       };
 
-      // Define a lista de opções de ícones de pastas para os selects
+      // Lista de opções de ícones de pastas (caminhos e chaves de tradução)
       const folderIconOptions = [
         { value: "svg/tiktok.svg", textKey: "iconTikTok" },
         { value: "svg/kwai.svg", textKey: "iconKwai" },
@@ -2016,9 +2239,8 @@
         { value: "svg/link.svg", textKey: "iconLink" }
       ];
 
-
-      // Update itemFolderSelect (Add Item Section)
-      itemFolderSelect.innerHTML = '';
+      // Atualiza o select de pasta na seção "Adicionar Novo Item"
+      itemFolderSelect.innerHTML = ''; // Limpa as opções existentes
       folders.forEach(folder => {
         const option = document.createElement('option');
         option.value = folder.name;
@@ -2026,7 +2248,7 @@
         itemFolderSelect.appendChild(option);
       });
       
-      // Update searchFolderSelect (Search Bar Section)
+      // Atualiza o select de pasta na seção "Buscar Itens"
       searchFolderSelect.innerHTML = `<option value="all" data-i18n="allFolders">${window.translations[currentLanguage]['allFolders']}</option>`;
       folders.forEach(folder => {
         const option = document.createElement('option');
@@ -2035,7 +2257,7 @@
         searchFolderSelect.appendChild(option);
       });
       
-      // Update editItemFolderSelect (Edit Item Modal)
+      // Atualiza o select de pasta no modal "Editar Item"
       editItemFolderSelect.innerHTML = `<option value="">${window.translations[currentLanguage]['noFolder']}</option>`;
       folders.forEach(folder => {
         const option = document.createElement('option');
@@ -2044,9 +2266,10 @@
         editItemFolderSelect.appendChild(option);
       });
       
-      // Update foldersList (Folders Section)
+      // Atualiza a lista de botões de pastas na seção "Pastas"
       foldersList.innerHTML = `<button id="all-items-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-gray-600 to-gray-800 rounded-lg text-white font-semibold hover:from-gray-700 hover:to-gray-900" data-i18n="allItemsBtn">${window.translations[currentLanguage]['allItemsBtn']}</button>`;
       folders.forEach(folder => {
+          // Conta quantos itens estão em cada pasta
           const itemCount = items.filter(item => item.folder === folder.name).length;
           const folderButtonHtml = `
               <div class="flex items-center gap-1 relative">
@@ -2058,54 +2281,58 @@
           foldersList.innerHTML += folderButtonHtml;
       });
 
-      localStorage.setItem('folders', JSON.stringify(folders));
+      localStorage.setItem('folders', JSON.stringify(folders)); // Salva as pastas no localStorage
 
+      // **FIX:** Adiciona event listeners (onclick) aos botões de pasta e "Todos os Itens"
+      // Isso é crucial para que o filtro de pastas funcione corretamente após a renderização dinâmica da lista de pastas.
       document.querySelectorAll('.folder-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedFolder = btn.dataset.folder;
-          searchItems();
-        });
+        btn.onclick = () => { // Usa onclick para simplicidade após a criação dinâmica
+          selectedFolder = btn.dataset.folder; // Define a pasta selecionada para filtragem
+          searchItems(); // Re-executa a busca para filtrar itens pela pasta
+        };
       });
-      document.getElementById('all-items-btn').addEventListener('click', () => {
-        selectedFolder = null;
-        searchItems();
-      });
+      const allItemsButtonElement = document.getElementById('all-items-btn');
+      if (allItemsButtonElement) { 
+        allItemsButtonElement.onclick = () => { // Usa onclick
+            selectedFolder = null; // Reseta a seleção de pasta para mostrar "todos"
+            searchItems(); // Re-executa a busca
+        };
+      }
 
+      // Adiciona event listeners para os botões de edição de pasta (dentro da lista de pastas)
       foldersList.addEventListener('click', (e) => {
         if (e.target.classList.contains('edit-folder-btn')) {
-          e.preventDefault();
-          const folderName = e.target.dataset.folderName;
-          currentEditingFolder = folders.find(f => f.name === folderName);
+          e.preventDefault(); // Evita o comportamento padrão do botão
+          const folderName = e.target.dataset.folderName; // Obtém o nome da pasta a ser editada
+          currentEditingFolder = folders.find(f => f.name === folderName); // Encontra o objeto da pasta nos dados
           if (currentEditingFolder) {
+            // Preenche o modal de edição de pasta com os dados da pasta
             editFolderNameInput.value = currentEditingFolder.name;
             editFolderColorSelect.value = currentEditingFolder.color;
             editFolderIconSelect.value = currentEditingFolder.icon;
-            editFolderModal.classList.remove('hidden');
+            editFolderModal.classList.remove('hidden'); // Mostra o modal
           }
-        } else if (e.target.classList.contains('folder-btn')) {
-          selectedFolder = e.target.dataset.folder;
-          searchItems();
         }
       });
 
-      // Populate icon select options dynamically with SVGs
-      folderIconSelect.innerHTML = '';
-      editFolderIconSelect.innerHTML = '';
-
+      // Popula as opções de ícone nos selects de ícone de pasta (para adicionar e editar)
+      folderIconSelect.innerHTML = ''; // Limpa as opções existentes
+      editFolderIconSelect.innerHTML = ''; // Limpa as opções existentes
       folderIconOptions.forEach(optionData => {
         folderIconSelect.appendChild(createOptionWithSVG(optionData.value, optionData.textKey, optionData.value));
         editFolderIconSelect.appendChild(createOptionWithSVG(optionData.value, optionData.textKey, optionData.value));
       });
-      applyTheme(); // Re-apply theme to ensure new icons get the correct filter
+      applyTheme(); // Reaplica o tema para garantir que os novos ícones tenham o filtro correto
     }
 
-    // Update saved tags list and datalists
+    // Função para atualizar a lista de tags salvas e os datalists de tags para autocompletar
     function updateSavedTagsList() {
-        tagsList.innerHTML = '';
-        savedTagsDatalist.innerHTML = '';
-        savedTagsDatalistSearch.innerHTML = '';
+        tagsList.innerHTML = ''; // Limpa a lista visual de tags
+        savedTagsDatalist.innerHTML = ''; // Limpa o datalist para autocompletar ao adicionar item
+        savedTagsDatalistSearch.innerHTML = ''; // Limpa o datalist para autocompletar na busca
 
         savedTags.forEach(tag => {
+            // Cria o elemento visual para cada tag (com botões de editar/excluir)
             const tagElement = document.createElement('div');
             tagElement.classList.add('tag-item');
             tagElement.innerHTML = `
@@ -2115,8 +2342,9 @@
                     <button class="delete-tag-btn delete" data-tag="${tag}" data-i18n="deleteBtn">${window.translations[currentLanguage]['deleteBtn']}</button>
                 </div>
             `;
-            tagsList.appendChild(tagElement);
+            tagsList.appendChild(tagElement); // Adiciona à lista visual
 
+            // Adiciona a tag aos datalists para sugestões de autocompletar
             const option = document.createElement('option');
             option.value = tag;
             savedTagsDatalist.appendChild(option);
@@ -2125,53 +2353,63 @@
             searchOption.value = tag;
             savedTagsDatalistSearch.appendChild(searchOption);
         });
-        localStorage.setItem('savedTags', JSON.stringify(savedTags));
-        applyTheme(); // Re-apply theme to ensure tag items get the correct colors
+        localStorage.setItem('savedTags', JSON.stringify(savedTags)); // Salva as tags no localStorage
+        applyTheme(); // Reaplica o tema para garantir cores corretas
     }
 
-    // Add new tag
+    // Event listener para o botão "Adicionar Tag"
     addTagBtn.addEventListener('click', () => {
-        const newTag = newTagInput.value.trim();
+        const newTag = newTagInput.value.trim(); // Obtém o valor do input, remove espaços
+        // Verifica se a tag não está vazia e se já não existe
         if (newTag && !savedTags.includes(newTag)) {
-            savedTags.push(newTag);
-            newTagInput.value = '';
-            updateSavedTagsList();
+            savedTags.push(newTag); // Adiciona a nova tag
+            newTagInput.value = ''; // Limpa o input
+            updateSavedTagsList(); // Atualiza a lista visual de tags
         } else if (newTag) {
+            // Mensagem se a tag já existe
             showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newTag));
         } else {
+            // Mensagem se o input está vazio
             showCustomModal(window.translations[currentLanguage]['newTagPlaceholder']);
         }
     });
 
-    // Edit tag
+    // Event listener para edição e exclusão de tags na lista de tags
     tagsList.addEventListener('click', (e) => {
+        // Se o botão clicado tem a classe 'edit-tag-btn'
         if (e.target.classList.contains('edit-tag-btn')) {
-            const tagToEdit = e.target.dataset.tag;
-            currentEditingTag = tagToEdit;
-            editTagNameInput.value = tagToEdit;
-            editTagModal.classList.remove('hidden');
-        } else if (e.target.classList.contains('delete-tag-btn')) {
-            const tagToDelete = e.target.dataset.tag;
+            const tagToEdit = e.target.dataset.tag; // Obtém a tag a ser editada
+            currentEditingTag = tagToEdit; // Armazena a tag atual para edição
+            editTagNameInput.value = tagToEdit; // Preenche o input do modal de edição
+            editTagModal.classList.remove('hidden'); // Mostra o modal de edição
+        } 
+        // Se o botão clicado tem a classe 'delete-tag-btn'
+        else if (e.target.classList.contains('delete-tag-btn')) {
+            const tagToDelete = e.target.dataset.tag; // Obtém a tag a ser excluída
+            // Pede confirmação antes de excluir
             showConfirmModal(`Tem certeza de que deseja excluir a tag "${tagToDelete}"? Esta tag será removida de todos os links que a utilizam.`, () => {
+                // Filtra a tag da lista de tags salvas
                 savedTags = savedTags.filter(tag => tag !== tagToDelete);
+                // Remove a tag de todos os itens que a utilizam
                 items = items.map(item => {
                     if (item.tags && item.tags.includes(tagToDelete)) {
                         return { ...item, tags: item.tags.filter(t => t !== tagToDelete) };
                     }
                     return item;
                 });
-                localStorage.setItem('items', JSON.stringify(items));
-                updateSavedTagsList();
-                renderItems();
+                localStorage.setItem('items', JSON.stringify(items)); // Salva os itens atualizados
+                updateSavedTagsList(); // Atualiza a lista visual de tags
+                renderItems(); // Re-renderiza os itens (para refletir a remoção da tag)
             }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
         }
     });
 
-    // Save edited tag
+    // Event listener para salvar alterações de tag no modal de edição
     saveTagChangesBtn.addEventListener('click', () => {
-        const oldTag = currentEditingTag;
-        const newTag = editTagNameInput.value.trim();
+        const oldTag = currentEditingTag; // Tag original
+        const newTag = editTagNameInput.value.trim(); // Novo nome da tag
 
+        // Validações
         if (newTag && newTag !== oldTag && savedTags.includes(newTag)) {
             showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newTag));
             return;
@@ -2181,6 +2419,7 @@
             return;
         }
 
+        // Atualiza o nome da tag em savedTags e em todos os itens que a utilizam
         savedTags = savedTags.map(tag => tag === oldTag ? newTag : tag);
         items = items.map(item => {
             if (item.tags) {
@@ -2189,14 +2428,14 @@
             return item;
         });
 
-        localStorage.setItem('items', JSON.stringify(items));
-        updateSavedTagsList();
-        renderItems();
-        editTagModal.classList.add('hidden');
-        currentEditingTag = null;
+        localStorage.setItem('items', JSON.stringify(items)); // Salva os itens atualizados
+        updateSavedTagsList(); // Atualiza a lista visual de tags
+        renderItems(); // Re-renderiza os itens
+        editTagModal.classList.add('hidden'); // Oculta o modal
+        currentEditingTag = null; // Reseta a tag em edição
     });
 
-    // Save folder changes
+    // Event listener para salvar alterações de pasta no modal de edição
     saveFolderChangesBtn.addEventListener('click', () => {
       if (currentEditingFolder) {
         const oldFolderName = currentEditingFolder.name;
@@ -2204,6 +2443,7 @@
         const newFolderColor = editFolderColorSelect.value;
         const newFolderIcon = editFolderIconSelect.value;
 
+        // Validações
         if (newFolderName && newFolderName !== oldFolderName && folders.some(f => f.name === newFolderName)) {
             showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newFolderName));
             return;
@@ -2213,10 +2453,12 @@
             return;
         }
 
+        // Atualiza as propriedades da pasta
         currentEditingFolder.name = newFolderName;
         currentEditingFolder.color = newFolderColor;
         currentEditingFolder.icon = newFolderIcon;
 
+        // Se o nome da pasta mudou, atualiza todos os itens que a referenciam
         if (oldFolderName !== newFolderName) {
           items = items.map(item => {
             if (item.folder === oldFolderName) {
@@ -2225,52 +2467,58 @@
             return item;
           });
         }
-        localStorage.setItem('folders', JSON.stringify(folders));
-        localStorage.setItem('items', JSON.stringify(items));
-        updateFolderSelects();
-        searchItems();
-        editFolderModal.classList.add('hidden');
-        currentEditingFolder = null;
+        localStorage.setItem('folders', JSON.stringify(folders)); // Salva as pastas
+        localStorage.setItem('items', JSON.stringify(items)); // Salva os itens
+        updateFolderSelects(); // Atualiza os selects de pasta e a lista de botões
+        searchItems(); // Re-renderiza os itens
+        editFolderModal.classList.add('hidden'); // Oculta o modal
+        currentEditingFolder = null; // Reseta a pasta em edição
       }
     });
 
-    // Delete folder from edit modal
+    // Event listener para excluir pasta no modal de edição de pasta
     deleteFolderFromModalBtn.addEventListener('click', (e) => {
         e.preventDefault();
         if (currentEditingFolder) {
             const folderName = currentEditingFolder.name;
             const linksInFolder = items.filter(item => item.folder === folderName).length;
             
+            // Pede confirmação para exclusão, informando sobre os links na pasta
             showConfirmModal(window.translations[currentLanguage]['confirmDeleteFolder'](folderName, linksInFolder), () => {
+                // Remove a pasta da lista de pastas
                 folders = folders.filter(f => f.name !== folderName);
+                // Move os links da pasta excluída para "All Items" (folder: null)
                 items = items.map(item => {
                     if (item.folder === folderName) {
                         return { ...item, folder: null };
                     }
                     return item;
                 });
-                localStorage.setItem('items', JSON.stringify(items));
-                localStorage.setItem('folders', JSON.stringify(folders));
-                updateFolderSelects();
-                searchItems();
-                editFolderModal.classList.add('hidden');
-                currentEditingFolder = null;
+                localStorage.setItem('items', JSON.stringify(items)); // Salva os itens
+                localStorage.setItem('folders', JSON.stringify(folders)); // Salva as pastas
+                updateFolderSelects(); // Atualiza os selects de pasta e a lista de botões
+                searchItems(); // Re-renderiza os itens
+                editFolderModal.classList.add('hidden'); // Oculta o modal
+                currentEditingFolder = null; // Reseta a pasta em edição
             }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
         }
     });
 
-    // Fetch metadata from URL
+    // Função para buscar metadados de uma URL (título, descrição, imagem)
+    // Isso ajuda a popular a pré-visualização e os cards de itens
     async function fetchMetadata(url) {
       try {
+        // Tenta extrair ID e informações para YouTube
         const youtubeVideoId = getYouTubeVideoId(url);
         if (youtubeVideoId) {
             return {
                 title: `${window.translations[currentLanguage]['youtubeVideoPrefix']}: ${youtubeVideoId}`,
                 description: window.translations[currentLanguage]['youtubeVideoDescription'],
-                image: `https://img.youtube.com/vi/${youtubeVideoId}/sddefault.jpg`
+                image: `https://img.youtube.com/vi/${youtubeVideoId}/sddefault.jpg` // URL de thumbnail do YouTube
             };
         }
 
+        // Tenta extrair ID e informações para Dailymotion
         const dailymotionRegex = /(?:dailymotion\.com\/(?:video|embed)\/|dai\.ly\/)([a-zA-Z0-9]+)/;
         const dailymotionMatch = url.match(dailymotionRegex);
         if (dailymotionMatch && dailymotionMatch[1]) {
@@ -2282,6 +2530,7 @@
             };
         }
 
+        // Tenta extrair ID e informações para TikTok
         if (url.includes('tiktok.com')) {
           const tiktokRegex = /(?:tiktok\.com\/@(?:[a-zA-Z0-9_]+\/video|v)\/)([0-9]+)/;
           const tiktokMatch = tiktokRegex.exec(url);
@@ -2289,10 +2538,11 @@
           return {
             title: `${window.translations[currentLanguage]['tiktokVideoPrefix']}: ${tiktokVideoId}`,
             description: `${window.translations[currentLanguage]['tiktokVideoDescription']}`,
-            image: `https://placehold.co/200x150?text=TikTok+Video`
+            image: `https://placehold.co/200x150?text=TikTok+Video` // Placeholder para TikTok
           };
         }
 
+        // Tenta extrair ID e informações para Kwai
         if (url.includes('kwai.com')) {
           const kwaiRegex = /(?:kwai\.com\/(?:photo|video)\/)([0-9]+)/;
           const kwaiMatch = kwaiRegex.exec(url);
@@ -2300,28 +2550,31 @@
           return {
             title: `${window.translations[currentLanguage]['kwaiVideoPrefix']}: ${kwaiContentId}`,
             description: `${window.translations[currentLanguage]['kwaiVideoDescription']}`,
-            image: `https://placehold.co/200x150?text=Kwai+Content`
+            image: `https://placehold.co/200x150?text=Kwai+Content` // Placeholder para Kwai
           };
         }
 
+        // Para Facebook (geralmente difícil de obter metadados sem API)
         if (url.includes('facebook.com')) {
             return {
                 title: `${window.translations[currentLanguage]['facebookLinkPrefix']}`,
                 description: `${window.translations[currentLanguage]['facebookLinkDescription']}`,
-                image: `https://placehold.co/200x150?text=Facebook+Link`
+                image: `https://placehold.co/200x150?text=Facebook+Link` // Placeholder para Facebook
             };
         }
 
+        // Para Instagram (geralmente difícil de obter metadados sem API)
         if (url.includes('instagram.com')) {
           return {
             title: `${window.translations[currentLanguage]['instagramLinkPrefix']}`,
             description: `${window.translations[currentLanguage]['instagramLinkDescription']}`,
-            image: `https://placehold.co/200x150?text=Instagram+Content`
+            image: `https://placehold.co/200x150?text=Instagram+Content` // Placeholder para Instagram
           };
         }
 
+        // Metadados genéricos para outros links
         const urlObj = new URL(url);
-        const displayUrl = urlObj.hostname.replace('www.', '');
+        const displayUrl = urlObj.hostname.replace('www.', ''); // Obtém o domínio
         const pathSegments = urlObj.pathname.split('/').filter(segment => segment.length > 0);
         let dynamicTitle = `${window.translations[currentLanguage]['genericLinkPrefix']}: ${displayUrl}`;
         if (pathSegments.length > 0) {
@@ -2332,7 +2585,7 @@
         return {
           title: dynamicTitle,
           description: `${window.translations[currentLanguage]['genericContentFrom']} ${displayUrl}. (${window.translations[currentLanguage]['noMetadataAvailable']})`,
-          image: `https://placehold.co/200x150?text=No+Preview`
+          image: `https://placehold.co/200x150?text=No+Preview` // Imagem de placeholder
         };
       } catch (error) {
         console.error('Failed to generate metadata placeholder:', error);
@@ -2340,260 +2593,371 @@
       }
     }
 
+    // Função para obter o ID de um vídeo do YouTube a partir da URL
     function getYouTubeVideoId(url) {
         const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
         const match = url.match(regex);
         return match ? match[1] : null;
     }
 
-    // Update preview in real-time
+    // Função para atualizar a pré-visualização ao adicionar um novo item
     async function updatePreview(url) {
       if (url.trim()) {
-        previewContainer.classList.remove('hidden');
-        previewImage.src = '';
-        previewTitle.textContent = window.translations[currentLanguage]['loadingPreview'];
-        previewDescription.textContent = window.translations[currentLanguage]['fetchingPreview'];
+        previewContainer.classList.remove('hidden'); // Mostra o contêiner de preview
+        previewImage.src = ''; // Limpa a imagem anterior
+        previewTitle.textContent = window.translations[currentLanguage]['loadingPreview']; // Exibe mensagem de carregamento
+        previewDescription.textContent = window.translations[currentLanguage]['fetchingPreview']; // Exibe mensagem de busca
 
-        const metadata = await fetchMetadata(url);
-        previewImage.src = metadata.image;
-        previewTitle.textContent = metadata.title;
-        previewDescription.textContent = metadata.description;
+        const metadata = await fetchMetadata(url); // Busca os metadados da URL
+        previewImage.src = metadata.image; // Define a imagem do preview
+        previewTitle.textContent = metadata.title; // Define o título do preview
+        previewDescription.textContent = metadata.description; // Define a descrição do preview
         previewImage.onerror = function() {
+            // Fallback se a imagem não carregar
             this.src = `https://placehold.co/80?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}`;
         };
       } else {
-        previewContainer.classList.add('hidden');
+        previewContainer.classList.add('hidden'); // Oculta o contêiner de preview se a URL estiver vazia
       }
     }
 
-    // Render items list
+    // Função para renderizar a lista de itens salvos (ou itens filtrados)
     async function renderItems(filteredItems = items) {
-      itemsList.innerHTML = '';
+      itemsList.innerHTML = ''; // Limpa a lista existente
       if (filteredItems.length === 0) {
         itemsList.innerHTML = `<p class="text-gray-200">${window.translations[currentLanguage]['noItemsFound']}</p>`;
         return;
       }
 
       for (const item of filteredItems) {
+        // Encontra a pasta do item ou usa uma pasta padrão se não tiver
         const folder = folders.find(f => f.name === item.folder) || { color: 'bg-gray-500', icon: 'svg/folder.svg', name: window.translations[currentLanguage]['noFolder'] };
         
+        // Se os metadados estiverem faltando ou forem placeholder, tenta buscá-los novamente
         if (!item.metadata || !item.metadata.title || (item.metadata.image && item.metadata.image.includes('placehold.co'))) {
           item.metadata = await fetchMetadata(item.url);
-          localStorage.setItem('items', JSON.stringify(items));
+          localStorage.setItem('items', JSON.stringify(items)); // Salva itens atualizados
         }
         const { title, description, image } = item.metadata;
         const addedDate = item.timestamp ? new Date(item.timestamp).toLocaleString(currentLanguage) : '';
 
-        // Generate star rating display
+        // Gera o HTML para a exibição de estrelas (avaliação)
         let starsHtml = '<div class="display-rating">';
         for (let i = 1; i <= 5; i++) {
             starsHtml += `<span class="star${item.rating >= i ? '' : '-empty'}">★</span>`;
         }
         starsHtml += '</div>';
 
+        // Lógica para determinar o elemento clicável: player de vídeo ou link externo
+        let clickableElement;
+        if (item.type === 'video') {
+            // Para vídeos, o clique abrirá o modal de reprodutor interno
+            clickableElement = `
+                <div class="flex flex-col items-center text-center w-full flex-grow cursor-pointer" data-item-id="${item.id}" data-url="${item.url}" data-item-type="${item.type}" onclick="openVideoPlayer('${item.url}', '${item.type}', ${item.id})">
+                    <img src="${image}" alt="Preview" class="item-thumbnail-img" onerror="this.src='https://placehold.co/200x150?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}'">
+                    <div class="w-full mt-3 flex-grow flex flex-col justify-center">
+                        <div class="item-title truncate-lines-2 leading-tight">${title}</div>
+                        <p class="item-url-short">${item.url.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0]}</p>
+                        <p class="item-added-date">${addedDate}</p>
+                    </div>
+                </div>`;
+        } else {
+            // Para outros tipos, o clique abrirá em uma nova aba/janela do navegador
+            clickableElement = `
+                <a href="${item.url}" target="_blank" class="flex flex-col items-center text-center w-full flex-grow no-underline ${theme === 'light' ? 'text-gray-800' : 'text-white'}" data-item-id="${item.id}">
+                    <img src="${image}" alt="Preview" class="item-thumbnail-img" onerror="this.src='https://placehold.co/200x150?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}'">
+                    <div class="w-full mt-3 flex-grow flex flex-col justify-center">
+                        <div class="item-title truncate-lines-2 leading-tight">${title}</div>
+                        <p class="item-url-short">${item.url.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0]}</p>
+                        <p class="item-added-date">${addedDate}</p>
+                    </div>
+                </a>`;
+        }
+
         const itemHtml = `
           <div class="glass-effect p-3 sm:p-4 rounded-xl hover:shadow-xl transition-all flex flex-col items-center justify-between h-full" style="border-color: ${folder.color.replace('bg-', '#').replace('-500', '50').replace('-600', '60').replace('black', '000')};">
-            <a href="${item.url}" target="_blank" class="flex flex-col items-center text-center w-full flex-grow no-underline ${theme === 'light' ? 'text-gray-800' : 'text-white'}" data-item-id="${item.id}">
-              <img src="${image}" alt="Preview" class="item-thumbnail-img" onerror="this.src='https://placehold.co/200x150?text=${window.translations[currentLanguage]['noPreview'].replace(/ /g, '+')}'">
-              <div class="w-full mt-3 flex-grow flex flex-col justify-center">
-                <div class="item-title truncate-lines-2 leading-tight">${title}</div>
-                <p class="item-url-short">${item.url.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0]}</p>
-                <p class="item-added-date">${addedDate}</p>
-              </div>
-            </a>
+            ${clickableElement}
             <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mt-4 pt-4 border-t border-white/10 w-full item-actions-bottom">
               <span class="inline-block w-3 h-3 sm:w-4 sm:h-4 ${folder.color} rounded-full"></span>
-              ${starsHtml} <button class="copy-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 rounded-lg text-white text-sm hover:from-green-700 hover:to-green-800" data-url="${item.url}" data-i18n="copyBtn">${window.translations[currentLanguage]['copyBtn']}</button>
+              ${starsHtml} 
+              <button class="copy-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 rounded-lg text-white text-sm hover:from-green-700 hover:to-green-800" data-url="${item.url}" data-i18n="copyBtn">${window.translations[currentLanguage]['copyBtn']}</button>
               <button class="edit-item-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg text-white text-sm hover:from-blue-700 hover:to-blue-800" data-id="${item.id}" data-i18n="editBtn">${window.translations[currentLanguage]['editBtn']}</button>
               <button class="delete-btn px-2 sm:px-3 py-1 bg-gradient-to-r from-red-500 to-red-700 rounded-lg text-white text-sm hover:from-red-600 hover:to-red-800" data-id="${item.id}" data-i18n="deleteBtn">${window.translations[currentLanguage]['deleteBtn']}</button>
             </div>
           </div>
         `;
-        itemsList.innerHTML += itemHtml;
+        itemsList.innerHTML += itemHtml; // Adiciona o item renderizado à lista
       }
-      applyTheme(); // Re-apply theme to ensure item titles and urls get correct colors
+      applyTheme(); // Reaplica o tema para garantir cores corretas
+    }
 
-      // Add event listener to track clicks on item URLs
-      document.querySelectorAll('#items-list .glass-effect > a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const itemId = parseInt(e.currentTarget.dataset.itemId);
+    // **Funções do Reprodutor de Vídeo:**
+
+    // Função para abrir o modal do reprodutor de vídeo e carregar o vídeo
+    function openVideoPlayer(url, type, itemId) {
+        let embedUrl = ''; // Variável para armazenar a URL de incorporação (embed)
+
+        // Lógica para construir a URL de incorporação correta com base no tipo e plataforma do vídeo
+        if (type === 'video') { // Verifica se é um item do tipo "vídeo"
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const videoId = getVideoIdFromUrl(url, 'youtube');
+                if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            } else if (url.includes('dailymotion.com') || url.includes('dai.ly')) {
+                const videoId = getVideoIdFromUrl(url, 'dailymotion');
+                if (videoId) embedUrl = `https://www.dailymotion.com/embed/video/${videoId}?autoplay=1`;
+            } else if (url.includes('tiktok.com')) {
+                const videoId = getVideoIdFromUrl(url, 'tiktok');
+                // Embeds do TikTok podem ser complexos e exigir um script adicional ou ser bloqueados.
+                // Esta URL é uma tentativa de embed direto, mas pode não funcionar universalmente.
+                // Para maior compatibilidade em executáveis, pode ser necessário um player customizado ou abrir em nova aba.
+                if (videoId) embedUrl = `https://www.tiktok.com/embed/v2/${videoId}`; 
+            } else if (url.includes('kwai.com')) {
+                const videoId = getVideoIdFromUrl(url, 'kwai');
+                // Embeds do Kwai são mais restritivos. Abrir em nova aba pode ser a melhor opção.
+                if (videoId) embedUrl = `https://m.kwai.com/photo/${videoId}/embed`; // Tentativa de embed
+            } else if (url.includes('facebook.com')) {
+                // Facebook é o mais problemático para embedar sem o SDK ou permissões específicas.
+                // Geralmente, abrir em uma nova aba é a solução mais confiável.
+                window.open(url, '_blank'); // Abre a URL original em uma nova aba
+                // Registra o acesso mesmo que abra externamente
+                const item = items.find(i => i.id === itemId);
+                if (item) {
+                    if (!item.accessHistory) item.accessHistory = [];
+                    item.accessHistory.push(Date.now());
+                    localStorage.setItem('items', JSON.stringify(items));
+                }
+                return; // Sai da função, não tenta incorporar no iframe
+            }
+        }
+
+        // Se uma URL de incorporação válida foi gerada, injeta o iframe no modal
+        if (embedUrl) {
+            videoPlayerIframeContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+            videoPlayerModal.classList.remove('hidden'); // Mostra o modal do reprodutor
+            
+            // Atualiza o histórico de acesso do item (cliques)
             const item = items.find(i => i.id === itemId);
             if (item) {
                 if (!item.accessHistory) {
                     item.accessHistory = [];
                 }
                 item.accessHistory.push(Date.now());
-                localStorage.setItem('items', JSON.stringify(items));
-                // No need to update dashboard immediately here, as it will be updated when user switches back to Dashboard tab.
+                localStorage.setItem('items', JSON.stringify(items)); // Salva os itens com o novo acesso
             }
-        });
-    });
+        } else {
+             // Fallback: Se a URL não puder ser incorporada ou for de um tipo não suportado no iframe, abre em nova aba.
+             // Isso garante que o conteúdo seja acessível de alguma forma.
+            window.open(url, '_blank');
+            // Registra o acesso mesmo que abra externamente
+            const item = items.find(i => i.id === itemId);
+            if (item) {
+                if (!item.accessHistory) item.accessHistory = [];
+                item.accessHistory.push(Date.now());
+                localStorage.setItem('items', JSON.stringify(items));
+            }
+        }
     }
 
-    // Add item
+    // Função para fechar o modal do reprodutor de vídeo
+    function closeVideoPlayerModal() {
+        videoPlayerIframeContainer.innerHTML = ''; // Limpa o conteúdo do iframe (para parar a reprodução e limpar o modal)
+        videoPlayerModal.classList.add('hidden'); // Oculta o modal do reprodutor
+        updateDashboard(); // Atualiza o dashboard (para refletir novos acessos, se houver)
+    }
+
+    // Event listener para o botão "Adicionar Item"
     addItemBtn.addEventListener('click', async () => {
-      const url = itemUrlInput.value.trim();
-      const tags = itemTagsInput.value.trim().split(',').map(tag => tag.trim()).filter(tag => tag);
-      if (url) {
+      const url = itemUrlInput.value.trim(); // Obtém a URL do input e remove espaços
+      const tags = itemTagsInput.value.trim().split(',').map(tag => tag.trim()).filter(tag => tag); // Processa as tags (separa por vírgula, limpa espaços)
+      if (url) { // Se a URL não estiver vazia
+        // Verifica se já existe um item com a mesma URL para evitar duplicatas
         const isDuplicate = items.some(item => item.url === url);
         if (isDuplicate) {
             showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](url));
-            return;
+            return; // Sai da função se for duplicado
         }
 
-        const metadata = await fetchMetadata(url);
+        const metadata = await fetchMetadata(url); // Busca metadados (título, imagem, etc.) da URL
+        // Adiciona o novo item ao array 'items'
         items.push({
-          id: Date.now(),
-          url,
-          type: itemTypeSelect.value,
-          folder: itemFolderSelect.value,
-          tags: tags.length > 0 ? tags : [],
-          metadata,
-          timestamp: Date.now(),
-          rating: 0, // New item starts with 0 rating
-          accessHistory: [] // Initialize access history for new items
+          id: Date.now(), // Gera um ID único baseado no timestamp atual
+          url, // URL original do item
+          type: itemTypeSelect.value, // Tipo selecionado (link, video, photo)
+          folder: itemFolderSelect.value, // Pasta selecionada
+          tags: tags.length > 0 ? tags : [], // Tags associadas ao item
+          metadata, // Metadados obtidos
+          timestamp: Date.now(), // Data/hora de criação do item
+          rating: 0, // Avaliação inicial (0 estrelas)
+          accessHistory: [] // Histórico de acesso vazio para um novo item
         });
+        // Adiciona quaisquer novas tags à lista global de tags salvas, se ainda não existirem
         tags.forEach(tag => {
             if (!savedTags.includes(tag)) {
                 savedTags.push(tag);
             }
         });
-        localStorage.setItem('savedTags', JSON.stringify(savedTags));
-        localStorage.setItem('items', JSON.stringify(items));
+        localStorage.setItem('savedTags', JSON.stringify(savedTags)); // Salva as tags salvas no localStorage
+        localStorage.setItem('items', JSON.stringify(items)); // Salva o array completo de itens no localStorage
+        
+        // Limpa os campos do formulário e esconde a pré-visualização
         itemUrlInput.value = '';
         itemTagsInput.value = '';
         previewContainer.classList.add('hidden');
-        updateSavedTagsList();
-        renderItems();
-        updateFolderSelects();
-        updateDashboard(); // Update dashboard after adding item
+        
+        // Atualiza a interface do usuário
+        updateSavedTagsList(); // Atualiza a lista de tags visíveis e datalists
+        renderItems(); // Re-renderiza a lista de itens exibida
+        updateFolderSelects(); // Atualiza os selects de pasta e seus contadores
+        updateDashboard(); // Atualiza o dashboard com os novos dados
       }
     });
 
-    // Paste link
+    // Event listener para o botão "Colar Link"
     pasteLinkBtn.addEventListener('click', async () => {
       try {
-        const text = await navigator.clipboard.readText();
-        itemUrlInput.value = text;
-        await updatePreview(text);
+        const text = await navigator.clipboard.readText(); // Tenta ler o texto da área de transferência
+        itemUrlInput.value = text; // Cola o texto no input de URL
+        await updatePreview(text); // Atualiza a pré-visualização com o texto colado
       } catch (err) {
-        console.error('Paste failed:', err);
-        showCustomModal(window.translations[currentLanguage]['pasteFailed']);
+        console.error('Paste failed:', err); // Log de erro se a colagem falhar
+        showCustomModal(window.translations[currentLanguage]['pasteFailed']); // Exibe mensagem de erro para o usuário
       }
     });
 
-    // Add folder
+    // Event listener para o botão "Adicionar Pasta"
     addFolderBtn.addEventListener('click', () => {
-      const folderName = newFolderInput.value.trim();
+      const folderName = newFolderInput.value.trim(); // Obtém o nome da nova pasta, removendo espaços
+      // Valida se o nome não está vazio e se a pasta com esse nome já não existe
       if (folderName && !folders.some(f => f.name === folderName)) {
+        // Adiciona a nova pasta ao array 'folders'
         folders.push({
           name: folderName,
-          color: folderColorSelect.value,
-          icon: folderIconSelect.value
+          color: folderColorSelect.value, // Cor selecionada para a pasta
+          icon: folderIconSelect.value // Ícone selecionado para a pasta
         });
-        updateFolderSelects();
-        newFolderInput.value = '';
-        renderItems();
-        updateDashboard(); // Update dashboard after adding folder
+        updateFolderSelects(); // Atualiza os selects de pasta e a lista de botões de pastas
+        newFolderInput.value = ''; // Limpa o input do nome da pasta
+        renderItems(); // Re-renderiza a lista de itens (caso a nova pasta afete a visualização ou filtros)
+        updateDashboard(); // Atualiza o dashboard com o novo número de pastas
       } else if (folderName) {
+        // Mensagem se o nome da pasta já existe
         showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](folderName));
       } else {
+        // Mensagem se o nome da pasta está vazio
         showCustomModal(window.translations[currentLanguage]['folderNameEmpty']);
       }
     });
 
-    // Search items
+    // Função para realizar a busca/filtragem de itens na lista principal
     function searchItems() {
-      const query = searchQueryInput.value.toLowerCase();
+      const query = searchQueryInput.value.toLowerCase(); // Termo de busca (URL, título, descrição) em minúsculas
+      // Processa as tags de busca: separa por vírgula, limpa espaços e filtra vazios
       const tagsQuery = searchTagsInput.value.toLowerCase().split(',').map(tag => tag.trim()).filter(tag => tag);
-      const type = searchTypeSelect.value;
-      const folder = searchFolderSelect.value;
-      const minRating = parseInt(searchRatingSelect.value); // Get min rating from select
+      const type = searchTypeSelect.value; // Tipo de item a buscar ('all', 'link', 'video', 'photo')
+      const folder = searchFolderSelect.value; // Pasta a buscar ('all' ou nome da pasta)
+      const minRating = parseInt(searchRatingSelect.value); // Avaliação mínima a buscar (convertida para inteiro)
 
+      // Filtra o array 'items' com base nos critérios de busca
       const filteredItems = items.filter(item => {
+        // Verifica se o item corresponde à query principal (URL, título ou descrição)
         const matchesQuery = query === '' || item.url.toLowerCase().includes(query) || 
                             (item.metadata && item.metadata.title.toLowerCase().includes(query)) ||
                             (item.metadata && item.metadata.description.toLowerCase().includes(query));
         
+        // Verifica se o item possui todas as tags pesquisadas (AND lógico entre as tags da busca)
         const matchesTags = tagsQuery.length === 0 || 
                             (item.tags && item.tags.some(tag => tagsQuery.some(searchTag => tag.toLowerCase().includes(searchTag))));
 
+        // Verifica se o tipo do item corresponde ao tipo selecionado no filtro
         const matchesType = type === 'all' || item.type === type;
+        // Verifica se o item pertence à pasta selecionada ou se a busca é por "todas as pastas"
+        // selectedFolder é a variável global usada pelos botões de filtro de pasta
         const matchesFolder = (folder === 'all' && (selectedFolder === null || item.folder === selectedFolder)) || 
                               (item.folder === folder);
         
-        // New: Filter by rating
+        // Verifica se a avaliação do item é maior ou igual à avaliação mínima selecionada
         const matchesRating = isNaN(minRating) || searchRatingSelect.value === 'all' ||
                               (searchRatingSelect.value === '0' && (item.rating === 0 || item.rating === undefined)) ||
                               (item.rating >= minRating);
 
+        // Retorna true se todos os critérios de busca forem atendidos
         return matchesQuery && matchesTags && matchesType && matchesFolder && matchesRating;
       });
-      renderItems(filteredItems);
+      renderItems(filteredItems); // Renderiza a lista de itens filtrados na interface
     }
 
-    searchQueryInput.addEventListener('input', searchItems);
-    searchTagsInput.addEventListener('input', searchItems);
-    searchTypeSelect.addEventListener('change', searchItems);
+    // Adiciona event listeners para os inputs e selects de busca
+    searchQueryInput.addEventListener('input', searchItems); // Dispara a busca ao digitar na query
+    searchTagsInput.addEventListener('input', searchItems); // Dispara a busca ao digitar tags
+    searchTypeSelect.addEventListener('change', searchItems); // Dispara a busca ao mudar o tipo
     searchFolderSelect.addEventListener('change', (e) => {
-      selectedFolder = e.target.value === 'all' ? null : e.target.value;
-      searchItems();
+      selectedFolder = e.target.value === 'all' ? null : e.target.value; // Atualiza a pasta selecionada
+      searchItems(); // Realiza a busca
     });
-    searchRatingSelect.addEventListener('change', searchItems); // New: Listen to rating filter change
+    searchRatingSelect.addEventListener('change', searchItems); // Dispara a busca ao mudar a avaliação
 
-    // Delegation of events for copy, edit, and delete item buttons
+    // Delegação de eventos para botões de copiar, editar e excluir itens na lista principal
     itemsList.addEventListener('click', (e) => {
+      // Botão de Excluir Item
       if (e.target.classList.contains('delete-btn')) {
-        const id = parseInt(e.target.dataset.id);
+        const id = parseInt(e.target.dataset.id); // Obtém o ID do item a ser excluído
         showConfirmModal(window.translations[currentLanguage]['confirmDeleteItem'], () => {
-          items = items.filter(item => item.id !== id);
-          localStorage.setItem('items', JSON.stringify(items));
-          renderItems();
-          updateFolderSelects();
-          updateDashboard(); // Update dashboard after deleting item
+          items = items.filter(item => item.id !== id); // Remove o item do array 'items'
+          localStorage.setItem('items', JSON.stringify(items)); // Salva o array atualizado no localStorage
+          renderItems(); // Re-renderiza a lista de itens
+          updateFolderSelects(); // Atualiza os contadores de itens nas pastas
+          updateDashboard(); // Atualiza as estatísticas do dashboard
         }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
-      } else if (e.target.classList.contains('copy-btn')) {
-        const url = e.target.dataset.url;
+      } 
+      // Botão de Copiar URL do Item
+      else if (e.target.classList.contains('copy-btn')) {
+        const url = e.target.dataset.url; // Obtém a URL do item a ser copiada
         
         try {
+            // Tenta usar a API moderna do navegador para copiar para a área de transferência
             navigator.clipboard.writeText(url).then(() => {
-                showCustomModal(window.translations[currentLanguage]['urlCopied'], window.translations[currentLanguage]['okBtn']);
+                showCustomModal(window.translations[currentLanguage]['urlCopied'], window.translations[currentLanguage]['okBtn']); // Mensagem de sucesso
             }).catch(err => {
-                console.error('Failed to copy using navigator.clipboard (promessa):', err);
-                fallbackCopyTextToClipboard(url);
+                console.error('Failed to copy using navigator.clipboard (promise-based):', err);
+                fallbackCopyTextToClipboard(url); // Se a API falhar, tenta o método de fallback
             });
         } catch (err) {
-            console.error('Failed to copy using navigator.clipboard (síncrono):', err);
-            fallbackCopyTextToClipboard(url);
+            // Captura erros para navegadores mais antigos ou restrições de segurança
+            console.error('Failed to copy using navigator.clipboard (synchronous):', err);
+            fallbackCopyTextToClipboard(url); // Tenta o método de fallback
         }
-      } else if (e.target.classList.contains('edit-item-btn')) {
-        const id = parseInt(e.target.dataset.id);
-        currentEditingItem = items.find(item => item.id === id);
+      } 
+      // Botão de Editar Item
+      else if (e.target.classList.contains('edit-item-btn')) {
+        const id = parseInt(e.target.dataset.id); // Obtém o ID do item a ser editado
+        currentEditingItem = items.find(item => item.id === id); // Encontra o item correspondente no array
         if (currentEditingItem) {
+          // Preenche os campos do modal de edição com os dados do item
           editItemUrlInput.value = currentEditingItem.url;
           editItemTagsInput.value = currentEditingItem.tags.join(', ');
           editItemTypeSelect.value = currentEditingItem.type;
-          editItemFolderSelect.value = currentEditingItem.folder || '';
+          editItemFolderSelect.value = currentEditingItem.folder || ''; // Define pasta ou string vazia
 
-          // Set current rating in the edit modal
+          // Define a avaliação atual do item nos botões de rádio do modal
           editItemRatingInputs.forEach(radio => {
               radio.checked = parseInt(radio.value) === currentEditingItem.rating;
           });
 
-          editItemModal.classList.remove('hidden');
+          editItemModal.classList.remove('hidden'); // Mostra o modal de edição de item
         }
       }
     });
 
-    // Save edited link changes
+    // Event listener para o botão "Salvar Alterações" no modal de edição de item
     saveItemChangesBtn.addEventListener('click', async () => {
-      if (currentEditingItem) {
-        const newUrl = editItemUrlInput.value.trim();
+      if (currentEditingItem) { // Verifica se há um item sendo editado
+        const newUrl = editItemUrlInput.value.trim(); // Obtém a nova URL
+        // Processa as tags: separa por vírgula, limpa espaços, filtra vazias
         const newTags = editItemTagsInput.value.trim().split(',').map(tag => tag.trim()).filter(tag => tag);
-        const newType = editItemTypeSelect.value;
-        const newFolder = editItemFolderSelect.value || null;
+        const newType = editItemTypeSelect.value; // Obtém o novo tipo
+        const newFolder = editItemFolderSelect.value || null; // Obtém a nova pasta ou null
         
-        // Get new rating from radio buttons
+        // Obtém a nova avaliação do item a partir dos botões de rádio
         let newRating = 0;
         editItemRatingInputs.forEach(radio => {
             if (radio.checked) {
@@ -2601,224 +2965,232 @@
             }
         });
 
+        // Verifica se a nova URL é duplicada, excluindo o próprio item que está sendo editado
         const isDuplicate = items.some(item => item.url === newUrl && item.id !== currentEditingItem.id);
         if (isDuplicate) {
-            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newUrl));
-            return;
+            showCustomModal(window.translations[currentLanguage]['folderAlreadyExists'](newUrl)); // Mensagem de erro para duplicata
+            return; // Sai da função
         }
 
+        // Atualiza as propriedades do item atual
         currentEditingItem.url = newUrl;
         currentEditingItem.tags = newTags;
         currentEditingItem.type = newType;
         currentEditingItem.folder = newFolder;
-        currentEditingItem.rating = newRating; // Update item rating
+        currentEditingItem.rating = newRating; // Atualiza a avaliação do item
         
+        // Se a URL do item foi alterada, busca novos metadados para ela
         if (newUrl !== currentEditingItem.url) {
             currentEditingItem.metadata = await fetchMetadata(newUrl);
         }
+        // Adiciona quaisquer novas tags que foram inseridas ao editar o item à lista global de tags salvas
         newTags.forEach(tag => {
             if (!savedTags.includes(tag)) {
                 savedTags.push(tag);
             }
         });
 
-        localStorage.setItem('savedTags', JSON.stringify(savedTags));
-        localStorage.setItem('items', JSON.stringify(items));
-        renderItems();
-        editItemModal.classList.add('hidden');
-        currentEditingItem = null;
-        updateSavedTagsList();
-        updateFolderSelects();
-        updateDashboard(); // Update dashboard after editing item
+        localStorage.setItem('savedTags', JSON.stringify(savedTags)); // Salva as tags salvas no localStorage
+        localStorage.setItem('items', JSON.stringify(items)); // Salva o array de itens atualizado
+        renderItems(); // Re-renderiza a lista de itens
+        editItemModal.classList.add('hidden'); // Oculta o modal de edição
+        currentEditingItem = null; // Reseta a variável do item em edição
+        updateSavedTagsList(); // Atualiza a lista de tags visíveis
+        updateFolderSelects(); // Atualiza os selects de pasta e contadores
+        updateDashboard(); // Atualiza o dashboard
       }
     });
 
-    // Fallback function for copying text to clipboard
+    // Função de fallback para copiar texto para a área de transferência (usado quando navigator.clipboard falha)
     function fallbackCopyTextToClipboard(text) {
-        const tempInput = document.createElement('textarea');
-        tempInput.value = text;
-        document.body.appendChild(tempInput);
-        tempInput.select();
+        const tempInput = document.createElement('textarea'); // Cria um textarea temporário
+        tempInput.value = text; // Atribui o texto a ser copiado
+        document.body.appendChild(tempInput); // Adiciona o textarea ao DOM
+        tempInput.select(); // Seleciona o texto no textarea
         try {
-            document.execCommand('copy');
-            showCustomModal(window.translations[currentLanguage]['urlCopied'] + ' (Fallback)', window.translations[currentLanguage]['okBtn']);
+            document.execCommand('copy'); // Tenta executar o comando de cópia (método antigo)
+            showCustomModal(window.translations[currentLanguage]['urlCopied'] + ' (Fallback)', window.translations[currentLanguage]['okBtn']); // Mensagem de sucesso
         } catch (err) {
-            console.error('Failed to copy using document.execCommand:', err);
-            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']);
+            console.error('Failed to copy using document.execCommand:', err); // Log de erro
+            showCustomModal(window.translations[currentLanguage]['copyFailed'], window.translations[currentLanguage]['okBtn']); // Mensagem de erro para o usuário
         } finally {
-            document.body.removeChild(tempInput);
+            document.body.removeChild(tempInput); // Remove o textarea temporário
         }
     }
 
-    // Toggle settings panel
+    // Event listener para o botão "Settings" (alterna a visibilidade do painel de configurações)
     settingsBtn.addEventListener('click', () => {
-      settingsPanel.classList.toggle('hidden');
+      settingsPanel.classList.toggle('hidden'); // Adiciona ou remove a classe 'hidden'
     });
 
-    // Toggle theme
+    // Event listener para o botão "Toggle Dark Theme"
     toggleThemeBtn.addEventListener('click', () => {
-      theme = theme === 'light' ? 'dark' : 'light';
-      applyTheme();
+      theme = theme === 'light' ? 'dark' : 'light'; // Inverte o tema atual
+      applyTheme(); // Aplica as novas classes de tema e cores
     });
 
-    // Clear all items
+    // Event listener para o botão "Clear All Items"
     clearItemsBtn.addEventListener('click', () => {
+      // Exibe um modal de confirmação antes de apagar tudo
       showConfirmModal(window.translations[currentLanguage]['confirmClearAllItems'], () => {
-          items = [];
-          localStorage.setItem('items', JSON.stringify(items));
-          renderItems();
-          updateFolderSelects();
-          updateDashboard(); // Update dashboard after clearing all items
+          items = []; // Esvazia o array de itens
+          localStorage.setItem('items', JSON.stringify(items)); // Salva o array vazio no localStorage
+          renderItems(); // Re-renderiza a lista de itens (agora vazia)
+          updateFolderSelects(); // Atualiza contadores de itens nas pastas
+          updateDashboard(); // Atualiza as estatísticas do dashboard
       }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
     });
 
-    // Open Manage Data Modal
+    // Event listener para o botão "Manage Data" (abre o modal de gerenciamento de dados)
     manageDataBtn.addEventListener('click', () => {
-      manageDataModal.classList.remove('hidden');
+      manageDataModal.classList.remove('hidden'); // Remove a classe 'hidden' para mostrar o modal
     });
 
-    // Export Data from Manage Data Modal
+    // Event listener para o botão "Exportar Dados" dentro do modal de gerenciamento de dados
     exportDataOptionBtn.addEventListener('click', () => {
+      // Coleta todos os dados relevantes do aplicativo para exportação
       const data = {
         items,
         folders,
-        savedTags, // Include savedTags in export
+        savedTags,
         theme,
         currentLanguage
       };
+      // Cria um objeto Blob (Binary Large Object) com os dados JSON formatados para legibilidade
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'liquid-glass-data.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      manageDataModal.classList.add('hidden');
+      const url = URL.createObjectURL(blob); // Cria uma URL temporária para o Blob
+      const a = document.createElement('a'); // Cria um elemento <a> (link) no DOM
+      a.href = url; // Define o href do link para a URL do Blob
+      a.download = 'liquid-glass-data.json'; // Define o nome do arquivo que será baixado
+      a.click(); // Simula um clique no link para iniciar o download
+      URL.revokeObjectURL(url); // Libera o objeto URL para economizar memória
+      manageDataModal.classList.add('hidden'); // Oculta o modal de gerenciamento após a exportação
     });
 
-    // Trigger Import Selection Modal
+    // Event listener para o input de arquivo de importação (acionado quando um arquivo é selecionado)
     importFileModalInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async (event) => {
+      const file = e.target.files[0]; // Obtém o primeiro arquivo selecionado
+      if (file) { // Se um arquivo foi selecionado
+        const reader = new FileReader(); // Cria um objeto FileReader para ler o conteúdo do arquivo
+        reader.onload = async (event) => { // Callback quando a leitura do arquivo estiver completa
           try {
-            const data = JSON.parse(event.target.result);
-            importedDataCache = data; // Store data in cache
-
-            // Reset checkboxes to checked by default for convenience
+            const data = JSON.parse(event.target.result); // Tenta parsear o conteúdo do arquivo como JSON
+            importedDataCache = data; // Armazena os dados importados em um cache temporário
+            
+            // Define todos os checkboxes de importação como marcados por padrão para conveniência do usuário
             importItemsCheckbox.checked = true;
             importFoldersCheckbox.checked = true;
             importTagsCheckbox.checked = true;
             importThemeCheckbox.checked = true;
             importLanguageCheckbox.checked = true;
 
-            manageDataModal.classList.add('hidden'); // Hide manage data modal
-            importSelectionModal.classList.remove('hidden'); // Show import selection modal
+            manageDataModal.classList.add('hidden'); // Oculta o modal de gerenciamento de dados
+            importSelectionModal.classList.remove('hidden'); // Mostra o modal de seleção de opções de importação
 
           } catch (err) {
-            console.error("Error parsing JSON file:", err);
-            showCustomModal(window.translations[currentLanguage]['invalidJsonFile'], window.translations[currentLanguage]['okBtn']);
-            importFileModalInput.value = ''; // Clear file input
+            console.error("Error parsing JSON file:", err); // Loga o erro se o arquivo não for um JSON válido
+            showCustomModal(window.translations[currentLanguage]['invalidJsonFile'], window.translations[currentLanguage]['okBtn']); // Alerta o usuário sobre o arquivo inválido
+            importFileModalInput.value = ''; // Limpa o input de arquivo para permitir nova seleção
           }
         };
-        reader.readAsText(file);
+        reader.readAsText(file); // Inicia a leitura do arquivo como texto
       }
     });
 
-    // Confirm Import from Import Selection Modal
+    // Event listener para o botão "Confirmar Importação" no modal de seleção de importação
     confirmImportSelectionBtn.addEventListener('click', async () => {
-      if (!importedDataCache) {
+      if (!importedDataCache) { // Verifica se há dados no cache para importar
           showCustomModal("Nenhum dado para importar. Por favor, selecione um arquivo JSON primeiro.", window.translations[currentLanguage]['okBtn']);
-          return;
+          return; // Sai da função se não houver dados
       }
 
-      showLoadingMessage(window.translations[currentLanguage]['importingData']);
+      showLoadingMessage(window.translations[currentLanguage]['importingData']); // Exibe mensagem de "Importando dados..."
       
+      // Obtém o estado de cada checkbox para decidir quais categorias de dados importar
       const importItems = importItemsCheckbox.checked;
       const importFolders = importFoldersCheckbox.checked;
       const importTags = importTagsCheckbox.checked;
       const importTheme = importThemeCheckbox.checked;
       const importLanguage = importLanguageCheckbox.checked;
 
-      // Wrap in a confirm dialog for overwrite warning
+      // Exibe um modal de confirmação para o usuário antes de prosseguir com a sobrescrita/mesclagem
       showConfirmModal(window.translations[currentLanguage]['confirmImport'], async () => {
-          // Import Items
+          // Lógica de Importação para Itens:
           if (importItems && importedDataCache.items && Array.isArray(importedDataCache.items)) {
               const newItems = [];
               for (const ni of importedDataCache.items) {
-                  // Check for duplicates based on URL
+                  // Verifica se o item a ser importado já existe localmente (pela URL)
                   if (!items.some(i => i.url === ni.url)) {
-                      // Ensure rating exists for imported items
+                      // Garante que as propriedades 'rating' e 'accessHistory' existam para itens importados
                       ni.rating = ni.rating !== undefined ? ni.rating : 0;
-                      // Ensure accessHistory exists for imported items
                       ni.accessHistory = ni.accessHistory || [];
-                      // Re-fetch metadata if it's missing or a placeholder from old export
+                      // Tenta buscar metadados para itens importados se estiverem faltando ou forem placeholders
                       if (!ni.metadata || !ni.metadata.title || (ni.metadata.image && ni.metadata.image.includes('placehold.co'))) {
                           ni.metadata = await fetchMetadata(ni.url);
                       }
-                      newItems.push(ni);
+                      newItems.push(ni); // Adiciona o item à lista de novos itens
                   }
               }
-              items = [...items, ...newItems]; // Add new items, keep existing unique
+              items = [...items, ...newItems]; // Mescla: adiciona novos itens, mantendo os existentes únicos
           }
 
-          // Import Folders
+          // Lógica de Importação para Pastas:
           if (importFolders && importedDataCache.folders && Array.isArray(importedDataCache.folders)) {
+              // Filtra pastas importadas para adicionar apenas as que não existem localmente
               const newFolders = importedDataCache.folders.filter(nf => !folders.some(f => f.name === nf.name));
-              folders = [...folders, ...newFolders]; // Add new folders, keep existing unique
+              folders = [...folders, ...newFolders]; // Mescla: adiciona novas pastas
           }
 
-          // Import Saved Tags
+          // Lógica de Importação para Tags Salvas:
           if (importTags && importedDataCache.savedTags && Array.isArray(importedDataCache.savedTags)) {
+              // Filtra tags importadas para adicionar apenas as que não existem localmente
               const newSavedTags = importedDataCache.savedTags.filter(nst => !savedTags.includes(nst));
-              savedTags = [...savedTags, ...newSavedTags]; // Add new tags, keep existing unique
+              savedTags = [...savedTags, ...newSavedTags]; // Mescla: adiciona novas tags
           }
 
-          // Import Theme
+          // Lógica de Importação para Tema:
           if (importTheme && importedDataCache.theme) {
-              theme = importedDataCache.theme;
+              theme = importedDataCache.theme; // Sobrescreve o tema atual
           }
 
-          // Import Language
+          // Lógica de Importação para Idioma:
           if (importLanguage && importedDataCache.currentLanguage) {
-              currentLanguage = importedDataCache.currentLanguage;
+              currentLanguage = importedDataCache.currentLanguage; // Sobrescreve o idioma atual
           }
 
-          // Save all to localStorage
+          // Salva todos os dados atualizados (itens, pastas, tags, tema, idioma) no localStorage
           localStorage.setItem('items', JSON.stringify(items));
           localStorage.setItem('folders', JSON.stringify(folders));
           localStorage.setItem('savedTags', JSON.stringify(savedTags));
           localStorage.setItem('theme', theme); 
           localStorage.setItem('language', currentLanguage);
 
-          // Update UI
+          // Atualiza toda a interface do usuário para refletir os dados importados
           applyTheme();
           updateFolderSelects();
           updateSavedTagsList();
           applyLanguage(currentLanguage);
           renderItems();
-          updateDashboard(); // Update dashboard after import
+          updateDashboard(); // Atualiza o dashboard com os novos dados
           
-          importSelectionModal.classList.add('hidden'); // Close selection modal
-          importFileModalInput.value = ''; // Clear file input
-          importedDataCache = null; // Clear cache
-          showLoadingMessage(window.translations[currentLanguage]['importSuccess'], 2000);
+          importSelectionModal.classList.add('hidden'); // Oculta o modal de seleção de importação
+          importFileModalInput.value = ''; // Limpa o input do arquivo
+          importedDataCache = null; // Limpa o cache de dados importados
+          showLoadingMessage(window.translations[currentLanguage]['importSuccess'], 2000); // Exibe mensagem de sucesso por 2 segundos
 
-      }, () => { // On Cancel callback for confirmModal
-          hideLoadingMessage();
-          importSelectionModal.classList.add('hidden');
-          importFileModalInput.value = ''; // Clear file input
-          importedDataCache = null; // Clear cache
-          showCustomModal(window.translations[currentLanguage]['importCanceled'], window.translations[currentLanguage]['okBtn']);
-      }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']);
+      }, () => { // Callback para quando o usuário clica em "Cancelar" no modal de confirmação
+          hideLoadingMessage(); // Oculta qualquer mensagem de carregamento
+          importSelectionModal.classList.add('hidden'); // Oculta o modal de seleção de importação
+          importFileModalInput.value = ''; // Limpa o input do arquivo
+          importedDataCache = null; // Limpa o cache de dados importados
+          showCustomModal(window.translations[currentLanguage]['importCanceled'], window.translations[currentLanguage]['okBtn']); // Alerta o usuário que a importação foi cancelada
+      }, window.translations[currentLanguage]['yesBtn'], window.translations[currentLanguage]['noBtn']); // Textos dos botões "Sim" e "Não"
     });
 
-
-    // Function to display a custom modal (replaces alert/confirm)
+    // Função genérica para exibir um modal customizado (substitui o 'alert' padrão do navegador)
     function showCustomModal(message, okBtnText = 'OK') {
-        const modal = document.createElement('div');
-        modal.classList.add('modal-overlay');
+        const modal = document.createElement('div'); // Cria um novo elemento div para o modal
+        modal.classList.add('modal-overlay'); // Adiciona a classe de overlay para estilização
         modal.innerHTML = `
             <div class="modal-content">
                 <p>${message}</p>
@@ -2827,17 +3199,18 @@
                 </div>
             </div>
         `;
-        document.body.appendChild(modal);
+        document.body.appendChild(modal); // Adiciona o modal ao corpo do documento
 
+        // Adiciona um event listener ao botão "OK" do modal para fechá-lo
         document.getElementById('modal-ok-btn').addEventListener('click', () => {
-            modal.remove();
+            modal.remove(); // Remove o modal do DOM
         });
     }
 
-    // Function to display a confirmation modal
+    // Função genérica para exibir um modal de confirmação (substitui o 'confirm' padrão do navegador)
     function showConfirmModal(message, onConfirm, onCancel, yesBtnText = 'Sim', noBtnText = 'Não') {
-        const modal = document.createElement('div');
-        modal.classList.add('modal-overlay');
+        const modal = document.createElement('div'); // Cria um novo elemento div para o modal
+        modal.classList.add('modal-overlay'); // Adiciona a classe de overlay
         modal.innerHTML = `
             <div class="modal-content">
                 <p>${message}</p>
@@ -2847,68 +3220,72 @@
                 </div>
             </div>
         `;
-        document.body.appendChild(modal);
+        document.body.appendChild(modal); // Adiciona o modal ao corpo do documento
 
+        // Adiciona um event listener ao botão de confirmação
         document.getElementById('confirm-action-btn').addEventListener('click', () => {
-            modal.remove();
-            onConfirm();
+            modal.remove(); // Remove o modal
+            onConfirm(); // Executa a função de confirmação passada como argumento
         });
 
+        // Adiciona um event listener ao botão de cancelamento
         document.getElementById('cancel-action-btn').addEventListener('click', () => {
-            modal.remove();
-            if (onCancel) onCancel();
+            modal.remove(); // Remove o modal
+            if (onCancel) onCancel(); // Executa a função de cancelamento, se fornecida
         });
     }
 
-    // Funções para mostrar/esconder mensagem de carregamento
+    // Função para mostrar a mensagem de carregamento na tela
     function showLoadingMessage(message, duration = 0) {
-        loadingMessage.textContent = message;
-        loadingMessage.style.display = 'block';
-        if (duration > 0) {
+        loadingMessage.textContent = message; // Define o texto da mensagem de carregamento
+        loadingMessage.style.display = 'block'; // Torna a mensagem visível
+        if (duration > 0) { // Se uma duração for especificada
             setTimeout(() => {
-                hideLoadingMessage();
+                hideLoadingMessage(); // Oculta a mensagem após a duração
             }, duration);
         }
     }
 
+    // Função para ocultar a mensagem de carregamento da tela
     function hideLoadingMessage() {
-        loadingMessage.style.display = 'none';
+        loadingMessage.style.display = 'none'; // Oculta a mensagem
     }
 
-    // Event listener for language selection
+    // Event listener para a mudança de seleção no dropdown de idioma
     languageSelect.addEventListener('change', (e) => {
-      applyLanguage(e.target.value);
+      applyLanguage(e.target.value); // Chama a função para aplicar o novo idioma
     });
 
-    // Initialize the language select with the current language
+    // Define o valor inicial do select de idioma com o idioma atualmente salvo
     languageSelect.value = currentLanguage;
 
-    // Add event listeners for quick clear buttons
+    // Adiciona event listeners para os botões de limpar input (o "X" dentro dos campos)
     document.querySelectorAll('.clear-input-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            const targetInputId = e.target.dataset.targetInput;
-            const targetInput = document.getElementById(targetInputId);
+            const targetInputId = e.target.dataset.targetInput; // Obtém o ID do input associado ao botão
+            const targetInput = document.getElementById(targetInputId); // Encontra o elemento input
             if (targetInput) {
-                targetInput.value = '';
+                targetInput.value = ''; // Limpa o valor do input
                 if (targetInputId === 'item-url') {
-                    updatePreview('');
+                    updatePreview(''); // Se for o input de URL, limpa a pré-visualização
                 }
                 if (targetInputId.startsWith('search-')) {
-                    searchItems();
+                    searchItems(); // Se for um input de busca, re-executa a busca para refletir a mudança
                 }
             }
         });
     });
 
-    // Initialize the app
+    // **Inicialização do Aplicativo:**
+    // Tudo dentro deste bloco é executado quando o DOM estiver completamente carregado.
     document.addEventListener('DOMContentLoaded', () => {
-        applyTheme();
-        updateFolderSelects();
-        updateSavedTagsList();
-        applyLanguage(currentLanguage);
-        renderItems();
-        updateDashboard(); // Initial dashboard render
-        showTab('dashboard-tab'); // Show dashboard tab by default
+        applyTheme(); // Aplica o tema salvo ou padrão
+        updateFolderSelects(); // Carrega e renderiza as pastas
+        updateSavedTagsList(); // Carrega e renderiza as tags
+        applyLanguage(currentLanguage); // Aplica o idioma salvo ou padrão (importante para traduções iniciais)
+        renderItems(); // Renderiza a lista inicial de itens
+        updateDashboard(); // Renderiza os dados do dashboard
+        showTab('dashboard-tab'); // Define a aba "Dashboard" como a aba inicial visível
     });
   </script>
 </body>
