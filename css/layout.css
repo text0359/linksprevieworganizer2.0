@@ -1,0 +1,743 @@
+/* Estilos básicos do corpo da página (parte que não é do tema) */
+body {
+  min-height: 100vh; /* Altura mínima de 100% da viewport */
+  display: flex; /* Usa flexbox para centralizar conteúdo */
+  flex-direction: column; /* Permite que o conteúdo e o rodapé se empilhem */
+  justify-content: space-between; /* Empurra o rodapé para a parte inferior */
+  align-items: flex-start; /* Alinha ao topo verticalmente */
+  font-family: 'Inter', sans-serif; /* Define a fonte principal */
+  overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+  padding-top: 1rem; /* Espaçamento no topo */
+  padding-bottom: 2rem; /* Espaçamento na parte inferior para o rodapé */
+}
+
+/* Efeito de vidro (glass effect) aplicado a vários elementos */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.4); /* Fundo translúcido (40% opacidade) */
+  backdrop-filter: blur(12px); /* Efeito de desfoque no que está por trás */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Borda semi-transparente */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 16px; /* Bordas arredondadas */
+  transition: all 0.4s ease-in-out; /* Transição para todas as propriedades em 0.4s */
+  box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
+}
+
+/* Efeito de hover para elementos com 'glass-effect' */
+.glass-effect:hover {
+  transform: translateY(-3px); /* Leve levantamento ao passar o mouse */
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15); /* Sombra maior ao passar o mouse */
+}
+
+/* Estilos para botões de menu (Settings, Manage Data) */
+.menu-button {
+  transition: all 0.3s ease-in-out; /* Transição suave para interações */
+}
+
+/* Efeito de hover para botões de menu */
+.menu-button:hover {
+  transform: scale(1.08); /* Aumento de escala leve */
+  filter: brightness(1.1); /* Aumento de brilho leve */
+}
+
+/* Estilos para os botões de scroll (voltar ao topo, ir para o fim) */
+.scroll-btn {
+  position: fixed; /* Fixa a posição na tela */
+  bottom: 20px; /* 20px da parte inferior */
+  right: 20px; /* 20px da parte direita */
+  background-color: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente escuro */
+  color: white; /* Texto branco */
+  border: none; /* Sem borda */
+  border-radius: 50%; /* Torna o botão circular */
+  width: 40px; /* Largura */
+  height: 40px; /* Altura */
+  font-size: 1.5rem; /* Tamanho da seta */
+  cursor: pointer; /* Cursor de ponteiro */
+  display: flex; /* Usa flexbox para centralizar a seta */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease; /* Transições suaves */
+  z-index: 999; /* Garante que fique acima de outros elementos */
+}
+
+.scroll-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Fundo mais escuro no hover */
+  transform: translateY(-2px); /* Leve levantamento */
+}
+
+/* Posição específica para o botão de "ir para o fim" */
+#go-to-bottom-btn {
+  right: 70px; /* Posiciona à esquerda do botão "voltar ao topo" */
+}
+
+/* Estilos para inputs de texto e selects */
+input, select {
+  background: rgba(255, 255, 255, 0.6); /* Fundo translúcido (tema claro) */
+  border: 1px solid rgba(255, 255, 255, 0.7); /* Borda semi-transparente (tema claro) */
+  transition: all 0.3s ease-in-out; /* Transição suave */
+  width: 100%; /* Ocupa a largura total do contêiner */
+  height: 3rem; /* Altura fixa */
+  padding: 0.75rem; /* Preenchimento interno */
+  border-radius: 0.5rem; /* Bordas arredondadas */
+  color: #333; /* Cor do texto (tema claro) */
+  font-size: 0.875rem; /* Tamanho da fonte */
+  box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
+}
+
+/* Estilos para opções de select (dropdown) */
+select option {
+    background-color: #ffffff; /* Fundo branco (tema claro) */
+    color: #333; /* Texto escuro (tema claro) */
+}
+
+/* Estilos de foco para inputs e selects */
+input:focus, select:focus {
+  background: rgba(255, 255, 255, 0.7); /* Fundo mais opaco ao focar */
+  border-color: #007bff; /* Borda azul ao focar */
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); /* Sombra azul ao focar */
+  outline: none; /* Remove o contorno padrão do navegador */
+}
+
+/* Animação de fade-in para elementos que aparecem na tela */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); } /* Começa invisível e ligeiramente abaixo */
+  to { opacity: 1; transform: translateY(0); } /* Termina visível e na posição original */
+}
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out; /* Aplica a animação fadeIn */
+}
+
+/* Estilos da imagem de preview ao adicionar um item */
+.add-item-preview-img {
+  max-width: 80px; /* Largura máxima */
+  max-height: 80px; /* Altura máxima */
+  object-fit: cover; /* Ajusta a imagem para preencher, cortando se necessário */
+  border-radius: 8px; /* Bordas arredondadas */
+}
+
+/* Estilos da imagem de thumbnail dos itens salvos */
+.item-thumbnail-img {
+  width: 100%; /* Ocupa a largura total do contêiner */
+  height: 180px; /* Altura fixa */
+  object-fit: cover; /* Ajusta a imagem para preencher, cortando se necessário */
+  border-radius: 12px; /* Bordas arredondadas */
+  margin-bottom: 8px; /* Espaçamento inferior */
+}
+
+/* Estilos para os itens individuais na lista de itens salvos */
+#items-list .glass-effect {
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Itens empilhados verticalmente */
+  align-items: center; /* Centraliza itens horizontalmente */
+  text-align: center; /* Centraliza texto */
+  padding: 0.75rem; /* Preenchimento interno */
+  border-radius: 1rem; /* Bordas arredondadas */
+  border: 2px solid transparent; /* Borda transparente (para ser alterada via JS com a cor da pasta) */
+}
+/* ... (Seus estilos existentes) ... */
+
+/* Borda animada RGB (Corrigida) /
+.glass-effect.animated-border {
+--folder-color: #6b7280; / Cor padrão /
+position: relative;
+overflow: hidden; / Garante que a borda não saia /
+border: none; / Remove a borda padrão */
+
+.glass-effect.animated-border::before {
+content: '';
+position: absolute;
+top: 0; /* Alinha com o topo do elemento pai /
+left: 0; / Alinha com a esquerda do elemento pai /
+right: 0; / Alinha com a direita do elemento pai /
+bottom: 0; / Alinha com a parte inferior do elemento pai /
+border-radius: inherit; / Herda o border-radius /
+background: conic-gradient(
+from 0deg at 50% 50%,
+var(--folder-color) 0%,
+color-mix(in srgb, var(--folder-color) 50%, transparent 50%) 25%,
+var(--folder-color) 50%,
+color-mix(in srgb, var(--folder-color) 50%, transparent 50%) 75%,
+var(--folder-color) 100%
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) padding-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: destination-out;
+mask:
+linear-gradient(#fff 0 0) padding-box,
+linear-gradient(#fff 0 0);
+mask-composite: subtract;
+animation: rotate-border 3s linear infinite; / Ajustei a velocidade para um teste /
+z-index: -1; / Fica atrás do conteúdo */
+transition: all 0.3s ease-in-out;
+}
+
+/* Animação de rotação */
+@keyframes rotate-border {
+from {
+transform: rotate(0deg);
+}
+to {
+transform: rotate(360deg);
+}
+}
+
+/* Efeito de hover opcional /
+.glass-effect.animated-border:hover::before {
+animation-duration: 1.5s; / Acelera no hover */
+/* Estilos para o link/contêiner clicável dentro do item da lista */
+#items-list .glass-effect > a, #items-list .glass-effect > div[onclick] {
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Conteúdo empilhado verticalmente */
+  align-items: center; /* Centraliza horizontalmente */
+  text-align: center; /* Centraliza texto */
+  width: 100%; /* Ocupa a largura total */
+  flex-grow: 1; /* Permite que cresça para preencher espaço */
+  text-decoration: none; /* Remove sublinhado de links */
+  color: inherit; /* Herda a cor do texto do pai */
+}
+
+/* Estilos do título do item na lista */
+#items-list .glass-effect .item-title {
+  font-size: 0.9rem; /* Tamanho da fonte */
+  line-height: 0.8; /* Altura da linha */
+  margin-top: 0.0rem; /* Espaçamento superior */
+  font-weight: 600; /* Peso da fonte */
+}
+
+/* Descrição do item (oculta na lista principal) */
+#items-list .glass-effect .item-description {
+  display: none; /* Oculta a descrição */
+}
+
+/* Estilos da URL curta do item na lista */
+#items-list .glass-effect .item-url-short {
+  font-size: 0.70rem; /* Tamanho da fonte menor */
+  opacity: 0.8; /* Levemente transparente */
+  margin-top: 0.0rem; /* Espaçamento superior */
+}
+
+/* Estilos da data de adição do item na lista */
+#items-list .glass-effect .item-added-date {
+  font-size: 0.7rem; /* Tamanho da fonte menor */
+  color: #718096; /* Cinza */
+  opacity: 0.9; /* Quase opaco */
+  margin-top: 0.0rem; /* Espaçamento superior */
+}
+
+/* Utilidades para truncar texto em 2 linhas */
+.truncate-lines-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita a 2 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden; /* Oculta o conteúdo extra */
+    text-overflow: ellipsis; /* Adiciona "..." no final */
+}
+
+/* Utilidades para truncar texto em 3 linhas */
+.truncate-lines-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limita a 3 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden; /* Oculta o conteúdo extra */
+    text-overflow: ellipsis; /* Adiciona "..." no final */
+}
+
+/* Estilos para o painel de configurações */
+#settings-panel {
+  max-height: 70vh; /* Altura máxima para rolagem */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo exceder */
+}
+
+/* Estilos para o overlay de modais (fundo escuro por trás do modal) */
+.modal-overlay {
+  position: fixed; /* Fixa na viewport */
+  top: 0;
+  left: 0;
+  width: 100%; /* Largura total */
+  height: 100%; /* Altura total */
+  background: rgba(0, 0, 0, 0.7); /* Fundo preto translúcido */
+  display: flex; /* Usa flexbox para centralizar o conteúdo do modal */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  z-index: 1000; /* Fica acima de outros elementos */
+  animation: fadeIn 0.3s ease-out; /* Animação de fade-in ao aparecer */
+}
+
+/* Estilos para o conteúdo do modal */
+.modal-content {
+  background: #fff; /* Fundo branco (tema claro) */
+  padding: 25px; /* Preenchimento interno */
+  border-radius: 15px; /* Bordas arredondadas */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* Sombra suave */
+  text-align: center; /* Centraliza texto */
+  color: #333; /* Cor do texto (tema claro) */
+  max-width: 400px; /* Largura máxima */
+  width: 90%; /* Ocupa 90% da largura do contêiner */
+  position: relative; /* Para posicionar o botão de fechar */
+  animation: scaleIn 0.3s ease-out; /* Animação de escala ao aparecer */
+}
+
+/* Animação de escala para modais */
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; } /* Começa menor e invisível */
+  to { transform: scale(1); opacity: 1; } /* Termina no tamanho original e visível */
+}
+
+/* Estilos para o botão de fechar do modal */
+.modal-close-btn {
+  position: absolute; /* Posiciona absolutamente */
+  top: 10px; /* 10px do topo */
+  right: 10px; /* 10px da direita */
+  background: none; /* Sem fundo */
+  border: none; /* Sem borda */
+  font-size: 1.5rem; /* Tamanho do ícone "X" */
+  cursor: pointer; /* Cursor de ponteiro */
+  color: #888; /* Cor cinza */
+  transition: color 0.2s ease-in-out; /* Transição de cor */
+}
+
+/* Efeito de hover no botão de fechar do modal */
+.modal-close-btn:hover {
+  color: #333; /* Cor mais escura no hover */
+}
+
+/* Grupo de input dentro do modal */
+.modal-input-group {
+    margin-bottom: 15px; /* Espaço entre grupos de input */
+    text-align: left; /* Alinha texto à esquerda */
+}
+
+/* Label do grupo de input do modal */
+.modal-input-group label {
+  color: #333; /* Cor do texto (tema claro) */
+  display: block; /* Garante que o label ocupe sua própria linha */
+  margin-bottom: 5px; /* Espaço entre label e input */
+  font-weight: 600; /* Peso da fonte */
+}
+
+/* Inputs e selects dentro do modal */
+.modal-input-group input, .modal-input-group select {
+  background: #f0f0f0; /* Fundo cinza claro */
+  border: 1px solid #ddd; /* Borda cinza */
+  color: #333; /* Cor do texto */
+  width: 100%; /* Ocupa a largura total */
+  padding: 8px 12px; /* Preenchimento interno */
+  border-radius: 5px; /* Bordas arredondadas */
+}
+
+/* Ações do modal (botões) */
+.modal-actions {
+  display: flex; /* Usa flexbox */
+  justify-content: center; /* Centraliza botões */
+  gap: 15px; /* Espaçamento entre botões */
+  margin-top: 20px; /* Espaçamento superior */
+}
+
+/* Estilo base para botões de modal */
+.modal-btn {
+  padding: 10px 20px; /* Preenchimento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  font-weight: 600; /* Peso da fonte */
+  cursor: pointer; /* Cursor de ponteiro */
+  border: none; /* Sem borda */
+  transition: all 0.2s ease-in-out; /* Transição suave */
+}
+
+/* Botão de confirmação no modal */
+.modal-btn.confirm {
+  background-color: #007bff; /* Azul brilhante */
+  color: white; /* Texto branco */
+}
+.modal-btn.confirm:hover {
+  background-color: #0056b3; /* Azul mais escuro no hover */
+  transform: translateY(-1px); /* Leve levantamento */
+}
+
+/* Botão de cancelar no modal */
+.modal-btn.cancel {
+  background-color: #cccccc; /* Cinza claro */
+  color: #333; /* Texto escuro */
+}
+.modal-btn.cancel:hover {
+  background-color: #b0b0b0; /* Cinza mais escuro no hover */
+  transform: translateY(-1px); /* Leve levantamento */
+}
+
+/* Botão de excluir pasta no modal */
+.modal-btn.delete-folder {
+  background-color: #dc3545; /* Vermelho */
+  color: white; /* Texto branco */
+}
+.modal-btn.delete-folder:hover {
+  background-color: #c82333; /* Vermelho mais escuro no hover */
+}
+
+/* Botões de ação para pastas (editar) */
+.folder-action-btn {
+  padding: 4px 8px; /* Preenchimento interno */
+  border-radius: 6px; /* Bordas arredondadas */
+  font-size: 0.75rem; /* Tamanho da fonte menor */
+  font-weight: 500; /* Peso da fonte */
+  margin-left: 5px; /* Espaçamento à esquerda */
+  transition: all 0.2s ease-in-out; /* Transição suave */
+}
+.folder-action-btn.edit {
+  background-color: #007bff; /* Azul */
+  color: white; /* Texto branco */
+}
+.folder-action-btn.edit:hover {
+  background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
+/* Botão de editar item */
+.edit-item-btn {
+    background-color: #28a745; /* Verde */
+    color: white; /* Texto branco */
+    padding: 4px 8px; /* Preenchimento interno */
+    border-radius: 6px; /* Bordas arredondadas */
+    font-size: 0.75rem; /* Tamanho da fonte menor */
+    font-weight: 500; /* Peso da fonte */
+    margin-left: 5px; /* Espaçamento à esquerda */
+    transition: all 0.2s ease-in-out; /* Transição suave */
+}
+.edit-item-btn:hover {
+    background-color: #218838; /* Verde mais escuro no hover */
+}
+
+/* Estilos para itens de tag na lista de tags */
+.tag-item {
+    display: flex; /* Usa flexbox */
+    justify-content: space-between; /* Espaçamento entre os elementos */
+    align-items: center; /* Alinha verticalmente ao centro */
+    padding: 8px 12px; /* Preenchimento interno */
+    background: rgba(255, 255, 255, 0.4); /* Fundo translúcido (tema claro) */
+    border-radius: 8px; /* Bordas arredondadas */
+    margin-bottom: 8px; /* Espaçamento inferior */
+    color: #333; /* Cor do texto (tema claro) */
+}
+
+/* Botões dentro de itens de tag */
+.tag-item-buttons button {
+    padding: 4px 8px; /* Preenchimento interno */
+    border-radius: 6px; /* Bordas arredondadas */
+    font-size: 0.75rem; /* Tamanho da fonte menor */
+    font-weight: 500; /* Peso da fonte */
+    margin-left: 8px; /* Espaçamento à esquerda */
+    transition: all 0.2s ease-in-out; /* Transição suave */
+}
+.tag-item-buttons .edit {
+    background-color: #007bff; /* Azul */
+    color: white; /* Texto branco */
+}
+.tag-item-buttons .edit:hover {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
+.tag-item-buttons .delete {
+    background-color: #dc3545; /* Vermelho */
+    color: white; /* Texto branco */
+}
+.tag-item-buttons .delete:hover {
+    background-color: #c82333; /* Vermelho mais escuro no hover */
+}
+
+/* Botão para limpar input */
+.clear-input-btn {
+    position: absolute; /* Posiciona absolutamente */
+    right: 10px; /* 10px da direita */
+    top: 50%; /* Centraliza verticalmente */
+    transform: translateY(-50%); /* Ajusta para centralização exata */
+    background: none; /* Sem fundo */
+    border: none; /* Sem borda */
+    color: #888; /* Cor cinza */
+    cursor: pointer; /* Cursor de ponteiro */
+    font-size: 1rem; /* Tamanho da fonte */
+    padding: 5px; /* Preenchimento interno */
+    line-height: 1; /* Altura da linha */
+    transition: color 0.2s ease-in-out; /* Transição de color */
+}
+.clear-input-btn:hover {
+    color: #333; /* Cor mais escura no hover */
+}
+.input-with-clear {
+    position: relative; /* Permite posicionamento absoluto do botão de limpar */
+}
+.hidden {
+  display: none; /* Utilidade para ocultar elementos */
+}
+
+/* Mensagem de carregamento */
+.loading-message {
+    position: fixed; /* Fixo na tela */
+    top: 50%; /* Centraliza verticalmente */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta para centralização exata */
+    background: rgba(0, 0, 0, 0.8); /* Fundo preto translúcido */
+    color: white; /* Texto branco */
+    padding: 15px 30px; /* Preenchimento */
+    border-radius: 10px; /* Bordas arredondadas */
+    z-index: 1001; /* Fica acima de outros elementos */
+    font-size: 1.2rem; /* Tamanho da fonte */
+    display: none; /* Inicia oculto */
+}
+
+/* Estilo para ícones SVG em selects e buttons */
+.icon-svg {
+    height: 1em; /* Altura proporcional ao texto */
+    width: 1em; /* Largura proporcional ao texto */
+    vertical-align: middle; /* Alinha verticalmente com o texto */
+    margin-right: 0.25em; /* Espaçamento à direita */
+    filter: invert(0); /* Padrão: sem inversão de cor (tema claro) */
+}
+
+/* Estilos para o sistema de estrelas (avaliação) */
+.star-rating {
+    display: inline-flex; /* Estrelas em linha */
+    direction: rtl; /* Direção do texto da direita para a esquerda (para alinhar estrelas) */
+    unicode-bidi: isolate; /* Controla o algoritmo bidirecional */
+    gap: 2px; /* Espaçamento entre estrelas */
+}
+.star-rating input[type="radio"] {
+    display: none; /* Oculta os botões de rádio nativos */
+}
+.star-rating label {
+    color: #ccc; /* Cor da estrela vazia */
+    font-size: 1.5rem; /* Tamanho da estrela */
+    cursor: pointer; /* Cursor de ponteiro */
+    transition: color 0.2s; /* Transição de cor */
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffb700; /* Cor da estrela preenchida (amarelo/laranja) */
+}
+
+/* Estilo para exibição das estrelas (não clicável) */
+.display-rating .star {
+    font-size: 1.2rem; /* Tamanho menor para exibição */
+    color: #ffb700; /* Cor da estrela preenchida */
+    margin: 0 1px; /* Margem horizontal */
+}
+.display-rating .star-empty {
+    font-size: 1.2rem; /* Tamanho menor para exibição */
+    color: #ccc; /* Cor da estrela vazia */
+    margin: 0 1px; /* Margem horizontal */
+}
+
+/* Ações do item na parte inferior (botões de copiar, editar, excluir) */
+.item-actions-bottom {
+  display: flex; /* Usa flexbox */
+  flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+  justify-content: center; /* Centraliza botões */
+  align-items: center; /* Alinha verticalmente ao centro */
+  gap: 0.5rem; /* Espaçamento entre os botões */
+}
+
+/* Estilos para grupos de checkbox no modal de importação */
+.modal-checkbox-group {
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Checkboxes empilhados verticalmente */
+    align-items: flex-start; /* Alinha checkboxes à esquerda */
+    margin-top: 15px; /* Espaçamento superior */
+    gap: 10px; /* Espaçamento entre checkboxes */
+}
+.modal-checkbox-group label {
+    display: flex; /* Usa flexbox para alinhar checkbox e texto */
+    align-items: center; /* Alinha verticalmente ao centro */
+    cursor: pointer; /* Cursor de ponteiro */
+    font-size: 1rem; /* Tamanho da fonte */
+    color: #333; /* Cor do texto (tema claro) */
+}
+.modal-checkbox-group input[type="checkbox"] {
+    margin-right: 10px; /* Espaçamento à direita do checkbox */
+    transform: scale(1.2); /* Aumenta o tamanho do checkbox */
+}
+
+/* Estilos para os botões das abas */
+.tab-buttons {
+  display: flex; /* Usa flexbox */
+  justify-content: center; /* Centraliza os botões das abas */
+  margin-bottom: 1rem; /* Espaçamento inferior */
+  gap: 0.5rem; /* Espaçamento entre os botões */
+  flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+}
+
+/* Estilo base para cada botão de aba */
+.tab-button {
+  padding: 0.75rem 1.5rem; /* Preenchimento interno */
+  background-color: rgba(255, 255, 255, 0.2); /* Fundo translúcido (tema claro) */
+  backdrop-filter: blur(8px); /* Desfoque de fundo */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borda */
+  border-radius: 12px; /* Bordas arredondadas */
+  color: #333; /* Cor do texto (tema claro) */
+  font-weight: 600; /* Peso da fonte */
+  cursor: pointer; /* Cursor de ponteiro */
+  transition: all 0.3s ease; /* Transição suave para interações */
+}
+
+/* Efeito de hover nos botões de aba */
+.tab-button:hover {
+  background-color: rgba(255, 255, 255, 0.4); /* Fundo mais opaco */
+  border-color: rgba(255, 255, 255, 0.5); /* Borda mais visível */
+  transform: translateY(-2px); /* Leve levantamento */
+}
+
+/* Estilo para a aba ativa */
+.tab-button.active {
+  background: linear-gradient(135deg, #007bff, #0056b3); /* Gradiente azul forte */
+  color: white; /* Texto branco */
+  border-color: #007bff; /* Borda azul */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Sombra azul */
+}
+
+/* Conteúdo das abas (inicialmente oculto) */
+.tab-content {
+  display: none; /* Oculta todo o conteúdo das abas por padrão */
+}
+
+/* Conteúdo da aba ativa (visível) */
+.tab-content.active {
+  display: block; /* Torna o conteúdo da aba ativa visível */
+}
+
+/* Estilos específicos para o layout do dashboard */
+.dashboard-grid {
+    display: grid; /* Usa grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Colunas responsivas */
+    gap: 1rem; /* Espaçamento entre os itens da grid */
+    margin-top: 1rem; /* Espaçamento superior */
+}
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.6); /* Fundo translúcido (tema claro) */
+    padding: 1rem; /* Preenchimento */
+    border-radius: 8px; /* Bordas arredondadas */
+    border: 1px solid rgba(255, 255, 255, 0.7); /* Borda */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Sombra */
+    color: #333; /* Cor do texto (tema claro) */
+}
+.dashboard-card h3 {
+    font-weight: 600; /* Peso da fonte */
+    margin-bottom: 0.5rem; /* Espaçamento inferior */
+    color: #007bff; /* Cor do título (tema claro) */
+}
+.dashboard-card p {
+    font-size: 0.9rem; /* Tamanho da fonte */
+}
+.dashboard-list {
+    list-style-type: none; /* Remove marcadores de lista */
+    padding: 0; /* Remove preenchimento da lista */
+}
+.dashboard-list li {
+        margin-bottom: 0.25rem; /* Espaçamento inferior para cada item da lista */
+    font-size: 0.9rem; /* Tamanho da fonte */
+    display: flex; /* Usa flexbox */
+    justify-content: space-between; /* Espaço entre os elementos (nome e valor) */
+    align-items: center; /* Alinha verticalmente ao centro */
+    flex-wrap: wrap; /* Permite que o conteúdo quebre a linha */
+    gap: 0.5rem; /* Espaçamento entre elementos em linha */
+}
+.dashboard-list li span:first-child {
+    font-weight: 500; /* Peso da fonte para o primeiro span (nome) */
+}
+/* Estilos específicos para listas de avaliação no dashboard */
+.dashboard-list.ratings li span:first-child {
+    display: flex; /* Usa flexbox para estrelas */
+    align-items: center; /* Alinha estrelas verticalmente */
+    gap: 2px; /* Espaçamento entre estrelas */
+}
+/* Linha de informações do item no dashboard (thumbnail + título) */
+.dashboard-list .item-info-row {
+    display: flex; /* Usa flexbox */
+    align-items: center; /* Alinha verticalmente ao centro */
+    gap: 0.5rem; /* Espaçamento entre thumbnail e título */
+    flex-grow: 1; /* Permite que cresça */
+    min-width: 0; /* Permite que o conteúdo encolha para caber */
+}
+/* Thumbnail dos itens no dashboard */
+.dashboard-list .item-thumbnail {
+    width: 40px; /* Largura fixa */
+    height: 40px; /* Altura fixa */
+    object-fit: cover; /* Ajusta a imagem */
+    border-radius: 4px; /* Bordas arredondadas */
+    flex-shrink: 0; /* Impede que a thumbnail encolha */
+}
+/* Botão "Copiar ID" no dashboard */
+.dashboard-list .copy-id-btn {
+    padding: 4px 8px; /* Preenchimento */
+    border-radius: 6px; /* Bordas arredondadas */
+    font-size: 0.7rem; /* Tamanho da fonte */
+    background-color: #28a745; /* Verde */
+    color: white; /* Texto branco */
+    transition: background-color 0.2s; /* Transição de cor */
+    flex-shrink: 0; /* Impede que o botão encolha */
+    cursor: pointer; /* Cursor de ponteiro */
+}
+.dashboard-list .copy-id-btn:hover {
+    background-color: #218838; /* Verde mais escuro no hover */
+}
+
+/* Estilos do modal do reprodutor de vídeo */
+#video-player-modal .modal-content {
+    max-width: 90%; /* Largura máxima */
+    max-height: 90%; /* Altura máxima */
+    width: 800px; /* Largura padrão para vídeos */
+    height: auto; /* Altura automática para manter a proporção */
+    background: #000; /* Fundo preto */
+    padding: 0; /* Sem preenchimento */
+    overflow: hidden; /* Oculta conteúdo extra */
+    color: white; /* Cor do texto (se houver) */
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Conteúdo empilhado verticalmente */
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    aspect-ratio: 16/9; /* Proporção de vídeo padrão 16:9 */
+}
+
+/* Botão de fechar no modal do reprodutor de vídeo */
+#video-player-modal .modal-close-btn {
+    color: white; /* Cor branca */
+    top: 21px; /* 5px do topo */
+    right: 15px; /* 5px da direita */
+    z-index: 1001; /* Acima do vídeo */
+    background: rgba(177, 45, 45, 0.5); /* Fundo translúcido */
+    border-radius: 50%; /* Circular */
+    width: 20px; /* Largura */
+    height: 20px; /* Altura */
+    display: flex; /* Usa flexbox para centralizar "X" */
+    justify-content: center; /* Centraliza "X" horizontalmente */
+    align-items: center; /* Centraliza "X" verticalmente */
+    font-size: 1.2rem; /* Tamanho da fonte do "X" */
+}
+
+/* Efeito de hover no botão de fechar do reprodutor de vídeo */
+#video-player-modal .modal-close-btn:hover {
+    color: #eee; /* Cor mais clara */
+    background: rgba(0,0,0,0.8); /* Fundo mais escuro */
+}
+
+/* Iframe dentro do contêiner do reprodutor de vídeo */
+#video-player-modal #video-player-iframe-container iframe {
+    width: 100%; /* Largura total */
+    height: 100%; /* Altura total */
+    border: none; /* Sem borda */
+}
+
+/* Footer general styles */
+footer {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    text-align: center;
+    color: #6b7280; /* Gray-600 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+footer nav a {
+    color: #374151; /* Gray-700 */
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+footer nav a:hover {
+    color: #1f2937; /* Gray-900 */
+}

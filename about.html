@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="aboutUsLink">About Us</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column; /* Changed to column to allow footer to stick to bottom */
+      justify-content: flex-start;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.8s ease-in-out;
+      overflow-x: hidden;
+      padding-top: 1rem;
+    }
+    body.light {
+      background: linear-gradient(135deg, #e0f2f7, #c1e7f0, #9fd8e6);
+    }
+    body.dark {
+      background: linear-gradient(135deg, #1a2a3a, #0a1a2a, #050f1a);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      transition: all 0.4s ease-in-out;
+      box-sizing: border-box;
+    }
+    body.dark .glass-effect {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .glass-effect:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+    }
+    body.dark .glass-effect:hover {
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+    }
+    /* Estilos para o conteúdo da página */
+    .content-container {
+      flex-grow: 1; /* Allows content to push footer down */
+      width: 100%;
+      max-width: 800px;
+      padding: 1rem;
+      margin-bottom: 2rem; /* Space before footer */
+      color: #333; /* Default text color for light theme */
+    }
+    body.dark .content-container {
+        color: #e0e7ff; /* Text color for dark theme */
+    }
+    /* Estilos do rodapé */
+    footer {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.4); /* Glass effect for footer */
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: #333; /* Default text color for light theme */
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+      margin-top: auto; /* Pushes footer to the bottom */
+    }
+    body.dark footer {
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e0e7ff;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
+    }
+    footer a {
+      color: #007bff; /* Link color for light theme */
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    body.dark footer a {
+      color: #4ecdc4; /* Link color for dark theme */
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="light">
+  <div class="w-full max-w-4xl mx-auto p-2 sm:p-4">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight mb-4 sm:mb-6" data-i18n="aboutUsLink">About Us</h1>
+
+    <div class="content-container glass-effect rounded-lg p-4 sm:p-6">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4" data-i18n="welcomeAboutUs">Welcome to Liquid Glass Organizer!</h2>
+      <p class="mb-4" data-i18n="aboutUsParagraph1">
+        We are passionate about helping you organize your digital life. Our application, "Liquid Glass Organizer," was created to simplify the way you save, categorize, and access your favorite links, videos, and photos. We believe in a clean, intuitive, and efficient experience for managing your digital content.
+      </p>
+      <p class="mb-4" data-i18n="aboutUsParagraph2">
+        With a focus on design and usability, we developed a system that not only helps you find what you need quickly but also offers a visually pleasing experience with its "glassmorphism" interface. Our goal is to provide a tool that adapts to your needs, whether for work, study, or leisure.
+      </p>
+      <p class="mb-4" data-i18n="aboutUsParagraph3">
+        We are constantly working to improve and add new features, always listening to the feedback from our users. Thank you for choosing Liquid Glass Organizer!
+      </p>
+      <p class="text-sm text-gray-600" data-i18n="currentVersion">Current Version: 1.0.0</p>
+    </div>
+  </div>
+
+  <footer class="glass-effect mt-auto">
+    <p>&copy; <span id="current-year"></span> Liquid Glass Organizer. All rights reserved.</p>
+    <div class="flex justify-center gap-4 mt-2">
+      <a href="about.html" data-i18n="aboutUsLink">About Us</a>
+      <a href="#" data-i18n="privacyPolicyLink">Privacy Policy</a>
+      <a href="#" data-i18n="termsOfServiceLink">Terms of Service</a>
+      <a href="#" data-i18n="contactUsLink">Contact Us</a>
+    </div>
+  </footer>
+
+  <script>
+    // **Objeto de Traduções (simplificado para esta página, o completo está em index.html):**
+    // Inclua APENAS as traduções necessárias para esta página.
+    window.translations = {
+      'pt-BR': {
+        aboutUsLink: 'Sobre Nós',
+        welcomeAboutUs: 'Bem-vindo(a) ao Liquid Glass Organizer!',
+        aboutUsParagraph1: 'Somos apaixonados por ajudar você a organizar sua vida digital. Nosso aplicativo, "Liquid Glass Organizer", foi criado para simplificar a maneira como você salva, categoriza e acessa seus links, vídeos e fotos favoritos. Acreditamos em uma experiência limpa, intuitiva e eficiente para o gerenciamento do seu conteúdo digital.',
+        aboutUsParagraph2: 'Com foco em design e usabilidade, desenvolvemos um sistema que não apenas te ajuda a encontrar o que precisa rapidamente, mas também oferece uma experiência visualmente agradável com sua interface "glassmorphism". Nosso objetivo é fornecer uma ferramenta que se adapta às suas necessidades, seja para trabalho, estudo ou lazer.',
+        aboutUsParagraph3: 'Estamos constantemente trabalhando para aprimorar e adicionar novas funcionalidades, sempre ouvindo o feedback de nossos usuários. Obrigado por escolher o Liquid Glass Organizer!',
+        currentVersion: 'Versão Atual: 1.0.0',
+        privacyPolicyLink: 'Política de Privacidade',
+        termsOfServiceLink: 'Termos de Serviço',
+        contactUsLink: 'Contato',
+      },
+      'en': {
+        aboutUsLink: 'About Us',
+        welcomeAboutUs: 'Welcome to Liquid Glass Organizer!',
+        aboutUsParagraph1: 'We are passionate about helping you organize your digital life. Our application, "Liquid Glass Organizer," was created to simplify the way you save, categorize, and access your favorite links, videos, and photos. We believe in a clean, intuitive, and efficient experience for managing your digital content.',
+        aboutUsParagraph2: 'With a focus on design and usability, we developed a system that not only helps you find what you need quickly but also offers a visually pleasing experience with its "glassmorphism" interface. Our goal is to provide a tool that adapts to your needs, whether for work, study, or leisure.',
+        aboutUsParagraph3: 'We are constantly working to improve and add new features, always listening to the feedback from our users. Thank you for choosing Liquid Glass Organizer!',
+        currentVersion: 'Current Version: 1.0.0',
+        privacyPolicyLink: 'Privacy Policy',
+        termsOfServiceLink: 'Terms of Service',
+        contactUsLink: 'Contact Us',
+      },
+      'es': {
+        aboutUsLink: 'Sobre Nosotros',
+        welcomeAboutUs: '¡Bienvenido(a) a Liquid Glass Organizer!',
+        aboutUsParagraph1: 'Nos apasiona ayudarte a organizar tu vida digital. Nuestra aplicación, "Liquid Glass Organizer", fue creada para simplificar la forma en que guardas, categorizas y accedes a tus enlaces, videos y fotos favoritos. Creemos en una experiencia limpia, intuitiva y eficiente para la gestión de tu contenido digital.',
+        aboutUsParagraph2: 'Con un enfoque en el diseño y la usabilidad, desarrollamos un sistema que no solo te ayuda a encontrar lo que necesitas rápidamente, sino que también ofrece una experiencia visualmente agradable con su interfaz "glassmorphism". Nuestro objetivo es proporcionar una herramienta que se adapte a tus necesidades, ya sea para el trabajo, el estudio o el ocio.',
+        aboutUsParagraph3: 'Estamos trabajando constantemente para mejorar y añadir nuevas funcionalidades, siempre escuchando los comentarios de nuestros usuarios. ¡Gracias por elegir Liquid Glass Organizer!',
+        currentVersion: 'Versión Actual: 1.0.0',
+        privacyPolicyLink: 'Política de Privacidad',
+        termsOfServiceLink: 'Términos de Servicio',
+        contactUsLink: 'Contacto',
+      }
+    };
+
+    let theme = localStorage.getItem('theme') || 'light';
+    let currentLanguage = localStorage.getItem('language') || 'pt-BR';
+
+    function applyTheme() {
+      document.body.className = theme;
+      // Atualiza cores do conteúdo
+      const contentContainer = document.querySelector('.content-container');
+      const h1Title = document.querySelector('h1');
+      const h2Title = document.querySelector('h2');
+      const paragraphs = document.querySelectorAll('.content-container p');
+      const footer = document.querySelector('footer');
+      const footerLinks = document.querySelectorAll('footer a');
+
+      if (theme === 'light') {
+        contentContainer.classList.remove('text-e0e7ff');
+        contentContainer.classList.add('text-333');
+        h1Title.classList.remove('text-white');
+        h1Title.classList.add('text-gray-800');
+        h2Title.classList.remove('text-e0e7ff');
+        h2Title.classList.add('text-gray-800');
+        paragraphs.forEach(p => {
+          p.classList.remove('text-e0e7ff');
+          p.classList.add('text-gray-700');
+        });
+        document.querySelector('.text-sm.text-gray-600').classList.remove('text-e0e7ff'); // Version text
+        document.querySelector('.text-sm.text-gray-600').classList.add('text-gray-600');
+
+        footer.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+        footer.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        footer.style.boxShadow = '0 -4px 10px rgba(0, 0, 0, 0.05)';
+        footer.style.color = '#333';
+        footerLinks.forEach(link => link.style.color = '#007bff');
+      } else {
+        contentContainer.classList.remove('text-333');
+        contentContainer.classList.add('text-e0e7ff');
+        h1Title.classList.remove('text-gray-800');
+        h1Title.classList.add('text-white');
+        h2Title.classList.remove('text-gray-800');
+        h2Title.classList.add('text-e0e7ff');
+        paragraphs.forEach(p => {
+          p.classList.remove('text-gray-700');
+          p.classList.add('text-e0e7ff');
+        });
+        document.querySelector('.text-sm.text-gray-600').classList.remove('text-gray-600'); // Version text
+        document.querySelector('.text-sm.text-gray-600').classList.add('text-e0e7ff');
+
+        footer.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        footer.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        footer.style.boxShadow = '0 -4px 10px rgba(0, 0, 0, 0.4)';
+        footer.style.color = '#e0e7ff';
+        footerLinks.forEach(link => link.style.color = '#4ecdc4');
+      }
+    }
+
+    function applyLanguage(lang) {
+      currentLanguage = lang;
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (window.translations[currentLanguage] && window.translations[currentLanguage][key]) {
+          element.textContent = window.translations[currentLanguage][key];
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      applyTheme();
+      applyLanguage(currentLanguage); // Apply initial language
+    });
+  </script>
+</body>
+</html>

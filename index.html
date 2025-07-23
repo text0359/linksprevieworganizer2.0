@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links Preview Organizer2.0</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+<body class="light">
+  <div class="w-full max-w-4xl mx-auto p-2 sm:p-4">
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6 animate-fade-in">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight mb-2 sm:mb-0" data-i18n="appTitle">Links Preview Organizer2.0</h1>
+      <div class="flex flex-wrap gap-2 sm:gap-4">
+        <button id="settings-btn" class="menu-button px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-white glass-effect font-semibold" data-i18n="settingsBtn">
+          Settings
+        </button>
+        <button id="manage-data-btn" class="menu-button px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg text-white glass-effect font-semibold" data-i18n="manageDataBtn">
+          Manage Data
+        </button>
+      </div>
+    </div>
+
+    <div id="settings-panel" class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in hidden w-full">
+      <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="settingsTitle">Settings</h2>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <button id="toggle-theme-btn" class="px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-green-600 to-lime-600 rounded-lg text-white font-semibold hover:from-green-700 hover:to-lime-700">
+          Toggle Dark Theme
+        </button>
+        <button id="clear-items-btn" class="px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg text-white font-semibold hover:from-red-700 hover:to-orange-700" data-i18n="clearAllItemsBtn">
+          Clear All Items
+        </button>
+        <button id="check-update-btn" class="px-3 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg text-white font-semibold hover:from-indigo-700 hover:to-purple-700" data-i18n="checkUpdateBtn">
+          Check for Updates
+        </button>
+      </div>
+      <div class="input-group mt-4">
+        <label for="language-select" class="text-gray-800" data-i18n="languageLabel">Language:</label>
+        <select id="language-select" class="flex-1">
+          <option value="pt-BR">Português (Brasil)</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2" data-i18n="manageTagsTitle">Manage Tags</h3>
+        <div class="flex flex-col sm:flex-row gap-2 mb-4 input-with-clear">
+          <input type="text" id="new-tag-input" placeholder="New tag name" class="flex-1" data-i18n-placeholder="newTagPlaceholder">
+          <button class="clear-input-btn" data-target-input="new-tag-input" data-i18n="clearBtn" title="Clear input">✕</button>
+          <button id="add-tag-btn" class="px-3 py-1 bg-gradient-to-r from-green-500 to-green-700 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-800" data-i18n="addTagBtn">Add Tag</button>
+        </div>
+        <div id="tags-list" class="flex flex-wrap gap-2">
+          </div>
+      </div>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab-button active" data-tab="dashboard" data-i18n="dashboardTab">Dashboard</button>
+        <button class="tab-button" data-tab="create-save" data-i18n="createSaveTab">Criar/Salvar Links</button>
+        <button class="tab-button" data-tab="folders-items" data-i18n="foldersItemsTab">Pastas & Itens Salvos</button>
+    </div>
+
+    <div id="dashboard-tab" class="tab-content active glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="dashboardTitle">Dashboard</h2>
+        <p class="text-gray-600 mb-4" data-i18n="dashboardContent">Bem-vindo ao seu painel! Aqui você encontrará um resumo de seus dados:</p>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3 data-i18n="totalItems">Total de Itens</h3>
+                <p id="dashboard-total-items" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByType">Itens por Tipo</h3>
+                <ul id="dashboard-items-by-type" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="totalFolders">Total de Pastas</h3>
+                <p id="dashboard-total-folders" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByFolder">Itens por Pasta</h3>
+                <ul id="dashboard-items-by-folder" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="totalTags">Total de Tags</h3>
+                <p id="dashboard-total-tags" class="text-2xl font-bold"></p>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="topTags">Tags Mais Usadas</h3>
+                <ul id="dashboard-top-tags" class="dashboard-list"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="itemsByRating">Itens por Avaliação</h3>
+                <ul id="dashboard-items-by-rating" class="dashboard-list ratings"></ul>
+            </div>
+            <div class="dashboard-card">
+                <h3 data-i18n="systemInfo">Informações do Sistema</h3>
+                <p><span data-i18n="currentTheme">Tema Atual:</span> <span id="dashboard-current-theme"></span></p>
+                <p><span data-i18n="currentLanguage">Idioma Atual:</span> <span id="dashboard-current-language"></span></p>
+            </div>
+            <div class="dashboard-card col-span-full">
+                <h3 data-i18n="lastAccessedItemsTitle">Últimos Acessos (Vídeos)</h3>
+                <ul id="dashboard-last-accessed-items" class="dashboard-list">
+                    </ul>
+            </div>
+            <div class="dashboard-card col-span-full">
+                <h3 data-i18n="mostAccessedItemsTitle">Vídeos Mais Acessados</h3>
+                <ul id="dashboard-most-accessed-videos" class="dashboard-list">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-save-tab" class="tab-content">
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="addNewItemTitle">Add New Item</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="item-url"
+                        type="text"
+                        placeholder="Enter or paste URL (e.g., video, photo, website)"
+                        class="flex-1"
+                        data-i18n-placeholder="itemUrlPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="item-url" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="item-tags"
+                        type="text"
+                        placeholder="Tags (e.g., inspiration, work, separated by commas)"
+                        list="saved-tags-datalist"
+                        class="flex-1"
+                        data-i18n-placeholder="itemTagsPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="item-tags" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <datalist id="saved-tags-datalist"></datalist>
+                <button id="paste-link-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg text-white font-semibold hover:from-yellow-700 hover:to-orange-700" data-i18n="pasteLinkBtn">
+                    Paste Link
+                </button>
+                <select id="item-type" class="flex-1" data-i18n="itemTypeSelect">
+                    <option value="link" data-i18n="optionLink">Link</option>
+                    <option value="video" data-i18n="optionVideo">Video</option>
+                    <option value="photo" data-i18n="optionPhoto">Photo</option>
+                </select>
+                <select id="item-folder" class="flex-1">
+                </select>
+                <button id="add-item-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg text-white font-semibold hover:from-pink-700 hover:to-purple-700" data-i18n="addItemBtn">
+                    Add Item
+                </button>
+            </div>
+            <div id="preview-container" class="mt-2 sm:mt-4 p-2 bg-white/40 rounded-lg hidden">
+                <div class="flex items-start gap-2">
+                    <img id="preview-image" src="" alt="Preview" class="add-item-preview-img">
+                    <div>
+                        <a id="preview-title" class="font-semibold text-gray-800 truncate hover:underline"></a>
+                        <p id="preview-description" class="text-sm text-gray-600 truncate"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="createNewFolderTitle">Create New Folder</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="new-folder"
+                        type="text"
+                        placeholder="New folder name"
+                        data-i18n-placeholder="newFolderNamePlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="new-folder" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <select id="folder-color" class="flex-1">
+                    <option value="bg-blue-500" data-i18n="colorBlue">Blue</option>
+                    <option value="bg-green-500" data-i18n="colorGreen">Green</option>
+                    <option value="bg-red-500" data-i18n="colorRed">Red</option>
+                    <option value="bg-purple-500" data-i18n="colorPurple">Purple</option>
+                    <option value="bg-yellow-500" data-i18n="colorYellow">Yellow</option>
+                    <option value="bg-black" data-i18n="colorBlack">Black</option>
+                    <option value="bg-teal-600" data-i18n="colorTeal">Teal</option>
+                    <option value="bg-pink-600" data-i18n="colorPink">Pink</option>
+                </select>
+                <select id="folder-icon" class="flex-1">
+                    <option value="svg/tiktok.svg" data-i18n="iconTikTok">TikTok</option>
+                    <option value="svg/kwai.svg" data-i18n="iconKwai">Kwai</option>
+                    <option value="svg/facebook.svg" data-i18n="iconFacebook">Facebook</option>
+                    <option value="svg/instagram.svg" data-i18n="iconInstagram">Instagram</option>
+                    <option value="svg/youtube.svg" data-i18n="iconYouTube">YouTube</option>
+                    <option value="svg/dailymotion.svg" data-i18n="iconDailymotion">Dailymotion</option>
+                    <option value="svg/folder.svg" data-i18n="iconFolder">Folder</option>
+                    <option value="svg/link.svg" data-i18n="iconLink">Outro Link</option>
+                </select>
+                <button id="add-folder-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg text-white font-semibold hover:from-blue-700 hover:to-teal-700" data-i18n="addFolderBtn">
+                    Add Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="folders-items-tab" class="tab-content">
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4 flex justify-between items-center">
+                <span data-i18n="foldersTitle">Folders</span>
+                <button id="toggle-folders-btn" class="px-2 py-1 bg-gray-500 rounded-lg text-white text-sm" data-i18n="collapseFoldersBtn">
+                    Collapse Folders
+                </button>
+            </h2>
+            <div id="folders-list-container">
+                <div id="folders-list" class="flex flex-wrap gap-2 sm:gap-4">
+                    <button id="all-items-btn" class="px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-gray-600 to-gray-800 rounded-lg text-white font-semibold hover:from-gray-700 hover:to-gray-900" data-i18n="allItemsBtn">
+                        All Items
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="searchItemsTitle">Search Items</h2>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="search-query"
+                        type="text"
+                        placeholder="Search by URL or tags..."
+                        class="flex-1"
+                        data-i18n-placeholder="searchQueryPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="search-query" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <div class="flex-1 input-with-clear">
+                    <input
+                        id="search-tags-input"
+                        type="text"
+                        placeholder="Search by tags (comma-separated)..."
+                        list="saved-tags-datalist-search"
+                        class="flex-1"
+                        data-i18n-placeholder="itemTagsPlaceholder"
+                    />
+                    <button class="clear-input-btn" data-target-input="search-tags-input" data-i18n="clearBtn" title="Clear input">✕</button>
+                </div>
+                <datalist id="saved-tags-datalist-search"></datalist>
+                <select id="search-type" class="flex-1">
+                    <option value="all" data-i18n="allTypes">All Types</option>
+                    <option value="link" data-i18n="optionLink">Link</option>
+                    <option value="video" data-i18n="optionVideo">Video</option>
+                    <option value="photo" data-i18n="optionPhoto">Photo</option>
+                </select>
+                <select id="search-folder" class="flex-1">
+                    <option value="all" data-i18n="allFolders">All Folders</option>
+                </select>
+                <select id="search-rating" class="flex-1">
+                    <option value="all" data-i18n="allRatings">Todas as Avaliações</option>
+                    <option value="1">1 Estrela ou mais</option>
+                    <option value="2">2 Estrelas ou mais</option>
+                    <option value="3">3 Estrelas ou mais</option>
+                    <option value="4">4 Estrelas ou mais</option>
+                    <option value="5">5 Estrelas</option>
+                    <option value="0">Não Avaliado</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="glass-effect rounded-lg p-2 sm:p-4 animate-fade-in">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-4" data-i18n="savedItemsTitle">Saved Items</h2>
+            <div id="items-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 overflow-hidden">
+                </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="edit-folder-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-folder-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editFolderTitle">Editar Pasta</h3>
+      <div class="modal-input-group">
+        <label for="edit-folder-name" data-i18n="folderNameLabel">Nome da Pasta:</label>
+        <input type="text" id="edit-folder-name">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-folder-color" data-i18n="folderColorLabel">Cor da Pasta:</label>
+        <select id="edit-folder-color">
+          <option value="bg-blue-500" data-i18n="colorBlue">Blue</option>
+          <option value="bg-green-500" data-i18n="colorGreen">Green</option>
+          <option value="bg-red-500" data-i18n="colorRed">Red</option>
+          <option value="bg-purple-500" data-i18n="colorPurple">Purple</option>
+          <option value="bg-yellow-500" data-i18n="colorYellow">Yellow</option>
+          <option value="bg-black" data-i18n="colorBlack">Black</option>
+          <option value="bg-teal-600" data-i18n="colorTeal">Teal</option>
+          <option value="bg-pink-600" data-i18n="colorPink">Pink</option>
+        </select>
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-folder-icon" data-i18n="folderIconLabel">Ícone da Pasta:</label>
+        <select id="edit-folder-icon">
+          <option value="svg/tiktok.svg" data-i18n="iconTikTok">TikTok</option>
+          <option value="svg/kwai.svg" data-i18n="iconKwai">Kwai</option>
+          <option value="svg/facebook.svg" data-i18n="iconFacebook">Facebook</option>
+          <option value="svg/instagram.svg" data-i18n="iconInstagram">Instagram</option>
+          <option value="svg/youtube.svg" data-i18n="iconYouTube">YouTube</option>
+          <option value="svg/dailymotion.svg" data-i18n="iconDailymotion">Dailymotion</option>
+          <option value="svg/folder.svg" data-i18n="iconFolder">Folder</option>
+          <option value="svg/link.svg" data-i18n="iconLink">Outro Link</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button id="save-folder-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button id="delete-folder-from-modal-btn" class="modal-btn delete-folder" data-i18n="deleteFolderBtn">Excluir Pasta</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-folder-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-item-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-item-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editItemTitle">Editar Elemento</h3>
+      <div class="modal-input-group">
+        <label for="edit-item-url" data-i18n="urlLabel">URL:</label>
+        <input type="text" id="edit-item-url">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-tags" data-i18n="tagsLabel">Etiquetas (separadas por vírgulas):</label>
+        <input type="text" id="edit-item-tags" list="saved-tags-datalist">
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-type" data-i18n="typeLabel">Tipo:</label>
+        <select id="edit-item-type">
+          <option value="link" data-i18n="optionLink">Link</option>
+          <option value="video" data-i18n="optionVideo">Video</option>
+          <option value="photo" data-i18n="optionPhoto">Photo</option>
+        </select>
+      </div>
+      <div class="modal-input-group">
+        <label for="edit-item-folder" data-i18n="folderLabel">Pasta:</label>
+        <select id="edit-item-folder">
+          </select>
+      </div>
+      <div class="modal-input-group">
+          <label data-i18n="ratingLabel">Avaliação:</label>
+          <div id="edit-item-rating" class="star-rating justify-center">
+              <input type="radio" id="edit-star-5" name="rating-edit" value="5" /><label for="edit-star-5" title="5 estrelas">★</label>
+              <input type="radio" id="edit-star-4" name="rating-edit" value="4" /><label for="edit-star-4" title="4 estrelas">★</label>
+              <input type="radio" id="edit-star-3" name="rating-edit" value="3" /><label for="edit-star-3" title="3 estrelas">★</label>
+              <input type="radio" id="edit-star-2" name="rating-edit" value="2" /><label for="edit-star-2" title="2 estrelas">★</label>
+              <input type="radio" id="edit-star-1" name="rating-edit" value="1" /><label for="edit-star-1" title="1 estrela">★</label>
+              <input type="radio" id="edit-star-0" name="rating-edit" value="0" class="hidden" checked />
+          </div>
+      </div>
+      <div class="modal-actions">
+        <button id="save-item-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-item-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-tag-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('edit-tag-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="editTagTitle">Editar Etiqueta</h3>
+      <div class="modal-input-group">
+        <label for="edit-tag-name" data-i18n="tagNameLabel">Nome da Etiqueta:</label>
+        <input type="text" id="edit-tag-name">
+      </div>
+      <div class="modal-actions">
+        <button id="save-tag-changes-btn" class="modal-btn confirm" data-i18n="saveChangesBtn">Salvar Alterações</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('edit-tag-modal').classList.add('hidden')" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="manage-data-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('manage-data-modal').classList.add('hidden')">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="manageDataTitle">Gerenciar Dados</h3>
+      <div class="flex flex-col gap-4">
+        <button id="export-data-option-btn" class="modal-btn confirm" data-i18n="exportDataOption">Exportar Dados</button>
+        <label class="modal-btn confirm cursor-pointer" data-i18n="importDataOption">
+          Importar Dados
+          <input id="import-file-modal-input" type="file" accept=".json" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div id="import-selection-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="document.getElementById('import-selection-modal').classList.add('hidden'); importFileModalInput.value='';">×</button>
+      <h3 class="text-xl font-semibold mb-4" data-i18n="selectImportOptions">Selecionar Opções de Importação</h3>
+      <div class="modal-checkbox-group">
+        <label>
+          <input type="checkbox" id="import-items-checkbox" checked>
+          <span data-i18n="itemsCheckbox">Itens</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-folders-checkbox" checked>
+          <span data-i18n="foldersCheckbox">Pastas</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-tags-checkbox" checked>
+          <span data-i18n="tagsCheckbox">Tags</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-theme-checkbox" checked>
+          <span data-i18n="themeCheckbox">Tema</span>
+        </label>
+        <label>
+          <input type="checkbox" id="import-language-checkbox" checked>
+          <span data-i18n="languageCheckbox">Idioma</span>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="confirm-import-selection-btn" class="modal-btn confirm" data-i18n="confirmImportBtn">Confirmar Importação</button>
+        <button class="modal-btn cancel" onclick="document.getElementById('import-selection-modal').classList.add('hidden'); importFileModalInput.value='';" data-i18n="cancelBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="video-player-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeVideoPlayerModal()">×</button>
+      <div id="video-player-iframe-container" style="width: 100%; height: 100%;"></div>
+    </div>
+  </div>
+
+  <div id="loading-message" class="loading-message"></div>
+
+  <button id="back-to-top-btn" class="scroll-btn hidden">↑</button>
+  <button id="go-to-bottom-btn" class="scroll-btn hidden">↓</button>
+  
+  <script src="js/config.js"></script>
+  <script src="js/functions.js"></script>
+  <script src="js/main.js"></script>
+  
+  <footer class="mt-8 py-4 text-center text-gray-600 text-sm">
+
+    <nav class="flex justify-center space-x-4 mb-2">
+      <a href="#" class="hover:underline" data-i18n="aboutUsLink">About Us</a>
+      <a href="#" class="hover:underline" data-i18n="privacyPolicyLink">Privacy Policy</a>
+      <a href="#" class="hover:underline" data-i18n="termsOfServiceLink">Terms of Service</a>
+      <a href="#" class="hover:underline" data-i18n="contactUsLink">Contact Us</a>
+    </nav>
+    <p>© 2025 Links Preview Organizer2.0. All rights reserved. Created by Werveson Nean.</p>
+  </footer>
+
+</body>
+</html>

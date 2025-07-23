@@ -1,0 +1,165 @@
+/* Estilos básicos do corpo da página */
+body {
+  transition: background 0.8s ease-in-out; /* Transição suave para mudança de fundo (tema) */
+}
+
+/* Tema claro: gradiente de fundo azul/verde claro */
+body.light {
+  background: linear-gradient(135deg, #e0f2f7, #c1e7f0, #9fd8e6);
+}
+
+/* Tema escuro: gradiente de fundo escuro */
+body.dark {
+  background: linear-gradient(135deg, #1a2a3a, #0a1a2a, #050f1a);
+}
+
+/* Estilos do efeito de vidro no tema escuro */
+body.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.2); /* Fundo mais escuro */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Borda mais sutil */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* Sombra mais pronunciada */
+}
+
+/* Efeito de hover no tema escuro para 'glass-effect' */
+body.dark .glass-effect:hover {
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6); /* Sombra ainda mais pronunciada */
+}
+
+/* ... (Seus estilos existentes em themes.css) ... */
+
+/* Estilos da borda animada no tema escuro */
+body.dark .glass-effect.animated-border::before {
+    /* Ajuste de cor se o tema escuro precisar de uma borda diferente */
+    /* background: conic-gradient(
+        from 0deg at 50% 50%,
+        color-mix(in srgb, var(--folder-color) 80%, black) 0%,
+        color-mix(in srgb, var(--folder-color) 50%, transparent) 20%,
+        color-mix(in srgb, var(--folder-color) 50%, transparent) 40%,
+        color-mix(in srgb, var(--folder-color) 80%, black) 60%,
+        color-mix(in srgb, var(--folder-color) 50%, transparent) 80%,
+        color-mix(in srgb, var(--folder-color) 80%, black) 100%
+    ); */
+    opacity: 0.8; /* Torna a borda um pouco mais sutil no tema escuro */
+}
+
+/* Estilos de inputs e selects no tema escuro */
+body.dark input, body.dark select {
+  background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Borda mais sutil */
+  color: #e0e7ff; /* Cor do texto mais clara */
+}
+
+/* Estilos para opções de select no tema escuro */
+body.dark select option {
+    background-color: #2a2a2a; /* Fundo escuro */
+    color: #e0e7ff; /* Texto claro */
+}
+
+/* Estilos de foco no tema escuro para inputs e selects */
+body.dark input:focus, body.dark select:focus {
+  background: rgba(255, 107, 107, 0.1); /* Fundo vermelho/transparente */
+  border-color: #ff6b6b; /* Borda vermelha */
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.6); /* Sombra vermelha */
+}
+
+/* Cor do título do item no tema claro */
+body.light #items-list .glass-effect .item-title {
+  color: #000000; /* Preto para alto contraste */
+}
+
+/* Cor do título do item no tema escuro */
+body.dark #items-list .glass-effect .item-title {
+  color: rgb(21, 132, 63); /* Verde mais claro */
+}
+
+/* Cor da URL curta no tema claro */
+body.light #items-list .glass-effect .item-url-short {
+  color: rgb(50, 50, 50); /* Cinza escuro */
+}
+
+/* Cor da URL curta no tema escuro */
+body.dark #items-list .glass-effect .item-url-short {
+  color: #b9b9b9; /* Cinza claro */
+}
+
+/* Cor da data de adição no tema escuro */
+body.dark #items-list .glass-effect .item-added-date {
+  color: #718096; /* Cinza */
+}
+
+/* Estilos do conteúdo do modal no tema escuro */
+body.dark .modal-content {
+  background: #2a2a2a; /* Fundo escuro */
+  color: #e0e7ff; /* Texto claro */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6); /* Sombra mais escura */
+}
+
+/* Estilos do botão de fechar do modal no tema escuro */
+body.dark .modal-close-btn {
+  color: #bbb; /* Cor mais clara */
+}
+body.dark .modal-close-btn:hover {
+  color: #fff; /* Cor branca no hover */
+}
+
+/* Label do grupo de input do modal no tema escuro */
+body.dark .modal-input-group label {
+  color: #e0e7ff; /* Cor do texto mais clara */
+}
+
+/* Inputs e selects dentro do modal no tema escuro */
+body.dark .modal-input-group input, body.dark .modal-input-group select {
+  background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Borda mais sutil */
+  color: #e0e7ff; /* Texto mais claro */
+}
+
+/* Estilos para itens de tag no tema escuro */
+body.dark .tag-item {
+    background: rgba(255, 255, 255, 0.05); /* Fundo mais escuro */
+    color: white; /* Texto branco */
+}
+
+body.dark .clear-input-btn {
+    color: #bbb; /* Cor mais clara */
+}
+body.dark .clear-input-btn:hover {
+    color: #fff; /* Cor branca no hover */
+}
+
+/* Inverte a cor do SVG no tema escuro */
+body.dark .icon-svg {
+    filter: invert(1); /* Inverte a cor (branco para preto, etc.) */
+}
+
+/* Estilo dos botões de aba no tema escuro */
+body.dark .tab-button {
+  background-color: rgba(0, 0, 0, 0.15); /* Fundo mais escuro */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Borda mais sutil */
+  color: white; /* Texto branco */
+}
+
+/* Efeito de hover nos botões de aba no tema escuro */
+body.dark .tab-button:hover {
+  background-color: rgba(0, 0, 0, 0.3); /* Fundo mais escuro */
+  border-color: rgba(255, 255, 255, 0.1); /* Borda mais visível */
+}
+
+/* Estilo para a aba ativa no tema escuro */
+body.dark .tab-button.active {
+  background: linear-gradient(135deg, #4ecdc4, #45b7d1); /* Gradiente ciano/azul */
+  border-color: #4ecdc4; /* Borda ciano */
+  box-shadow: 0 4px 10px rgba(78, 205, 196, 0.3); /* Sombra ciano */
+}
+
+body.dark .dashboard-card {
+    background: rgba(0, 0, 0, 0.2); /* Fundo mais escuro */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Borda mais sutil */
+    color: #e0e7ff; /* Cor do texto (tema escuro) */
+}
+body.dark .dashboard-card h3 {
+    color: #4ecdc4; /* Cor do título (tema escuro) */
+}
+body.dark .modal-checkbox-group label {
+    color: #e0e7ff; /* Cor do texto (tema escuro) */
+}
